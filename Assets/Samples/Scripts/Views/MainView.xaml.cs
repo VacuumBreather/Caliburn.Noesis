@@ -1,17 +1,8 @@
-﻿// <copyright file="MainView.xaml.cs" company="VacuumBreather">
-//      Copyright © 2021 VacuumBreather. All rights reserved.
-// </copyright>
-
-namespace VacuumBreather.Montreal.MapEditor.Views
+﻿namespace Samples.Views
 {
     #region Using Directives
 
-#if NOESIS
     using Noesis;
-
-#else
-    using System.Windows.Controls;
-#endif
 
     #endregion
 
@@ -31,12 +22,10 @@ namespace VacuumBreather.Montreal.MapEditor.Views
 
         #region Private Methods
 
-#if NOESIS
         private void InitializeComponent()
         {
-            GUI.LoadComponent(this, "Assets/Scripts/MapEditor/Views/MainView.xaml");
+            GUI.LoadComponent(this, "Assets/Samples/Scripts/Views/MainView.xaml");
         }
-#endif
 
         #endregion
     }

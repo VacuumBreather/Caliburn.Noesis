@@ -1,19 +1,19 @@
-﻿#if NOESIS
-namespace Caliburn.Noesis.Platform
+﻿namespace Caliburn.Noesis
 {
     #region Using Directives
 
     using System;
     using System.Globalization;
+    using global::Noesis;
 
     #endregion
 
     /// <summary>
     ///     Converter used to set a visibility depending on whether a value is null.
     /// </summary>
-    public class NullToVisibilityConverter : IValueConverter
+    public class NullCheckToVisibilityConverter : IValueConverter
     {
-        #region Public Methods
+        #region IValueConverter Implementation
 
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -30,4 +30,3 @@ namespace Caliburn.Noesis.Platform
         #endregion
     }
 }
-#endif

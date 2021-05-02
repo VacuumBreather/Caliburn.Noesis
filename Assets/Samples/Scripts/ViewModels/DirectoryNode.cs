@@ -1,31 +1,32 @@
-﻿// <copyright file="DirectoryNode.cs" company="VacuumBreather">
-//      Copyright © 2021 VacuumBreather. All rights reserved.
-// </copyright>
-
-namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Samples.ViewModels
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Security;
+    using Caliburn.Noesis.Samples.ViewModels;
     using Cysharp.Threading.Tasks;
+
+    #endregion
 
     public class DirectoryNode : FileSystemNode
     {
-        #region Constants and Fields
-
-        public DirectoryInfo DirectoryInfo { get; }
-
-        #endregion
-
         #region Constructors and Destructors
 
         public DirectoryNode(DirectoryInfo directoryInfo, DirectoryInfo startingDirectory = null)
             : base(startingDirectory, directoryInfo.Name)
         {
-            this.DirectoryInfo = directoryInfo;
+            DirectoryInfo = directoryInfo;
         }
+
+        #endregion
+
+        #region Public Properties
+
+        public DirectoryInfo DirectoryInfo { get; }
 
         #endregion
 
@@ -39,12 +40,16 @@ namespace Caliburn.Noesis.Samples.ViewModels
 
             try
             {
-                children = this.DirectoryInfo.EnumerateDirectories()
-                               .Where(directory =>
-                                   (directory.Attributes &
-                                    (FileAttributes.Temporary | FileAttributes.System | FileAttributes.Hidden)) == 0)
-                               .Select(directory => new DirectoryNode(directory, startingDirectory))
-                               .ToList();
+                children = DirectoryInfo.EnumerateDirectories()
+                                        .Where(
+                                            directory =>
+                                                (directory.Attributes &
+                                                 (FileAttributes.Temporary |
+                                                  FileAttributes.System |
+                                                  FileAttributes.Hidden)) ==
+                                                0)
+                                        .Select(directory => new DirectoryNode(directory, startingDirectory))
+                                        .ToList();
             }
             catch (SecurityException)
             {
@@ -69,11 +74,14 @@ namespace Caliburn.Noesis.Samples.ViewModels
 
             try
             {
-                files = this.DirectoryInfo.EnumerateFiles()
-                            .Where(file =>
-                                (file.Attributes &
-                                 (FileAttributes.Temporary | FileAttributes.System | FileAttributes.Hidden)) == 0)
-                            .ToList();
+                files = DirectoryInfo.EnumerateFiles()
+                                     .Where(
+                                         file => (file.Attributes &
+                                                  (FileAttributes.Temporary |
+                                                   FileAttributes.System |
+                                                   FileAttributes.Hidden)) ==
+                                                 0)
+                                     .ToList();
             }
             catch (SecurityException)
             {
@@ -98,6 +106,7 @@ namespace Caliburn.Noesis.Samples.ViewModels
             {
                 IsSelected = true;
             }
+
             if (DirectoryInfo.IsAncestorOf(startingDirectory))
             {
                 IsExpanded = true;

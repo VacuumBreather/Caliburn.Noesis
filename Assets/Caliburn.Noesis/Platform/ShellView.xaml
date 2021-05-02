@@ -1,0 +1,19 @@
+﻿<Page
+    x:Class="Caliburn.Noesis.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cal="clr-namespace:Caliburn.Noesis">
+    <Grid>
+        <Grid.Resources>
+            <cal:NullCheckToVisibilityConverter x:Key="NullToHidden" />
+        </Grid.Resources>
+        <ContentControl Content="{Binding MainContent.ActiveItem, Mode=OneWay}" />
+        <Grid Background="Transparent" Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
+            <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}">
+                <ContentControl.Effect>
+                    <DropShadowEffect />
+                </ContentControl.Effect>
+            </ContentControl>
+        </Grid>
+    </Grid>
+</Page>
