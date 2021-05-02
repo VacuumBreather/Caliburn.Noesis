@@ -12,7 +12,7 @@
     /// <summary>
     ///     A base implementation of <see cref="IScreen" />.
     /// </summary>
-    public class Screen : PropertyChangedBase, IScreen, IChild
+    public abstract class Screen : PropertyChangedBase, IScreen, IChild
     {
         #region Constants and Fields
 
@@ -28,7 +28,7 @@
         /// <summary>
         ///     Creates an instance of <see cref="Screen" />.
         /// </summary>
-        public Screen()
+        protected Screen()
         {
             this.displayName = GetType().Name;
         }
