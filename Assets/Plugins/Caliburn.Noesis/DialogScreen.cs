@@ -9,16 +9,16 @@
     #endregion
 
     /// <summary>
-    ///     Base class for dialog screens.
+    ///     A base class for dialog screens.
     /// </summary>
-    public abstract class DialogScreenBase : Screen
+    public abstract class DialogScreen : Screen
     {
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates an instance of <see cref="DialogScreenBase" />.
+        ///     Creates an instance of <see cref="DialogScreen" />.
         /// </summary>
-        protected DialogScreenBase()
+        protected DialogScreen()
         {
             CloseDialogCommand = new RelayCommand<bool?>(result => TryCloseAsync(result).Forget());
         }

@@ -10,7 +10,7 @@
     /// <summary>
     ///     A conductor for dialogs.
     /// </summary>
-    public class DialogConductor : Conductor<DialogScreenBase>
+    public class DialogConductor : Conductor<DialogScreen>
     {
         #region Constants and Fields
 
@@ -29,7 +29,7 @@
         ///     (Optional) A cancellation token that can be used by other objects or threads to receive notice of cancellation.
         /// </param>
         public async UniTask CloseDialogAsync(
-            DialogScreenBase dialog,
+            DialogScreen dialog,
             bool? dialogResult,
             CancellationToken cancellationToken = default)
         {
@@ -42,7 +42,7 @@
         }
 
         /// <summary>
-        ///     Shows the specified <see cref="DialogScreenBase" /> as a dialog.
+        ///     Shows the specified <see cref="DialogScreen" /> as a dialog.
         /// </summary>
         /// <param name="dialog">The dialog to show.</param>
         /// <param name="cancellationToken">
@@ -53,7 +53,7 @@
         ///     The task result contains the dialog result.
         /// </returns>
         public async UniTask<bool?> ShowDialogAsync(
-            DialogScreenBase dialog,
+            DialogScreen dialog,
             CancellationToken cancellationToken = default)
         {
             this.taskCompletionSource = new UniTaskCompletionSource<bool?>();
