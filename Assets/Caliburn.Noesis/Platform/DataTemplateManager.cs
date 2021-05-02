@@ -1,7 +1,12 @@
-﻿#if NOESIS
-namespace Caliburn.Noesis.Platform
+﻿namespace Caliburn.Noesis
 {
+    #region Using Directives
+
     using System;
+    using Extensions;
+    using global::Noesis;
+
+    #endregion
 
     public static class DataTemplateManager
     {
@@ -17,11 +22,7 @@ namespace Caliburn.Noesis.Platform
         {
             var dataTemplate = CreateTemplate(viewModelType, viewType);
 
-#if NOESIS
             dictionary.Add(viewModelType, dataTemplate);
-#else
-            dictionary.Add(dataTemplate.DataTemplateKey, dataTemplate);
-#endif
         }
 
         #endregion
@@ -43,7 +44,7 @@ namespace Caliburn.Noesis.Platform
                                $"    <v:{viewType.Name} />\n" +
                                "</DataTemplate>";
             }
-            else if (viewModelType.IsDerivedFromOrImplements(typeof(DialogViewModel)))
+            else if (viewModelType.IsDerivedFromOrImplements(typeof(DialogScreen)))
             {
                 xamlTemplate = "<DataTemplate\n" +
                                "    xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n" +
@@ -51,7 +52,7 @@ namespace Caliburn.Noesis.Platform
                                "    xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n" +
                                "    xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\"\n" +
                                "    xmlns:system=\"clr-namespace:System;assembly=mscorlib\"\n" +
-                               "    DataType=\"{x:Type vm:DialogViewModel}\">\n" +
+                               "    DataType=\"{x:Type vm:DialogScreen}\">\n" +
                                "    <Grid\n" +
                                "      Control.FontSize=\"20\"\n" +
                                "      Control.FontWeight=\"Bold\">\n" +
@@ -72,7 +73,7 @@ namespace Caliburn.Noesis.Platform
                                "                        Width=\"200\"\n" +
                                "                        Height=\"50\"\n" +
                                "                        Margin=\"10\"\n" +
-                               $"                        Command=\"{{Binding {nameof(DialogViewModel.CloseDialogCommand)}, Mode=OneTime}}\">\n" +
+                               $"                        Command=\"{{Binding {nameof(DialogScreen.CloseDialogCommand)}, Mode=OneTime}}\">\n" +
                                "                        <Button.CommandParameter>\n" +
                                "                            <system:Boolean>True</system:Boolean>\n" +
                                "                        </Button.CommandParameter>\n" +
@@ -82,7 +83,7 @@ namespace Caliburn.Noesis.Platform
                                "                        Width=\"200\"\n" +
                                "                        Height=\"50\"\n" +
                                "                        Margin=\"10\"\n" +
-                               $"                        Command=\"{{Binding {nameof(DialogViewModel.CloseDialogCommand)}, Mode=OneTime}}\">\n" +
+                               $"                        Command=\"{{Binding {nameof(DialogScreen.CloseDialogCommand)}, Mode=OneTime}}\">\n" +
                                "                        <Button.CommandParameter>\n" +
                                "                            <system:Boolean>False</system:Boolean>\n" +
                                "                        </Button.CommandParameter>\n" +
@@ -92,7 +93,7 @@ namespace Caliburn.Noesis.Platform
                                "                        Width=\"200\"\n" +
                                "                        Height=\"50\"\n" +
                                "                        Margin=\"10\"\n" +
-                               $"                        Command=\"{{Binding {nameof(DialogViewModel.CloseDialogCommand)}, Mode=OneTime}}\">\n" +
+                               $"                        Command=\"{{Binding {nameof(DialogScreen.CloseDialogCommand)}, Mode=OneTime}}\">\n" +
                                "                        <Button.CommandParameter>\n" +
                                "                            <x:Null />\n" +
                                "                        </Button.CommandParameter>\n" +
@@ -124,4 +125,3 @@ namespace Caliburn.Noesis.Platform
         #endregion
     }
 }
-#endif

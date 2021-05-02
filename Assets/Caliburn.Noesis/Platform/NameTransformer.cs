@@ -1,0 +1,163 @@
+﻿namespace Caliburn.Noesis
+{
+    #region Using Directives
+
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
+    #endregion
+
+    /// <summary>
+    ///     Class for managing the list of rules for doing name transformation.
+    /// </summary>
+    public class NameTransformer : BindableCollection<NameTransformer.Rule>
+    {
+        #region Constants and Fields
+
+        private const RegexOptions Options = RegexOptions.Compiled;
+
+        private bool useEagerRuleSelection = true;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Flag to indicate if transformations from all matched rules are returned. Otherwise, transformations from only the
+        ///     first matched rule are returned.
+        /// </summary>
+        public bool UseEagerRuleSelection
+        {
+            get => this.useEagerRuleSelection;
+            set => this.useEagerRuleSelection = value;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        ///     Adds a transform using a single replacement value and a global filter pattern.
+        /// </summary>
+        /// <param name="replacePattern">Regular expression pattern for replacing text</param>
+        /// <param name="replaceValue">The replacement value.</param>
+        /// <param name="globalFilterPattern">Regular expression pattern for global filtering</param>
+        public void AddRule(string replacePattern, string replaceValue, string globalFilterPattern = null)
+        {
+            AddRule(
+                replacePattern,
+                new[]
+                    {
+                        replaceValue
+                    },
+                globalFilterPattern);
+        }
+
+        /// <summary>
+        ///     Adds a transform using a list of replacement values and a global filter pattern.
+        /// </summary>
+        /// <param name="replacePattern">Regular expression pattern for replacing text</param>
+        /// <param name="replaceValueList">The list of replacement values</param>
+        /// <param name="globalFilterPattern">Regular expression pattern for global filtering</param>
+        public void AddRule(
+            string replacePattern,
+            IEnumerable<string> replaceValueList,
+            string globalFilterPattern = null)
+        {
+            Add(
+                new Rule
+                    {
+                        ReplacePattern = replacePattern,
+                        ReplacementValues = replaceValueList,
+                        GlobalFilterPattern = globalFilterPattern
+                    });
+        }
+
+        /// <summary>
+        ///     Gets the list of transformations for a given name.
+        /// </summary>
+        /// <param name="source">The name to transform into the resolved name list</param>
+        /// <returns>The transformed names.</returns>
+        public IEnumerable<string> Transform(string source)
+        {
+            var nameList = new List<string>();
+            var rules = this.Reverse();
+
+            foreach (var rule in rules)
+            {
+                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source))
+                {
+                    continue;
+                }
+
+                if (!rule.ReplacePatternRegex.IsMatch(source))
+                {
+                    continue;
+                }
+
+                nameList.AddRange(
+                    rule.ReplacementValues.Select(repString => rule.ReplacePatternRegex.Replace(source, repString)));
+
+                if (!this.useEagerRuleSelection)
+                {
+                    break;
+                }
+            }
+
+            return nameList;
+        }
+
+        #endregion
+
+        #region Nested Types
+
+        /// <summary>
+        ///     A rule that describes a name transform.
+        /// </summary>
+        public class Rule
+        {
+            #region Constants and Fields
+
+            /// <summary>
+            ///     Regular expression pattern for global filtering
+            /// </summary>
+            public string GlobalFilterPattern;
+
+            /// <summary>
+            ///     The list of replacement values
+            /// </summary>
+            public IEnumerable<string> ReplacementValues;
+
+            /// <summary>
+            ///     Regular expression pattern for replacing text
+            /// </summary>
+            public string ReplacePattern;
+
+            private Regex globalFilterPatternRegex;
+            private Regex replacePatternRegex;
+
+            #endregion
+
+            #region Public Properties
+
+            /// <summary>
+            ///     Regular expression for global filtering
+            /// </summary>
+            public Regex GlobalFilterPatternRegex => this.globalFilterPatternRegex ??
+                                                     (this.globalFilterPatternRegex = new Regex(
+                                                          this.GlobalFilterPattern,
+                                                          Options));
+
+            /// <summary>
+            ///     Regular expression for replacing text
+            /// </summary>
+            public Regex ReplacePatternRegex => this.replacePatternRegex ??
+                                                (this.replacePatternRegex = new Regex(this.ReplacePattern, Options));
+
+            #endregion
+        }
+
+        #endregion
+    }
+}

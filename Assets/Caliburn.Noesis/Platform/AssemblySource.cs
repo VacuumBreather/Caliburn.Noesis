@@ -6,11 +6,7 @@
     using System.Linq;
     using System.Reflection;
     using Extensions;
-#if !WinRT
-
-#else
-    using Windows.UI.Xaml;
-#endif
+    using global::Noesis;
 
     /// <summary>
     /// A source of assemblies that are inspectable by the framework.
@@ -49,9 +45,7 @@
         public static Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
             assembly.GetExportedTypes()
                 .Where(t =>
-#if NOESIS
                     typeof(UIElement).IsAssignableFrom(t) ||
-#endif
                     typeof(INotifyPropertyChanged).IsAssignableFrom(t));
 
         /// <summary>

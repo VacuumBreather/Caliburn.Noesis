@@ -2,15 +2,11 @@
 //      Copyright © 2021 VacuumBreather. All rights reserved.
 // </copyright>
 
-namespace VacuumBreather.Montreal.MapEditor.Views
+namespace Caliburn.Noesis
 {
-    #region Using Directives
+    using global::Noesis;
 
-#if NOESIS
-    using Noesis;
-#else
-    using System.Windows.Controls;
-#endif
+    #region Using Directives
 
     #endregion
 
@@ -30,12 +26,10 @@ namespace VacuumBreather.Montreal.MapEditor.Views
 
         #region Private Methods
 
-#if NOESIS
         private void InitializeComponent()
         {
-            GUI.LoadComponent(this, "Assets/Scripts/MapEditor/Views/ShellView.xaml");
+            GUI.LoadComponent(this, "Assets/Caliburn.Noesis/Platform/ShellView.xaml");
         }
-#endif
 
         #endregion
     }

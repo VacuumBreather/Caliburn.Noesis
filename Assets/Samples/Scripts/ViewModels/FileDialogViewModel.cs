@@ -1,9 +1,7 @@
-﻿// <copyright file="FileDialogViewModel.cs" company="VacuumBreather">
-//      Copyright © 2021 VacuumBreather. All rights reserved.
-// </copyright>
-
-namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Samples.ViewModels
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -11,16 +9,20 @@ namespace Caliburn.Noesis.Samples.ViewModels
     using System.Linq;
     using System.Security;
     using System.Threading;
+    using Caliburn.Noesis;
+    using Caliburn.Noesis.Samples.ViewModels;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
-    using Noesis;
+
+    #endregion
 
     public class FileDialogViewModel : DialogScreen
     {
         #region Constants and Fields
 
-        private FileInfo selectedFile;
         private DirectoryNode selectedDirectory;
+
+        private FileInfo selectedFile;
 
         #endregion
 
@@ -30,36 +32,18 @@ namespace Caliburn.Noesis.Samples.ViewModels
         public FileDialogViewModel()
         {
             DisplayName = "Open File";
-            CloseCommand = new RelayCommand<bool?>(dialogResult => TryCloseAsync(dialogResult).Forget(), dialogResult => (dialogResult != true) || SelectedFile != null);
+            CloseCommand = new RelayCommand<bool?>(
+                dialogResult => TryCloseAsync(dialogResult).Forget(),
+                dialogResult => (dialogResult != true) || (SelectedFile != null));
         }
 
         #endregion
-        
-        public FileInfo FileInfo { get; private set; }
 
-        /// <inheritdoc />
-        protected override UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
-        {
-            FileInfo = SelectedFile;
-            Root.Clear();
-
-            return UniTask.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        protected override async UniTask OnActivateAsync(CancellationToken cancellationToken)
-        {
-            var directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
-
-            var rootNode = new RootNode(directoryInfo);
-            Root.Add(rootNode);
-
-            await rootNode.Initialize();
-        }
+        #region Public Properties
 
         public RelayCommand<bool?> CloseCommand { get; }
 
-        #region Public Properties
+        public FileInfo FileInfo { get; private set; }
 
         public ObservableCollection<FileSystemNode> Root { get; } = new ObservableCollection<FileSystemNode>();
 
@@ -72,6 +56,30 @@ namespace Caliburn.Noesis.Samples.ViewModels
                 Set(ref this.selectedFile, value);
                 CloseCommand.RaiseCanExecuteChanged();
             }
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <inheritdoc />
+        protected override async UniTask OnActivateAsync(CancellationToken cancellationToken)
+        {
+            var directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+
+            var rootNode = new RootNode(directoryInfo);
+            Root.Add(rootNode);
+
+            await rootNode.Initialize();
+        }
+
+        /// <inheritdoc />
+        protected override UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        {
+            FileInfo = SelectedFile;
+            Root.Clear();
+
+            return UniTask.CompletedTask;
         }
 
         #endregion
@@ -90,10 +98,14 @@ namespace Caliburn.Noesis.Samples.ViewModels
 
             #endregion
 
+            #region Public Methods
+
             public async UniTask Initialize()
             {
                 await PopulateDirectories();
             }
+
+            #endregion
 
             #region Protected Methods
 
@@ -124,13 +136,13 @@ namespace Caliburn.Noesis.Samples.ViewModels
                 return UniTask.FromResult(driveNodes);
             }
 
-            #endregion
-
             /// <inheritdoc />
             protected override void PotentiallyExpand(DirectoryInfo startingDirectory)
             {
                 IsExpanded = true;
             }
+
+            #endregion
         }
 
         #endregion

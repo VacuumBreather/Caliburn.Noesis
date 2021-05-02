@@ -1,19 +1,12 @@
-﻿// <copyright file="MainViewModel.cs" company="VacuumBreather">
-//      Copyright © 2021 VacuumBreather. All rights reserved.
-// </copyright>
-
-namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
     #region Using Directives
 
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
     using System.Windows.Input;
     using Cysharp.Threading.Tasks;
+    using global::Samples.ViewModels;
     using JetBrains.Annotations;
-    using UnityEngine;
-    using Screen = Caliburn.Noesis.Screen;
+
 #if UNITY_5_3_OR_NEWER
 
 #else
@@ -29,8 +22,6 @@ namespace Caliburn.Noesis.Samples.ViewModels
     /// <seealso cref="PropertyChangedBase" />
     public class MainViewModel : Screen
     {
-        private IWindowManager WindowManager { get; }
-
         #region Constructors and Destructors
 
         /// <summary>
@@ -55,6 +46,8 @@ namespace Caliburn.Noesis.Samples.ViewModels
 
         private FileDialogViewModel FileDialog { get; } = new FileDialogViewModel();
 
+        private IWindowManager WindowManager { get; }
+
         #endregion
 
         #region Private Methods
@@ -62,10 +55,11 @@ namespace Caliburn.Noesis.Samples.ViewModels
         private async UniTask OpenDialog()
         {
             var fileDialog = FileDialog;
-            
+
             var result = await WindowManager.ShowDialogAsync(FileDialog);
 
-            Logger.Info(result == true ? $"File selected: {fileDialog.FileInfo?.FullName ?? "null"}" : "Operation canceled");
+            Logger.Info(
+                result == true ? $"File selected: {fileDialog.FileInfo?.FullName ?? "null"}" : "Operation canceled");
         }
 
         #endregion

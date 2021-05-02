@@ -1,20 +1,21 @@
-﻿// <copyright file="FileSystemNode.cs" company="VacuumBreather">
-//      Copyright © 2021 VacuumBreather. All rights reserved.
-// </copyright>
-
-namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
+    #region Using Directives
+
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using Cysharp.Threading.Tasks;
 
+    #endregion
+
     public class FileSystemNode : PropertyChangedBase
     {
         #region Constants and Fields
 
         private bool isExpanded;
+        private bool isSelected;
         private string name;
 
         #endregion
@@ -30,9 +31,11 @@ namespace Caliburn.Noesis.Samples.ViewModels
 
         #endregion
 
-        public ObservableCollection<FileInfo> Files { get; } = new ObservableCollection<FileInfo>();
-
         #region Public Properties
+
+        public BindableCollection<FileSystemNode> Children { get; } = new BindableCollection<FileSystemNode>();
+
+        public ObservableCollection<FileInfo> Files { get; } = new ObservableCollection<FileInfo>();
 
         public bool IsExpanded
         {
@@ -50,6 +53,8 @@ namespace Caliburn.Noesis.Samples.ViewModels
                 }
             }
         }
+
+        public bool IsPopulated { get; private set; }
 
         public bool IsSelected
         {
@@ -77,35 +82,22 @@ namespace Caliburn.Noesis.Samples.ViewModels
 
         public DirectoryInfo StartingDirectory { get; }
 
-        public BindableCollection<FileSystemNode> Children { get; } = new BindableCollection<FileSystemNode>();
-
         #endregion
 
         #region Protected Methods
 
-        public bool IsPopulated { get; private set; }
-        private bool isSelected;
-
-        protected async UniTask PopulateFiles()
+        protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
         {
-            IEnumerable<FileInfo> files;
+            return await UniTask.FromResult(Array.Empty<FileSystemNode>());
+        }
 
-#if NOESIS
-            await UniTask.SwitchToThreadPool();
-            files = await GetFilesAsync();
-            await UniTask.SwitchToMainThread();
-#else
-            await using (UniTask.ReturnToCurrentSynchronizationContext())
-            {
-                await UniTask.SwitchToThreadPool();
-                files = await GetFilesAsync();
-            }
-#endif
+        protected virtual async UniTask<IEnumerable<FileInfo>> GetFilesAsync()
+        {
+            return await UniTask.FromResult(Array.Empty<FileInfo>());
+        }
 
-            foreach (var file in files)
-            {
-                Files.Add(file);
-            }
+        protected virtual void PotentiallyExpand(DirectoryInfo startingDirectory)
+        {
         }
 
         protected async UniTask PopulateDirectories()
@@ -115,21 +107,9 @@ namespace Caliburn.Noesis.Samples.ViewModels
                 return;
             }
 
-#if NOESIS
             await UniTask.SwitchToThreadPool();
-
             var children = await GetChildrenAsync(StartingDirectory);
-            
             await UniTask.SwitchToMainThread();
-#else
-            IEnumerable<FileSystemNode> children;
-
-            await using (UniTask.ReturnToCurrentSynchronizationContext())
-            {
-                await UniTask.SwitchToThreadPool();
-                children = await GetChildrenAsync(StartingDirectory);
-            }
-#endif
 
             foreach (var child in children)
             {
@@ -141,18 +121,18 @@ namespace Caliburn.Noesis.Samples.ViewModels
             IsPopulated = true;
         }
 
-        protected virtual void PotentiallyExpand(DirectoryInfo startingDirectory)
+        protected async UniTask PopulateFiles()
         {
-        }
+            IEnumerable<FileInfo> files;
 
-        protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
-        {
-            return await UniTask.FromResult(Array.Empty<FileSystemNode>());
-        }
+            await UniTask.SwitchToThreadPool();
+            files = await GetFilesAsync();
+            await UniTask.SwitchToMainThread();
 
-        protected virtual async UniTask<IEnumerable<FileInfo>> GetFilesAsync()
-        {
-            return await UniTask.FromResult(Array.Empty<FileInfo>());
+            foreach (var file in files)
+            {
+                Files.Add(file);
+            }
         }
 
         #endregion
