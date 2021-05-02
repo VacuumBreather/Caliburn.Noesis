@@ -248,7 +248,8 @@
                     if (this.conductPublicItems)
                     {
                         var publicItems = GetType()
-                                          .GetRuntimeProperties()
+                                          .GetTypeInfo()
+                                          .DeclaredProperties
                                           .Where(
                                               propertyInfo =>
                                                   (propertyInfo.Name != nameof(Parent)) &&
