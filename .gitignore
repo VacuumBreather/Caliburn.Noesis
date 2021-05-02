@@ -452,9 +452,6 @@ MigrationBackup/
 
 # End of https://www.gitignore.io/api/unity,windows,visualstudio
 
-### Rider ###
-/.idea/
-
 ### Disable Unity Warnings ###
 !/[Aa]ssets/csc.rsp
 !/[Aa]ssets/csc.rsp.meta
