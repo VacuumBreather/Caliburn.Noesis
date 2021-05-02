@@ -2,7 +2,6 @@
 {
     #region Using Directives
 
-    using System.Collections.Generic;
     using Cysharp.Threading.Tasks;
 
     #endregion
@@ -16,29 +15,25 @@
         ///     Shows a modal dialog for the specified model.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="settings">The optional dialog settings.</param>
         /// <returns>The dialog result.</returns>
-        UniTask<bool?> ShowDialogAsync(DialogScreenBase rootModel, IDictionary<string, object> settings = null);
+        UniTask<bool?> ShowDialogAsync(DialogScreen rootModel);
 
         /// <summary>
         ///     Shows the specified model as the main content.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="settings">The optional dialog settings.</param>
-        UniTask ShowMainContentAsync(Screen rootModel, IDictionary<string, object> settings = null);
+        UniTask ShowMainContentAsync(Screen rootModel);
 
         /// <summary>
         ///     Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="settings">The optional popup settings.</param>
-        UniTask ShowPopupAsync(PropertyChangedBase rootModel, IDictionary<string, object> settings = null);
+        UniTask ShowPopupAsync(PropertyChangedBase rootModel);
 
         /// <summary>
         ///     Shows a non-modal window for the specified model.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="settings">The optional window settings.</param>
-        UniTask ShowWindowAsync(Screen rootModel, IDictionary<string, object> settings = null);
+        UniTask ShowWindowAsync(Screen rootModel);
     }
 }
