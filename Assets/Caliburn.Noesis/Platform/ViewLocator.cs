@@ -9,27 +9,33 @@
     #endregion
 
     /// <summary>
-    ///     A strategy for determining which view to use for a given model.
+    ///     Responsible for mapping view-model types to their corresponding view types.
     /// </summary>
-    public static class ViewLocator
+    public class ViewLocator
     {
         #region Constants and Fields
 
-        private static readonly List<string> ViewSuffixList = new List<string>();
+        private const string DefaultViewSuffix = "View";
 
-        private static string defaultSubNsViewModels;
-        private static string defaultSubNsViews;
-        private static string nameFormat;
-        private static string viewModelSuffix;
+        private readonly List<string> viewSuffixList = new List<string>();
 
-        private static bool includeViewSuffixInVmNames;
-        private static bool useNameSuffixesInMappings;
+        private string defaultSubNsViewModels;
+        private string defaultSubNsViews;
+
+        private bool includeViewSuffixInVmNames;
+        private ILogger logger;
+        private string nameFormat;
+        private bool useNameSuffixesInMappings;
+        private string viewModelSuffix;
 
         #endregion
 
         #region Constructors and Destructors
 
-        static ViewLocator()
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ViewLocator" /> class.
+        /// </summary>
+        public ViewLocator()
         {
             ConfigureTypeMappings(new TypeMappingConfiguration());
         }
@@ -38,64 +44,67 @@
 
         #region Private Properties
 
-        private static ILogger Logger { get; } = new UnityConsoleLogger(typeof(ViewLocator));
+        private ILogger Logger => this.logger ??= LogManager.GetLogger(this);
 
-        private static NameTransformer NameTransformer { get; } = new NameTransformer();
+        private NameTransformer NameTransformer { get; } = new NameTransformer();
 
         #endregion
 
         #region Public Methods
 
         /// <summary>
-        ///     Adds a default type mapping using the standard namespace mapping convention
+        ///     Adds a default type mapping using the standard namespace mapping convention.
         /// </summary>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddDefaultTypeMapping(string viewSuffix = "View")
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should be "View" or synonym of "View".</param>
+        public void AddDefaultTypeMapping(string viewSuffix = DefaultViewSuffix)
         {
-            if (!useNameSuffixesInMappings)
+            if (!this.useNameSuffixesInMappings)
             {
                 return;
             }
 
-            // Check for <Namespace>.<BaseName><ViewSuffix> construct
+            // Check for <Namespace>.<BaseName><ViewSuffix> construct.
             AddNamespaceMapping(string.Empty, string.Empty, viewSuffix);
 
-            // Check for <Namespace>.ViewModels.<NameSpace>.<BaseName><ViewSuffix> construct
-            AddSubNamespaceMapping(defaultSubNsViewModels, defaultSubNsViews, viewSuffix);
+            // Check for <Namespace>.ViewModels.<NameSpace>.<BaseName><ViewSuffix> construct.
+            AddSubNamespaceMapping(this.defaultSubNsViewModels, this.defaultSubNsViews, viewSuffix);
         }
 
         /// <summary>
-        ///     Adds a standard type mapping based on simple namespace mapping
+        ///     Adds a standard type mapping based on simple namespace mapping.
         /// </summary>
-        /// <param name="nsSource">Namespace of source type</param>
-        /// <param name="nsTargets">Namespaces of target type as an array</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        /// <param name="nsSource">Namespace of source type.</param>
+        /// <param name="nsTargets">Namespaces of target type.</param>
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should be "View" or synonym of "View".</param>
+        public void AddNamespaceMapping(
+            string nsSource,
+            IEnumerable<string> nsTargets,
+            string viewSuffix = DefaultViewSuffix)
         {
-            // need to terminate with "." in order to concatenate with type name later
-            var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
+            // We need to terminate with "." in order to concatenate with type name later.
+            var nsEncoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
-            // Start pattern search from beginning of string ("^")
-            // unless original string was blank (i.e. special case to indicate "append target to source")
+            // Start the pattern search from beginning of string ("^")
+            // unless the original string was blank (i.e. special case to indicate "append target to source").
             if (!string.IsNullOrEmpty(nsSource))
             {
-                nsencoded = "^" + nsencoded;
+                nsEncoded = "^" + nsEncoded;
             }
 
-            // Capture namespace as "origns" in case we need to use it in the output in the future
-            var nsreplace = RegExHelper.GetCaptureGroup("origns", nsencoded);
-
+            // Capture the namespace as "nsOrig" in case we need to use it in the output in the future.
+            var nsReplace = RegExHelper.GetCaptureGroup("nsOrig", nsEncoded);
             var nsTargetsRegEx = nsTargets.Select(t => t + ".").ToArray();
-            AddTypeMapping(nsreplace, null, nsTargetsRegEx, viewSuffix);
+
+            AddTypeMapping(nsReplace, null, nsTargetsRegEx, viewSuffix);
         }
 
         /// <summary>
-        ///     Adds a standard type mapping based on simple namespace mapping
+        ///     Adds a standard type mapping based on simple namespace mapping.
         /// </summary>
-        /// <param name="nsSource">Namespace of source type</param>
-        /// <param name="nsTarget">Namespace of target type</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        /// <param name="nsSource">Namespace of source type.</param>
+        /// <param name="nsTarget">Namespace of target type.</param>
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
+        public void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             AddNamespaceMapping(
                 nsSource,
@@ -107,48 +116,53 @@
         }
 
         /// <summary>
-        ///     Adds a standard type mapping by substituting one subnamespace for another
+        ///     Adds a standard type mapping by substituting one sub-namespace for another.
         /// </summary>
-        /// <param name="nsSource">Subnamespace of source type</param>
-        /// <param name="nsTargets">Subnamespaces of target type as an array</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string[] nsTargets, string viewSuffix = "View")
+        /// <param name="nsSource">Sub-namespace of source type.</param>
+        /// <param name="nsTargets">Sub-namespaces of target type.</param>
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
+        public void AddSubNamespaceMapping(
+            string nsSource,
+            IEnumerable<string> nsTargets,
+            string viewSuffix = DefaultViewSuffix)
         {
-            // need to terminate with "." in order to concatenate with type name later
-            var nsencoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
+            // We need to terminate with "." in order to concatenate with type name later.
+            var nsEncoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
-            string rxbeforetgt, rxaftersrc, rxaftertgt;
-            var rxbeforesrc = rxbeforetgt = rxaftersrc = rxaftertgt = string.Empty;
+            var rxBeforeTgt = string.Empty;
+            var rxAfterSrc = string.Empty;
+            var rxAfterTgt = string.Empty;
+            var rxBeforeSrc = string.Empty;
 
             if (!string.IsNullOrEmpty(nsSource))
             {
                 if (!nsSource.StartsWith("*"))
                 {
-                    rxbeforesrc = RegExHelper.GetNamespaceCaptureGroup("nsbefore");
-                    rxbeforetgt = @"${nsbefore}";
+                    rxBeforeSrc = RegExHelper.GetNamespaceCaptureGroup("nsBefore");
+                    rxBeforeTgt = @"${nsBefore}";
                 }
 
                 if (!nsSource.EndsWith("*"))
                 {
-                    rxaftersrc = RegExHelper.GetNamespaceCaptureGroup("nsafter");
-                    rxaftertgt = "${nsafter}";
+                    rxAfterSrc = RegExHelper.GetNamespaceCaptureGroup("nsAfter");
+                    rxAfterTgt = "${nsAfter}";
                 }
             }
 
-            var rxmid = RegExHelper.GetCaptureGroup("subns", nsencoded);
-            var nsreplace = string.Concat(rxbeforesrc, rxmid, rxaftersrc);
+            var rxMid = RegExHelper.GetCaptureGroup("subNs", nsEncoded);
+            var rxReplace = string.Concat(rxBeforeSrc, rxMid, rxAfterSrc);
+            var nsTargetsRegEx = nsTargets.Select(t => string.Concat(rxBeforeTgt, t, ".", rxAfterTgt)).ToArray();
 
-            var nsTargetsRegEx = nsTargets.Select(t => string.Concat(rxbeforetgt, t, ".", rxaftertgt)).ToArray();
-            AddTypeMapping(nsreplace, null, nsTargetsRegEx, viewSuffix);
+            AddTypeMapping(rxReplace, null, nsTargetsRegEx, viewSuffix);
         }
 
         /// <summary>
-        ///     Adds a standard type mapping by substituting one subnamespace for another
+        ///     Adds a standard type mapping by substituting one sub-namespace for another.
         /// </summary>
-        /// <param name="nsSource">Subnamespace of source type</param>
-        /// <param name="nsTarget">Subnamespace of target type</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = "View")
+        /// <param name="nsSource">Sub-namespace of source type.</param>
+        /// <param name="nsTarget">Sub-namespace of target type.</param>
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
+        public void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             AddSubNamespaceMapping(
                 nsSource,
@@ -160,69 +174,64 @@
         }
 
         /// <summary>
-        ///     Adds a standard type mapping based on namespace RegEx replace and filter patterns
+        ///     Adds a standard type mapping based on namespace RegEx replace and filter patterns.
         /// </summary>
-        /// <param name="nsSourceReplaceRegEx">RegEx replace pattern for source namespace</param>
-        /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
-        /// <param name="nsTargetsRegEx">Array of RegEx replace values for target namespaces</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(
+        /// <param name="nsSourceReplaceRegEx">RegEx replace pattern for source namespace.</param>
+        /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace.</param>
+        /// <param name="nsTargetsRegEx">Array of RegEx replace values for target namespaces.</param>
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
+        public void AddTypeMapping(
             string nsSourceReplaceRegEx,
             string nsSourceFilterRegEx,
-            string[] nsTargetsRegEx,
-            string viewSuffix = "View")
+            IEnumerable<string> nsTargetsRegEx,
+            string viewSuffix = DefaultViewSuffix)
         {
             RegisterViewSuffix(viewSuffix);
 
-            var replist = new List<string>();
-            var repsuffix = useNameSuffixesInMappings ? viewSuffix : string.Empty;
-            const string basegrp = "${basename}";
+            var repSuffix = this.useNameSuffixesInMappings ? viewSuffix : string.Empty;
 
-            foreach (var t in nsTargetsRegEx)
-            {
-                replist.Add(t + string.Format(nameFormat, basegrp, repsuffix));
-            }
+            const string BaseGroup = "${basename}";
 
-            var rxbase = RegExHelper.GetNameCaptureGroup("basename");
+            var rxBase = RegExHelper.GetNameCaptureGroup("basename");
             var suffix = string.Empty;
 
-            if (useNameSuffixesInMappings)
+            if (this.useNameSuffixesInMappings)
             {
-                suffix = viewModelSuffix;
+                suffix = this.viewModelSuffix;
 
-                if (!viewModelSuffix.Contains(viewSuffix) && includeViewSuffixInVmNames)
+                if (!this.viewModelSuffix.Contains(viewSuffix) && this.includeViewSuffixInVmNames)
                 {
                     suffix = viewSuffix + suffix;
                 }
             }
 
-            var rxsrcfilter = string.IsNullOrEmpty(nsSourceFilterRegEx)
-                                  ? null
-                                  : string.Concat(
-                                      nsSourceFilterRegEx,
-                                      string.Format(nameFormat, RegExHelper.NameRegEx, suffix),
-                                      "$");
+            var rxSourceFilter = string.IsNullOrEmpty(nsSourceFilterRegEx)
+                                     ? null
+                                     : string.Concat(
+                                         nsSourceFilterRegEx,
+                                         string.Format(this.nameFormat, RegExHelper.NameRegEx, suffix),
+                                         "$");
 
-            var rxsuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
+            var rxSuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
-                string.Concat(nsSourceReplaceRegEx, string.Format(nameFormat, rxbase, rxsuffix), "$"),
-                replist.ToArray(),
-                rxsrcfilter);
+                string.Concat(nsSourceReplaceRegEx, string.Format(this.nameFormat, rxBase, rxSuffix), "$"),
+                nsTargetsRegEx.Select(t => t + string.Format(this.nameFormat, BaseGroup, repSuffix)).ToArray(),
+                rxSourceFilter);
         }
 
         /// <summary>
-        ///     Adds a standard type mapping based on namespace RegEx replace and filter patterns
+        ///     Adds a standard type mapping based on namespace RegEx replace and filter patterns.
         /// </summary>
-        /// <param name="nsSourceReplaceRegEx">RegEx replace pattern for source namespace</param>
-        /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace</param>
-        /// <param name="nsTargetRegEx">RegEx replace value for target namespace</param>
-        /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View". (Optional)</param>
-        public static void AddTypeMapping(
+        /// <param name="nsSourceReplaceRegEx">RegEx replace pattern for source namespace.</param>
+        /// <param name="nsSourceFilterRegEx">RegEx filter pattern for source namespace.</param>
+        /// <param name="nsTargetRegEx">RegEx replace value for target namespace.</param>
+        /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
+        public void AddTypeMapping(
             string nsSourceReplaceRegEx,
             string nsSourceFilterRegEx,
             string nsTargetRegEx,
-            string viewSuffix = "View")
+            string viewSuffix = DefaultViewSuffix)
         {
             AddTypeMapping(
                 nsSourceReplaceRegEx,
@@ -240,33 +249,33 @@
         ///     configuration.
         /// </summary>
         /// <param name="config">An instance of TypeMappingConfiguration that provides the settings for configuration</param>
-        public static void ConfigureTypeMappings(TypeMappingConfiguration config)
+        public void ConfigureTypeMappings(TypeMappingConfiguration config)
         {
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
             {
-                throw new ArgumentException("DefaultSubNamespaceForViews field cannot be blank.");
+                throw new ArgumentException($"{config.DefaultSubNamespaceForViews} cannot be blank.");
             }
 
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
             {
-                throw new ArgumentException("DefaultSubNamespaceForViewModels field cannot be blank.");
+                throw new ArgumentException($"{config.DefaultSubNamespaceForViewModels} cannot be blank.");
             }
 
             if (string.IsNullOrEmpty(config.NameFormat))
             {
-                throw new ArgumentException("NameFormat field cannot be blank.");
+                throw new ArgumentException($"{config.NameFormat} cannot be blank.");
             }
 
             NameTransformer.Clear();
-            ViewSuffixList.Clear();
+            this.viewSuffixList.Clear();
 
-            defaultSubNsViews = config.DefaultSubNamespaceForViews;
-            defaultSubNsViewModels = config.DefaultSubNamespaceForViewModels;
-            nameFormat = config.NameFormat;
-            useNameSuffixesInMappings = config.UseNameSuffixesInMappings;
-            viewModelSuffix = config.ViewModelSuffix;
-            ViewSuffixList.AddRange(config.ViewSuffixList);
-            includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
+            this.defaultSubNsViews = config.DefaultSubNamespaceForViews;
+            this.defaultSubNsViewModels = config.DefaultSubNamespaceForViewModels;
+            this.nameFormat = config.NameFormat;
+            this.useNameSuffixesInMappings = config.UseNameSuffixesInMappings;
+            this.viewModelSuffix = config.ViewModelSuffix;
+            this.viewSuffixList.AddRange(config.ViewSuffixList);
+            this.includeViewSuffixInVmNames = config.IncludeViewSuffixInViewModelNames;
 
             SetAllDefaults();
         }
@@ -275,21 +284,23 @@
         ///     Locates the view type based on the specified model type.
         /// </summary>
         /// <param name="modelType">The model type.</param>
-        /// <returns>The view type.</returns>
-        public static Type LocateTypeForModelType(Type modelType)
+        /// <param name="assemblySource">The <see cref="AssemblySource" /> containing the relevant types.</param>
+        /// <returns>The located view type or <c>null</c> if no such type could be found.</returns>
+        public Type LocateTypeForModelType(Type modelType, AssemblySource assemblySource)
         {
             var viewTypeName = modelType.FullName;
 
-            viewTypeName = viewTypeName.Substring(
+            viewTypeName = viewTypeName?.Substring(
                 0,
                 viewTypeName.IndexOf('`') < 0 ? viewTypeName.Length : viewTypeName.IndexOf('`'));
 
             var viewTypeList = TransformName(viewTypeName).ToList();
-            var viewType = AssemblySource.FindTypeByNames(viewTypeList);
+            var viewType = assemblySource.FindTypeByNames(viewTypeList);
 
             if (viewType == null)
             {
-                Logger.Warn("View not found. Searched: {0}.", string.Join(", ", viewTypeList.ToArray()));
+                Logger.Info(
+                    $"No view not found for {modelType.Name}. {(viewTypeList.Any() ? "Searched:" + string.Join(", ", viewTypeList.ToArray()) : "No mappings found.")}.");
             }
 
             return viewType;
@@ -302,11 +313,11 @@
         ///     is added directly through the NameTransformer.
         /// </summary>
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public static void RegisterViewSuffix(string viewSuffix)
+        public void RegisterViewSuffix(string viewSuffix)
         {
-            if (ViewSuffixList.Count(s => s == viewSuffix) == 0)
+            if (this.viewSuffixList.Count(s => s == viewSuffix) == 0)
             {
-                ViewSuffixList.Add(viewSuffix);
+                this.viewSuffixList.Add(viewSuffix);
             }
         }
 
@@ -314,8 +325,8 @@
         ///     Transforms a ViewModel type name into all of its possible View type names.
         /// </summary>
         /// <param name="typeName">The name of the ViewModel type being resolved to its companion View.</param>
-        /// <returns>Enumeration of transformed names</returns>
-        public static IEnumerable<string> TransformName(string typeName)
+        /// <returns>Enumeration of transformed names.</returns>
+        public IEnumerable<string> TransformName(string typeName)
         {
             return NameTransformer.Transform(typeName);
         }
@@ -324,16 +335,16 @@
 
         #region Private Methods
 
-        private static void SetAllDefaults()
+        private void SetAllDefaults()
         {
-            if (useNameSuffixesInMappings)
+            if (this.useNameSuffixesInMappings)
             {
                 // Add support for all view suffixes
-                ViewSuffixList.ForEach(AddDefaultTypeMapping);
+                this.viewSuffixList.ForEach(AddDefaultTypeMapping);
             }
             else
             {
-                AddSubNamespaceMapping(defaultSubNsViewModels, defaultSubNsViews);
+                AddSubNamespaceMapping(this.defaultSubNsViewModels, this.defaultSubNsViews);
             }
         }
 

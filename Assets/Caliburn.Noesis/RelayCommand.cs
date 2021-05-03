@@ -27,7 +27,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates a new instance of <see cref="RelayCommand" />.
+        ///     Initializes a new instance of the <see cref="RelayCommand" /> class.
         /// </summary>
         /// <param name="execute">The action to perform when the command is executed.</param>
         /// <param name="canExecute">(Optional) The predicate which checks if the command can be executed.</param>

@@ -13,6 +13,9 @@
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainView" /> class.
+        /// </summary>
         public MainView()
         {
             InitializeComponent();

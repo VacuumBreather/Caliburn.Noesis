@@ -15,7 +15,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates an instance of the <see cref="CloseResult{T}" />
+        ///     Initializes a new instance of the <see cref="CloseResult{T}" /> class.
         /// </summary>
         /// <param name="closeCanOccur">Whether of not a close operation should occur.</param>
         /// <param name="children">The children of the instance that can be closed.</param>
