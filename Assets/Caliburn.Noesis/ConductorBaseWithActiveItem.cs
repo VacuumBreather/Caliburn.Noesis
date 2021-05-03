@@ -63,9 +63,11 @@
             CancellationToken cancellationToken)
         {
             await ScreenExtensions.TryDeactivateAsync(this.activeItem, closePrevious, cancellationToken);
+
             newItem = EnsureItem(newItem);
 
             this.activeItem = newItem;
+
             NotifyOfPropertyChange(nameof(ActiveItem));
 
             if (IsActive)

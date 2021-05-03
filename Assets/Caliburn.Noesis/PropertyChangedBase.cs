@@ -18,7 +18,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates an instance of <see cref="PropertyChangedBase" />.
+        ///     Initializes a new instance of the <see cref="PropertyChangedBase" /> class.
         /// </summary>
         protected PropertyChangedBase()
         {

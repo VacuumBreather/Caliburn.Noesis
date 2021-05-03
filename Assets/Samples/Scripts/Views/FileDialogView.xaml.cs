@@ -13,6 +13,9 @@
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FileDialogView" /> class.
+        /// </summary>
         public FileDialogView()
         {
             InitializeComponent();
@@ -35,7 +38,7 @@
 
         private void InitializeComponent()
         {
-            GUI.LoadComponent(this, "Assets/Scripts/MapEditor/Views/FileDialogView.xaml");
+            GUI.LoadComponent(this, "Assets/Samples/Scripts/Views/FileDialogView.xaml");
         }
 
         private void OnTreeViewItemSelected(object sender, RoutedEventArgs e)

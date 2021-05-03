@@ -16,13 +16,15 @@
     {
         #region Constructors and Destructors
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ShellViewModel" /> class.
+        /// </summary>
         public ShellViewModel()
             : base(true)
         {
-            DisplayName = "Root Conductor";
-            MainContent.DisplayName = "Main Content Conductor";
-            DialogContent.DisplayName = "Dialog Conductor";
+            DisplayName = "RootConductor";
+            MainContent.DisplayName = "MainConductor";
+            DialogContent.DisplayName = "DialogConductor";
         }
 
         #endregion

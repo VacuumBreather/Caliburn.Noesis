@@ -1,10 +1,10 @@
-﻿// <copyright file="ShellView.xaml.cs" company="VacuumBreather">
-//      Copyright © 2021 VacuumBreather. All rights reserved.
-// </copyright>
-
-namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis
 {
+    #region Using Directives
+
     using global::Noesis;
+
+    #endregion
 
     #region Using Directives
 
@@ -17,6 +17,9 @@ namespace Caliburn.Noesis
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="ShellView" /> class.
+        /// </summary>
         public ShellView()
         {
             InitializeComponent();

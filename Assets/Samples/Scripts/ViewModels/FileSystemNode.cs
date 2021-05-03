@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Samples.ViewModels
 {
     #region Using Directives
 
@@ -6,11 +6,16 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
+    using Caliburn.Noesis;
     using Cysharp.Threading.Tasks;
+    using JetBrains.Annotations;
 
     #endregion
 
-    public class FileSystemNode : PropertyChangedBase
+    /// <summary>
+    ///     Base class for nodes representing parts of a file system.
+    /// </summary>
+    public abstract class FileSystemNode : PropertyChangedBase
     {
         #region Constants and Fields
 
@@ -22,8 +27,12 @@
 
         #region Constructors and Destructors
 
-        /// <inheritdoc />
-        public FileSystemNode(DirectoryInfo startingDirectory, string name = "New Node")
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FileSystemNode" /> class.
+        /// </summary>
+        /// <param name="startingDirectory">The starting directory.</param>
+        /// <param name="name">(Optional) The name of this node.</param>
+        protected FileSystemNode(DirectoryInfo startingDirectory, string name = "New Node")
         {
             Name = name;
             StartingDirectory = startingDirectory;
@@ -33,10 +42,22 @@
 
         #region Public Properties
 
+        /// <summary>
+        ///     Gets the children nodes.
+        /// </summary>
+        [UsedImplicitly]
         public BindableCollection<FileSystemNode> Children { get; } = new BindableCollection<FileSystemNode>();
 
+        /// <summary>
+        ///     Gets the the files under this node (if any).
+        /// </summary>
+        [UsedImplicitly]
         public ObservableCollection<FileInfo> Files { get; } = new ObservableCollection<FileInfo>();
 
+        /// <summary>
+        ///     Gets or sets a value indicating if this node is expanded.
+        /// </summary>
+        [UsedImplicitly]
         public bool IsExpanded
         {
             get => this.isExpanded;
@@ -54,8 +75,16 @@
             }
         }
 
+        /// <summary>
+        ///     Gets a value indicating if this node has been populated with data.
+        /// </summary>
+        [UsedImplicitly]
         public bool IsPopulated { get; private set; }
 
+        /// <summary>
+        ///     Gets or sets a value indicating if this node is selected.
+        /// </summary>
+        [UsedImplicitly]
         public bool IsSelected
         {
             get => this.isSelected;
@@ -74,32 +103,65 @@
             }
         }
 
+        /// <summary>
+        ///     Gets the name of this node.
+        /// </summary>
+        [UsedImplicitly]
         public string Name
         {
             get => this.name;
             private set => Set(ref this.name, value);
         }
 
-        public DirectoryInfo StartingDirectory { get; }
+        #endregion
+
+        #region Protected Properties
+
+        /// <summary>
+        ///     Gets the starting directory of the tree.
+        /// </summary>
+        protected DirectoryInfo StartingDirectory { get; }
 
         #endregion
 
         #region Protected Methods
 
+        /// <summary>
+        ///     Override this to provide the children of this node.
+        /// </summary>
+        /// <param name="startingDirectory">The starting directory of the tree.</param>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the child nodes.
+        /// </returns>
         protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
         {
             return await UniTask.FromResult(Array.Empty<FileSystemNode>());
         }
 
+        /// <summary>
+        ///     Override this to provide the files under this node.
+        /// </summary>
+        /// <returns>
+        ///     A task that represents the asynchronous operation.
+        ///     The task result contains the files under this nodes.
+        /// </returns>
         protected virtual async UniTask<IEnumerable<FileInfo>> GetFilesAsync()
         {
             return await UniTask.FromResult(Array.Empty<FileInfo>());
         }
 
+        /// <summary>
+        ///     Override this to expand the node if it is part of the path of the specified starting directory.
+        /// </summary>
+        /// <param name="startingDirectory">The starting directory.</param>
         protected virtual void PotentiallyExpand(DirectoryInfo startingDirectory)
         {
         }
 
+        /// <summary>
+        ///     Populates this node with its sub directories.
+        /// </summary>
         protected async UniTask PopulateDirectories()
         {
             if (IsPopulated)
@@ -121,12 +183,14 @@
             IsPopulated = true;
         }
 
-        protected async UniTask PopulateFiles()
-        {
-            IEnumerable<FileInfo> files;
+        #endregion
 
+        #region Private Methods
+
+        private async UniTask PopulateFiles()
+        {
             await UniTask.SwitchToThreadPool();
-            files = await GetFilesAsync();
+            var files = await GetFilesAsync();
             await UniTask.SwitchToMainThread();
 
             foreach (var file in files)

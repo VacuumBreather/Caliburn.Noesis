@@ -19,6 +19,7 @@
         private string displayName;
         private bool isActive;
         private bool isInitialized;
+        private ILogger logger;
         private object parent;
 
         #endregion
@@ -26,7 +27,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates an instance of <see cref="Screen" />.
+        ///     Initializes a new instance of the <see cref="Screen" /> class.
         /// </summary>
         protected Screen()
         {
@@ -51,13 +52,9 @@
         #region Protected Properties
 
         /// <summary>
-        ///     Gets or sets the logger for this instance.
+        ///     Gets the logger for this instance.
         /// </summary>
-        /// <remarks>
-        ///     A <see cref="NullLogger" /> is used by default.
-        ///     Set to proper implementation outside of testing.
-        /// </remarks>
-        protected ILogger Logger { get; set; } = NullLogger.Instance;
+        protected ILogger Logger => this.logger ??= LogManager.GetLogger(this);
 
         #endregion
 
@@ -89,7 +86,7 @@
                 IsInitialized = initialized = true;
             }
 
-            Logger.Trace($"Activating{ToString()}.");
+            Logger.Trace($"Activating {ToString()}.");
 
             await OnActivateAsync(cancellationToken);
 

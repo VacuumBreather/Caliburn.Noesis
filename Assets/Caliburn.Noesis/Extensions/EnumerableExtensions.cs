@@ -4,6 +4,7 @@
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     #endregion
 
@@ -26,6 +27,17 @@
             {
                 action(item);
             }
+        }
+
+        /// <summary>
+        ///     Returns every element of the sequence that is not null.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        public static IEnumerable<T> NotNull<T>(this IEnumerable<T> source)
+            where T : class
+        {
+            return source.Where(item => item != null);
         }
 
         #endregion

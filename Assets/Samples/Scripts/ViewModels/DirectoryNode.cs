@@ -7,15 +7,22 @@
     using System.IO;
     using System.Linq;
     using System.Security;
-    using Caliburn.Noesis.Samples.ViewModels;
     using Cysharp.Threading.Tasks;
 
     #endregion
 
+    /// <summary>
+    ///     A <see cref="FileSystemNode" /> representing a directory.
+    /// </summary>
     public class DirectoryNode : FileSystemNode
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="DirectoryNode" /> class.
+        /// </summary>
+        /// <param name="directoryInfo">The <see cref="DirectoryInfo" /> to wrap.</param>
+        /// <param name="startingDirectory">The starting directory of the tree.</param>
         public DirectoryNode(DirectoryInfo directoryInfo, DirectoryInfo startingDirectory = null)
             : base(startingDirectory, directoryInfo.Name)
         {
@@ -26,13 +33,15 @@
 
         #region Public Properties
 
+        /// <summary>
+        ///     The wrapped <see cref="DirectoryInfo" />.
+        /// </summary>
         public DirectoryInfo DirectoryInfo { get; }
 
         #endregion
 
         #region Protected Methods
 
-        /// <param name="startingDirectory"></param>
         /// <inheritdoc />
         protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
         {

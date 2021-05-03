@@ -52,9 +52,7 @@
         ///     A task that represents the asynchronous save operation.
         ///     The task result contains the dialog result.
         /// </returns>
-        public async UniTask<bool?> ShowDialogAsync(
-            DialogScreen dialog,
-            CancellationToken cancellationToken = default)
+        public async UniTask<bool?> ShowDialogAsync(DialogScreen dialog, CancellationToken cancellationToken = default)
         {
             this.taskCompletionSource = new UniTaskCompletionSource<bool?>();
 

@@ -10,17 +10,17 @@
     using System.Security;
     using System.Threading;
     using Caliburn.Noesis;
-    using Caliburn.Noesis.Samples.ViewModels;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
 
     #endregion
 
+    /// <summary>
+    ///     A view-model representing a dialog used to open files.
+    /// </summary>
     public class FileDialogViewModel : DialogScreen
     {
         #region Constants and Fields
-
-        private DirectoryNode selectedDirectory;
 
         private FileInfo selectedFile;
 
@@ -28,11 +28,13 @@
 
         #region Constructors and Destructors
 
-        /// <inheritdoc />
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="FileDialogViewModel" /> class.
+        /// </summary>
         public FileDialogViewModel()
         {
             DisplayName = "Open File";
-            CloseCommand = new RelayCommand<bool?>(
+            CloseDialogCommand = new RelayCommand<bool?>(
                 dialogResult => TryCloseAsync(dialogResult).Forget(),
                 dialogResult => (dialogResult != true) || (SelectedFile != null));
         }
@@ -41,20 +43,28 @@
 
         #region Public Properties
 
-        public RelayCommand<bool?> CloseCommand { get; }
-
+        /// <summary>
+        ///     Gets the opened file.
+        /// </summary>
         public FileInfo FileInfo { get; private set; }
 
+        /// <summary>
+        ///     Gets the root node collection.
+        /// </summary>
+        [UsedImplicitly]
         public ObservableCollection<FileSystemNode> Root { get; } = new ObservableCollection<FileSystemNode>();
 
+        /// <summary>
+        ///     Gets the selected file.
+        /// </summary>
+        [UsedImplicitly]
         public FileInfo SelectedFile
         {
             get => this.selectedFile;
-            [UsedImplicitly]
             set
             {
                 Set(ref this.selectedFile, value);
-                CloseCommand.RaiseCanExecuteChanged();
+                CloseDialogCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -86,29 +96,23 @@
 
         #region Nested Types
 
-        public class RootNode : FileSystemNode
+        private class RootNode : FileSystemNode
         {
-            #region Constructors and Destructors
-
             /// <inheritdoc />
             public RootNode(DirectoryInfo startingDirectory)
                 : base(startingDirectory, "Computer")
             {
             }
 
-            #endregion
-
-            #region Public Methods
-
+            /// <summary>
+            ///     Initializes this instance.
+            /// </summary>
             public async UniTask Initialize()
             {
                 await PopulateDirectories();
             }
 
-            #endregion
-
-            #region Protected Methods
-
+            /// <inheritdoc />
             protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
             {
                 IEnumerable<FileSystemNode> driveNodes;
@@ -141,8 +145,6 @@
             {
                 IsExpanded = true;
             }
-
-            #endregion
         }
 
         #endregion

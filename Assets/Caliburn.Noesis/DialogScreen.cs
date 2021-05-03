@@ -3,7 +3,6 @@
     #region Using Directives
 
     using System.Threading;
-    using System.Windows.Input;
     using Cysharp.Threading.Tasks;
 
     #endregion
@@ -16,7 +15,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates an instance of <see cref="DialogScreen" />.
+        ///     Initializes a new instance of the <see cref="DialogScreen" /> class.
         /// </summary>
         protected DialogScreen()
         {
@@ -28,9 +27,9 @@
         #region Public Properties
 
         /// <summary>
-        ///     The command to close the dialog.
+        ///     Gets or sets the command to close the dialog.
         /// </summary>
-        public ICommand CloseDialogCommand { get; }
+        public RelayCommand<bool?> CloseDialogCommand { get; protected set; }
 
         #endregion
 

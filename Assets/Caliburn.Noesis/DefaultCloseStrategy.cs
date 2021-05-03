@@ -23,7 +23,7 @@
         #region Constructors and Destructors
 
         /// <summary>
-        ///     Creates an instance of the class.
+        ///     Initializes a new instance of the <see cref="DefaultCloseStrategy{T}" /> class.
         /// </summary>
         /// <param name="closeConductedItemsWhenConductorCannotClose">
         ///     Indicates that even if all conducted items are not closable,

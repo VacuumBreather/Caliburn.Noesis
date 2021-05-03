@@ -4,172 +4,91 @@
 
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
+    using Cysharp.Threading.Tasks;
+    using JetBrains.Annotations;
     using UnityEngine;
 
     #endregion
 
     /// <summary>
-    ///     Inherit from this class in order to customize the configuration of the framework.
+    ///     Inherit from this class to configure and run the framework.
     /// </summary>
-    public abstract class BootstrapperBase : MonoBehaviour
+    [RequireComponent(typeof(NoesisView))]
+    public abstract class BootstrapperBase<T> : MonoBehaviour
+        where T : Screen
     {
         #region Constants and Fields
 
         private bool isInitialized;
 
+        private ILogger logger;
+        private NoesisView noesisView;
+        private IWindowManager windowManager;
+
         #endregion
 
-        #region Public Methods
+        #region Serialized Fields
+
+        [SerializeField]
+        [UsedImplicitly]
+        private List<NoesisXaml> xamls;
+
+        #endregion
+
+        #region Protected Properties
 
         /// <summary>
-        ///     Initialize the framework.
+        ///     Gets the <see cref="ILogger" /> for this instance.
         /// </summary>
-        public void Initialize()
-        {
-            if (this.isInitialized)
-            {
-                return;
-            }
-
-            this.isInitialized = true;
-
-            var baseExtractTypes = AssemblySourceCache.ExtractTypes;
-
-            AssemblySourceCache.ExtractTypes = assembly =>
-                {
-                    var baseTypes = baseExtractTypes(assembly);
-                    /*var elementTypes = assembly.GetExportedTypes()
-                        .Where(t => typeof(UIElement).IsAssignableFrom(t));*/
-
-                    return baseTypes /*.Union(elementTypes)*/;
-                };
-
-            AssemblySource.Instance.Refresh();
-
-            StartRuntime();
-        }
+        protected ILogger Logger => this.logger ??= LogManager.GetLogger(this);
 
         #endregion
 
         #region Protected Methods
 
         /// <summary>
-        ///     Override this to provide an IoC specific implementation.
+        ///     Override this to return your own modified configuration.
         /// </summary>
-        /// <param name="instance">The instance to perform injection on.</param>
-        protected virtual void BuildUp(object instance)
+        /// <returns>The <see cref="CaliburnConfiguration" /> to be used by the framework.</returns>
+        protected virtual CaliburnConfiguration GetConfiguration()
         {
+            return CaliburnConfiguration.Default;
         }
 
         /// <summary>
-        ///     Override to configure the framework and setup your IoC container.
+        ///     Override this to return the instance of your main content view-model.
+        ///     You can return an instance retrieved from an IoC container here.
         /// </summary>
-        protected virtual void Configure()
+        /// <returns>The main content view-model.</returns>
+        protected virtual T GetMainContentViewModel()
         {
+            return Activator.CreateInstance<T>();
         }
 
         /// <summary>
-        ///     Override this to provide an IoC specific implementation
+        ///     Override this to return your own implementation of <see cref="IWindowManager" />.
+        ///     You can return an instance retrieved from an IoC container here.
         /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <returns>The located services.</returns>
-        protected virtual IEnumerable<object> GetAllInstances(Type service)
+        /// <returns>The <see cref="IWindowManager" /> instance.</returns>
+        protected virtual IWindowManager GetWindowManager()
         {
-            return new[]
-                       {
-                           Activator.CreateInstance(service)
-                       };
-        }
-
-        /// <summary>
-        ///     Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <returns>The located service.</returns>
-        protected virtual object GetInstance(Type service)
-        {
-            // if (service == typeof(IWindowManager))
-            //     service = typeof(WindowManager);
-
-            return Activator.CreateInstance(service);
+            return this.windowManager ??= new ShellViewModel();
         }
 
         /// <summary>
         ///     Override this to add custom behavior on exit.
         /// </summary>
-        protected virtual void OnExit()
+        protected virtual UniTask OnExit()
         {
+            return UniTask.CompletedTask;
         }
 
         /// <summary>
         ///     Override this to add custom behavior to execute after the application starts.
         /// </summary>
-        protected virtual void OnStartup()
+        protected virtual UniTask OnStartup()
         {
-        }
-
-        /// <summary>
-        ///     Override this to add custom behavior for unhandled exceptions.
-        /// </summary>
-        protected virtual void OnUnhandledException()
-        {
-        }
-
-        /// <summary>
-        ///     Provides an opportunity to hook into the application object.
-        /// </summary>
-        protected virtual void PrepareApplication()
-        {
-            // Application.Startup += OnStartup;
-            // Application.DispatcherUnhandledException += OnUnhandledException;
-            // Application.Exit += OnExit;
-        }
-
-        /// <summary>
-        ///     Override to tell the framework where to find assemblies to inspect for views, etc.
-        /// </summary>
-        /// <returns>A list of assemblies to inspect.</returns>
-        protected virtual IEnumerable<Assembly> SelectAssemblies()
-        {
-            return new[]
-                       {
-                           GetType().Assembly
-                       };
-        }
-
-        /// <summary>
-        ///     Called by the bootstrapper's constructor at runtime to start the framework.
-        /// </summary>
-        protected virtual void StartRuntime()
-        {
-            AssemblySourceCache.Install();
-            AssemblySource.Instance.AddRange(SelectAssemblies());
-
-            PrepareApplication();
-
-            Configure();
-        }
-
-        /// <summary>
-        ///     Locates the view model, locates the associate view, binds them and shows it as the root view.
-        /// </summary>
-        /// <param name="viewModelType">The view model type.</param>
-        /// <param name="settings">The optional window settings.</param>
-        protected void DisplayRootViewFor(Type viewModelType, IDictionary<string, object> settings = null)
-        {
-            // var windowManager = IoC.Get<IWindowManager>();
-            // windowManager.ShowWindow(IoC.GetInstance(viewModelType, null), null, settings);
-        }
-
-        /// <summary>
-        ///     Locates the view model, locates the associate view, binds them and shows it as the root view.
-        /// </summary>
-        /// <typeparam name="TViewModel">The view model type.</typeparam>
-        /// <param name="settings">The optional window settings.</param>
-        protected void DisplayRootViewFor<TViewModel>(IDictionary<string, object> settings = null)
-        {
-            DisplayRootViewFor(typeof(TViewModel), settings);
+            return UniTask.CompletedTask;
         }
 
         #endregion
@@ -178,17 +97,80 @@
 
         private void Awake()
         {
-            Initialize();
+            this.windowManager = GetWindowManager();
+            this.noesisView = GetComponent<NoesisView>();
+
+            if (!this.noesisView)
+            {
+                Logger.Error($"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
+            }
         }
 
-        private void Start()
+        private async void Start()
         {
-            OnStartup();
+            await OnStartup();
+
+            Initialize(GetConfiguration());
+
+            if (!this.isInitialized)
+            {
+                Logger.Error($"{GetType()} has not been initialized.");
+
+                return;
+            }
+
+            this.noesisView.Content.DataContext = this.windowManager;
+            var mainContent = GetMainContentViewModel();
+            await this.windowManager.ShowMainContentAsync(mainContent);
         }
 
-        private void OnDestroy()
+        private async void OnEnable()
         {
-            OnExit();
+            if (this.windowManager is IActivate activate)
+            {
+                await activate.ActivateAsync();
+            }
+        }
+
+        private async void OnDisable()
+        {
+            if (this.windowManager is IDeactivate deactivate)
+            {
+                await deactivate.DeactivateAsync(false);
+            }
+        }
+
+        private async void OnDestroy()
+        {
+            await OnExit();
+
+            if (this.windowManager is IDeactivate deactivate)
+            {
+                await deactivate.DeactivateAsync(true);
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void Initialize(CaliburnConfiguration configuration)
+        {
+            if (this.isInitialized)
+            {
+                return;
+            }
+
+            if (this.noesisView.Content is null)
+            {
+                Logger.Error($"The {nameof(NoesisView)} root XAML must be set.");
+
+                return;
+            }
+
+            DataTemplateManager.RegisterDataTemplates(configuration, this.noesisView.Content.Resources);
+
+            this.isInitialized = true;
         }
 
         #endregion
