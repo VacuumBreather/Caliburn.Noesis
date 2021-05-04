@@ -10,9 +10,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     Inherit from this class to configure and run the framework.
-    /// </summary>
+    /// <summary>Inherit from this class to configure and run the framework.</summary>
     [RequireComponent(typeof(NoesisView))]
     public abstract class BootstrapperBase<T> : MonoBehaviour
         where T : Screen
@@ -37,18 +35,14 @@
 
         #region Protected Properties
 
-        /// <summary>
-        ///     Gets the <see cref="ILogger" /> for this instance.
-        /// </summary>
+        /// <summary>Gets the <see cref="ILogger" /> for this instance.</summary>
         protected ILogger Logger => this.logger ??= LogManager.GetLogger(this);
 
         #endregion
 
         #region Protected Methods
 
-        /// <summary>
-        ///     Override this to return your own modified configuration.
-        /// </summary>
+        /// <summary>Override this to return your own modified configuration.</summary>
         /// <returns>The <see cref="CaliburnConfiguration" /> to be used by the framework.</returns>
         protected virtual CaliburnConfiguration GetConfiguration()
         {
@@ -56,8 +50,8 @@
         }
 
         /// <summary>
-        ///     Override this to return the instance of your main content view-model.
-        ///     You can return an instance retrieved from an IoC container here.
+        ///     Override this to return the instance of your main content view-model. You can return an
+        ///     instance retrieved from an IoC container here.
         /// </summary>
         /// <returns>The main content view-model.</returns>
         protected virtual T GetMainContentViewModel()
@@ -66,8 +60,8 @@
         }
 
         /// <summary>
-        ///     Override this to return your own implementation of <see cref="IWindowManager" />.
-        ///     You can return an instance retrieved from an IoC container here.
+        ///     Override this to return your own implementation of <see cref="IWindowManager" />. You can
+        ///     return an instance retrieved from an IoC container here.
         /// </summary>
         /// <returns>The <see cref="IWindowManager" /> instance.</returns>
         protected virtual IWindowManager GetWindowManager()
@@ -75,17 +69,13 @@
             return this.windowManager ??= new ShellViewModel();
         }
 
-        /// <summary>
-        ///     Override this to add custom behavior on exit.
-        /// </summary>
+        /// <summary>Override this to add custom behavior on exit.</summary>
         protected virtual UniTask OnExit()
         {
             return UniTask.CompletedTask;
         }
 
-        /// <summary>
-        ///     Override this to add custom behavior to execute after the application starts.
-        /// </summary>
+        /// <summary>Override this to add custom behavior to execute after the application starts.</summary>
         protected virtual UniTask OnStartup()
         {
             return UniTask.CompletedTask;
@@ -102,7 +92,8 @@
 
             if (!this.noesisView)
             {
-                Logger.Error($"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
+                Logger.Error(
+                    $"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
             }
         }
 
@@ -168,7 +159,9 @@
                 return;
             }
 
-            DataTemplateManager.RegisterDataTemplates(configuration, this.noesisView.Content.Resources);
+            DataTemplateManager.RegisterDataTemplates(
+                configuration,
+                this.noesisView.Content.Resources);
 
             this.isInitialized = true;
         }

@@ -7,29 +7,23 @@
 
     #endregion
 
-    /// <summary>
-    ///     A base class for dialog screens.
-    /// </summary>
+    /// <summary>A base class for dialog screens.</summary>
     public abstract class DialogScreen : Screen
     {
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DialogScreen" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="DialogScreen" /> class.</summary>
         protected DialogScreen()
         {
-            CloseDialogCommand = new RelayCommand<bool?>(result => TryCloseAsync(result).Forget());
+            CloseDialogCommand = new AsyncRelayCommand<bool?>(TryCloseAsync, CanCloseDialog);
         }
 
         #endregion
 
         #region Public Properties
 
-        /// <summary>
-        ///     Gets or sets the command to close the dialog.
-        /// </summary>
-        public RelayCommand<bool?> CloseDialogCommand { get; protected set; }
+        /// <summary>Gets or sets the command to close the dialog.</summary>
+        public AsyncRelayCommand<bool?> CloseDialogCommand { get; }
 
         #endregion
 
@@ -47,6 +41,21 @@
                 Logger.Warn($"{this} should be hosted in a {nameof(DialogConductor)}.");
                 await base.TryCloseAsync(dialogResult);
             }
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>Override this to define when the <see cref="CloseDialogCommand" /> can be executed.</summary>
+        /// <param name="dialogResult">The dialog result parameter of the <see cref="CloseDialogCommand" />.</param>
+        /// <returns>
+        ///     <c>true</c> if the dialog can be closed with the specified result; otherwise, <c>false</c>
+        ///     .
+        /// </returns>
+        protected virtual bool CanCloseDialog(bool? dialogResult)
+        {
+            return true;
         }
 
         #endregion

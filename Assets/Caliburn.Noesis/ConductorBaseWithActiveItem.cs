@@ -9,7 +9,8 @@
     #endregion
 
     /// <summary>
-    ///     A base class for various implementations of <see cref="IConductor" /> that maintain an active item.
+    ///     A base class for various implementations of <see cref="IConductor" /> that maintain an
+    ///     active item.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
     public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConductActiveItem<T>
@@ -23,9 +24,7 @@
 
         #region Public Properties
 
-        /// <summary>
-        ///     The currently active item.
-        /// </summary>
+        /// <summary>The currently active item.</summary>
         public T ActiveItem
         {
             get => this.activeItem;
@@ -36,9 +35,7 @@
 
         #region IHaveActiveItem Implementation
 
-        /// <summary>
-        ///     The currently active item.
-        /// </summary>
+        /// <summary>The currently active item.</summary>
         /// <value></value>
         object IHaveActiveItem.ActiveItem
         {
@@ -50,9 +47,7 @@
 
         #region Protected Methods
 
-        /// <summary>
-        ///     Changes the active item.
-        /// </summary>
+        /// <summary>Changes the active item.</summary>
         /// <param name="newItem">The new item to activate.</param>
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
@@ -62,7 +57,10 @@
             bool closePrevious,
             CancellationToken cancellationToken)
         {
-            await ScreenExtensions.TryDeactivateAsync(this.activeItem, closePrevious, cancellationToken);
+            await ScreenExtensions.TryDeactivateAsync(
+                this.activeItem,
+                closePrevious,
+                cancellationToken);
 
             newItem = EnsureItem(newItem);
 
@@ -78,9 +76,7 @@
             OnActivationProcessed(this.activeItem, true);
         }
 
-        /// <summary>
-        ///     Changes the active item.
-        /// </summary>
+        /// <summary>Changes the active item.</summary>
         /// <param name="newItem">The new item to activate.</param>
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>

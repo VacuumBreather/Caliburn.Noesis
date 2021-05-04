@@ -10,16 +10,12 @@
 
     #endregion
 
-    /// <summary>
-    ///     Interaction logic for ShellView.xaml
-    /// </summary>
+    /// <summary>Interaction logic for ShellView.xaml</summary>
     public partial class ShellView : Page
     {
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ShellView" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ShellView" /> class.</summary>
         public ShellView()
         {
             InitializeComponent();
