@@ -3,27 +3,43 @@
     #region Using Directives
 
     using System;
-    using System.Collections.Generic;
     using Cysharp.Threading.Tasks;
+#if UNITY_5_5_OR_NEWER
+    using System.Collections.Generic;
     using JetBrains.Annotations;
     using UnityEngine;
+
+#else
+    using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Threading;
+#endif
 
     #endregion
 
     /// <summary>Inherit from this class to configure and run the framework.</summary>
+#if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class BootstrapperBase<T> : MonoBehaviour
+#endif
+    public abstract class BootstrapperBase<T>
+#if UNITY_5_5_OR_NEWER
+        : MonoBehaviour
+#endif
         where T : Screen
     {
         #region Constants and Fields
 
         private bool isInitialized;
-
         private ILogger logger;
+#if UNITY_5_5_OR_NEWER
         private NoesisView noesisView;
+#endif
         private IWindowManager windowManager;
+        private CaliburnConfiguration configuration;
 
         #endregion
+
+#if UNITY_5_5_OR_NEWER
 
         #region Serialized Fields
 
@@ -32,6 +48,24 @@
         private List<NoesisXaml> xamls;
 
         #endregion
+
+#endif
+
+#if !UNITY_5_5_OR_NEWER
+        #region Constructors and Destructors
+
+        /// <summary>Initializes a new instance of the <see cref="BootstrapperBase{T}" /> class.</summary>
+        protected BootstrapperBase()
+        {
+            Execute.Dispatcher = Dispatcher.CurrentDispatcher;
+            Application.Current.Startup += (_, __) => Execute.OnUIThreadAsync(Start).Forget();
+            Application.Current.Activated += (_, __) =>  Execute.OnUIThreadAsync(OnEnable).Forget();
+            Application.Current.Deactivated +=
+                (_, __) =>  Execute.OnUIThreadAsync(OnDisable).Forget();
+        }
+
+        #endregion
+#endif
 
         #region Protected Properties
 
@@ -85,9 +119,9 @@
 
         #region Unity Methods
 
+#if UNITY_5_5_OR_NEWER
         private void Awake()
         {
-            this.windowManager = GetWindowManager();
             this.noesisView = GetComponent<NoesisView>();
 
             if (!this.noesisView)
@@ -96,12 +130,27 @@
                     $"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
             }
         }
+#endif
 
+#if UNITY_5_5_OR_NEWER
         private async void Start()
+#else
+        private async UniTask Start()
+#endif
         {
-            await OnStartup();
+#if !UNITY_5_5_OR_NEWER
+            var window = new Window
+                             {
+                                 Content = new ShellView(),
+                                 Width = 1280,
+                                 Height = 720
+                             };
+            window.Show();
+            window.Closing += OnWindowClosing;
+            await OnEnable();
+#endif
 
-            Initialize(GetConfiguration());
+            await OnStartup();
 
             if (!this.isInitialized)
             {
@@ -110,20 +159,54 @@
                 return;
             }
 
+#if UNITY_5_5_OR_NEWER
             this.noesisView.Content.DataContext = this.windowManager;
+#else
+            window.DataContext = this.windowManager;
+#endif
+
             var mainContent = GetMainContentViewModel();
             await this.windowManager.ShowMainContentAsync(mainContent);
         }
 
-        private async void OnEnable()
+#if !UNITY_5_5_OR_NEWER
+        private void OnWindowClosing(object _, CancelEventArgs args)
         {
+            var canClose = true;
+
+            if (this.windowManager is IGuardClose guardClose)
+            {
+                canClose = guardClose.CanCloseAsync().AsTask().Result;
+            }
+
+            if (canClose)
+            {
+                Execute.OnUIThreadAsync(OnDestroy).Forget();
+            }
+
+            args.Cancel = !canClose;
+        }
+#endif
+
+#if UNITY_5_5_OR_NEWER
+        private async void OnEnable()
+#else
+        private async UniTask OnEnable()
+#endif
+        {
+            Initialize();
+
             if (this.windowManager is IActivate activate)
             {
                 await activate.ActivateAsync();
             }
         }
 
+#if UNITY_5_5_OR_NEWER
         private async void OnDisable()
+#else
+        private async UniTask OnDisable()
+#endif
         {
             if (this.windowManager is IDeactivate deactivate)
             {
@@ -131,7 +214,11 @@
             }
         }
 
+#if UNITY_5_5_OR_NEWER
         private async void OnDestroy()
+#else
+        private async UniTask OnDestroy()
+#endif
         {
             await OnExit();
 
@@ -145,13 +232,17 @@
 
         #region Private Methods
 
-        private void Initialize(CaliburnConfiguration configuration)
+        private void Initialize()
         {
             if (this.isInitialized)
             {
                 return;
             }
 
+            this.windowManager = GetWindowManager();
+            this.configuration = GetConfiguration();
+
+#if UNITY_5_5_OR_NEWER
             if (this.noesisView.Content is null)
             {
                 Logger.Error($"The {nameof(NoesisView)} root XAML must be set.");
@@ -159,9 +250,12 @@
                 return;
             }
 
-            DataTemplateManager.RegisterDataTemplates(
-                configuration,
-                this.noesisView.Content.Resources);
+            var dictionary = this.noesisView.Content.Resources;
+#else
+            var dictionary = Application.Current.Resources;
+#endif
+
+            DataTemplateManager.RegisterDataTemplates(this.configuration, dictionary);
 
             this.isInitialized = true;
         }

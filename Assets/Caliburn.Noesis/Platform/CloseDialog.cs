@@ -3,7 +3,15 @@
     #region Using Directives
 
     using System;
+#if UNITY_5_5_OR_NEWER
     using global::Noesis;
+
+#else
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
+    using System.Windows.Data;
+#endif
 
     #endregion
 
@@ -57,7 +65,7 @@
 
             button.CommandParameter = e.NewValue switch
                 {
-                    DialogResult.Cancel => null,
+                    DialogResult.Cancel => default(bool?),
                     DialogResult.Ok => true,
                     DialogResult.Yes => true,
                     DialogResult.No => false,
