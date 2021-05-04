@@ -1,35 +1,25 @@
 ﻿namespace Caliburn.Noesis
 {
-    /// <summary>
-    ///     Helper class for encoding strings to regular expression patterns.
-    /// </summary>
+    /// <summary>Helper class for encoding strings to regular expression patterns.</summary>
     public static class RegExHelper
     {
         #region Constants and Fields
 
-        /// <summary>
-        ///     The regular expression pattern for a valid name.
-        /// </summary>
+        /// <summary>The regular expression pattern for a valid name.</summary>
         public const string NameRegEx =
             @"[\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}_][\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}_]*";
 
-        /// <summary>
-        ///     The regular expression pattern for a namespace or namespace fragment.
-        /// </summary>
+        /// <summary>The regular expression pattern for a namespace or namespace fragment.</summary>
         public const string NamespaceRegEx = "(" + SubNamespaceRegEx + ")*";
 
-        /// <summary>
-        ///     The regular expression pattern for a sub-namespace (including the dot).
-        /// </summary>
+        /// <summary>The regular expression pattern for a sub-namespace (including the dot).</summary>
         public const string SubNamespaceRegEx = NameRegEx + @"\.";
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>
-        ///     Creates a named capture group with the specified regular expression.
-        /// </summary>
+        /// <summary>Creates a named capture group with the specified regular expression.</summary>
         /// <param name="groupName">The name of the capture group to create.</param>
         /// <param name="regEx">The regular expression pattern to capture.</param>
         /// <returns>A regular expression capture group with the specified group name.</returns>
@@ -43,9 +33,7 @@
                 ")");
         }
 
-        /// <summary>
-        ///     Creates a capture group for a valid name regular expression pattern.
-        /// </summary>
+        /// <summary>Creates a capture group for a valid name regular expression pattern.</summary>
         /// <param name="groupName">The name of the capture group to create.</param>
         /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetNameCaptureGroup(string groupName)
@@ -53,9 +41,7 @@
             return GetCaptureGroup(groupName, NameRegEx);
         }
 
-        /// <summary>
-        ///     Creates a capture group for a namespace regular expression pattern.
-        /// </summary>
+        /// <summary>Creates a capture group for a namespace regular expression pattern.</summary>
         /// <param name="groupName">The name of capture group to create.</param>
         /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetNamespaceCaptureGroup(string groupName)
@@ -63,9 +49,7 @@
             return GetCaptureGroup(groupName, NamespaceRegEx);
         }
 
-        /// <summary>
-        ///     Converts a namespace (including wildcards) to a regular expression string.
-        /// </summary>
+        /// <summary>Converts a namespace (including wildcards) to a regular expression string.</summary>
         /// <param name="sourceNamespace">Source namespace to convert to regular expression.</param>
         /// <returns>A namespace converted to a regular expression.</returns>
         public static string NamespaceToRegEx(string sourceNamespace)

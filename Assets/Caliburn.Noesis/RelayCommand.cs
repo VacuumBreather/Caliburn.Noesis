@@ -7,16 +7,12 @@
 
     #endregion
 
-    /// <summary>
-    ///     A command which delegates its execution to a specified action.
-    /// </summary>
-    public class RelayCommand : ICommand
+    /// <summary>A command which relays its execution to a delegate.</summary>
+    public class RelayCommand : IRaisingCommand
     {
         #region Constants and Fields
 
-        /// <summary>
-        ///     A command which does nothing.
-        /// </summary>
+        /// <summary>A command which does nothing and can always be executed.</summary>
         public static RelayCommand DoNothing = new RelayCommand(() => { });
 
         private readonly Func<bool> canExecute;
@@ -26,9 +22,7 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="RelayCommand" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="RelayCommand" /> class.</summary>
         /// <param name="execute">The action to perform when the command is executed.</param>
         /// <param name="canExecute">(Optional) The predicate which checks if the command can be executed.</param>
         public RelayCommand(Action execute, Func<bool> canExecute = null)
@@ -61,11 +55,9 @@
 
         #endregion
 
-        #region Public Methods
+        #region IRaisingCommand Implementation
 
-        /// <summary>
-        ///     Raises the <see cref="CanExecuteChanged" /> event.
-        /// </summary>
+        /// <summary>Raises the <see cref="CanExecuteChanged" /> event.</summary>
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
@@ -74,16 +66,13 @@
         #endregion
     }
 
-    /// <summary>
-    ///     A command which delegates its execution to a specified action.
-    /// </summary>
-    public class RelayCommand<T> : ICommand
+    /// <summary>A command which relays its execution to a delegate.</summary>
+    /// <typeparam name="T">The type of the command parameter.</typeparam>
+    public class RelayCommand<T> : ICommand<T>
     {
         #region Constants and Fields
 
-        /// <summary>
-        ///     A command which does nothing.
-        /// </summary>
+        /// <summary>A command which does nothing and can always be executed.</summary>
         public static RelayCommand<T> DoNothing = new RelayCommand<T>(_ => { });
 
         private readonly Func<T, bool> canExecute;
@@ -93,9 +82,7 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Creates a new instance of <see cref="RelayCommand{T}" />.
-        /// </summary>
+        /// <summary>Creates a new instance of <see cref="RelayCommand{T}" />.</summary>
         /// <param name="execute">The action to perform when the command is executed.</param>
         /// <param name="canExecute">(Optional) The predicate which checks if the command can be executed.</param>
         public RelayCommand(Action<T> execute, Func<T, bool> canExecute = null)
@@ -112,27 +99,41 @@
         public event EventHandler CanExecuteChanged;
 
         /// <inheritdoc />
-        public bool CanExecute(object parameter)
+        bool ICommand.CanExecute(object parameter)
         {
-            return this.canExecute?.Invoke((T)parameter) ?? true;
+            return CanExecute((T)parameter);
         }
 
         /// <inheritdoc />
-        public void Execute(object parameter)
+        void ICommand.Execute(object parameter)
+        {
+            Execute((T)parameter);
+        }
+
+        #endregion
+
+        #region ICommand<T> Implementation
+
+        /// <inheritdoc />
+        public bool CanExecute(T parameter)
+        {
+            return this.canExecute?.Invoke(parameter) ?? true;
+        }
+
+        /// <inheritdoc />
+        public void Execute(T parameter)
         {
             if (CanExecute(parameter))
             {
-                this.execute?.Invoke((T)parameter);
+                this.execute?.Invoke(parameter);
             }
         }
 
         #endregion
 
-        #region Public Methods
+        #region IRaisingCommand Implementation
 
-        /// <summary>
-        ///     Raises the <see cref="CanExecuteChanged" /> event.
-        /// </summary>
+        /// <summary>Raises the <see cref="CanExecuteChanged" /> event.</summary>
         public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);

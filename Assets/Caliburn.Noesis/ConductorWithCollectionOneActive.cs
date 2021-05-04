@@ -15,15 +15,14 @@
     {
         #region Nested Types
 
-        /// <summary>
-        ///     An implementation of <see cref="IConductor" /> that holds on many items.
-        /// </summary>
+        /// <summary>An implementation of <see cref="IConductor" /> that holds on many items.</summary>
         public partial class Collection
         {
             #region Nested Types
 
             /// <summary>
-            ///     An implementation of <see cref="IConductor" /> that holds on many items but only activates one at a time.
+            ///     An implementation of <see cref="IConductor" /> that holds on many items but only activates
+            ///     one at a time.
             /// </summary>
             public class OneActive : ConductorBaseWithActiveItem<T>
             {
@@ -36,7 +35,8 @@
                 #region Constructors and Destructors
 
                 /// <summary>
-                ///     Initializes a new instance of the <see cref="Caliburn.Noesis.Conductor{T}.Collection.OneActive" /> class.
+                ///     Initializes a new instance of the
+                ///     <see cref="Caliburn.Noesis.Conductor{T}.Collection.OneActive" /> class.
                 /// </summary>
                 public OneActive()
                 {
@@ -69,25 +69,23 @@
 
                 #region Public Properties
 
-                /// <summary>
-                ///     Gets the items that are currently being conducted.
-                /// </summary>
+                /// <summary>Gets the items that are currently being conducted.</summary>
                 public IBindableCollection<T> Items => this.items;
 
                 #endregion
 
                 #region Public Methods
 
-                /// <summary>
-                ///     Activates the specified item.
-                /// </summary>
+                /// <summary>Activates the specified item.</summary>
                 /// <param name="item">The item to activate.</param>
                 /// <param name="cancellationToken">
-                ///     (Optional) A cancellation token that can be used by other objects or threads to receive notice of
-                ///     cancellation.
+                ///     (Optional) A cancellation token that can be used by other objects
+                ///     or threads to receive notice of cancellation.
                 /// </param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default)
+                public override async UniTask ActivateItemAsync(
+                    T item,
+                    CancellationToken cancellationToken = default)
                 {
                     if ((item != null) && item.Equals(ActiveItem))
                     {
@@ -103,14 +101,15 @@
                     await ChangeActiveItemAsync(item, false, cancellationToken);
                 }
 
-                /// <summary>
-                ///     Called to check whether or not this instance can close.
-                /// </summary>
+                /// <summary>Called to check whether or not this instance can close.</summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
+                public override async UniTask<bool> CanCloseAsync(
+                    CancellationToken cancellationToken = default)
                 {
-                    var closeResult = await CloseStrategy.ExecuteAsync(this.items.ToList(), cancellationToken);
+                    var closeResult = await CloseStrategy.ExecuteAsync(
+                                          this.items.ToList(),
+                                          cancellationToken);
 
                     if (closeResult.CloseCanOccur || !closeResult.Children.Any())
                     {
@@ -148,9 +147,7 @@
                     return closeResult.CloseCanOccur;
                 }
 
-                /// <summary>
-                ///     Deactivates the specified item.
-                /// </summary>
+                /// <summary>Deactivates the specified item.</summary>
                 /// <param name="item">The item to close.</param>
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
@@ -185,9 +182,7 @@
                     }
                 }
 
-                /// <summary>
-                ///     Gets the children.
-                /// </summary>
+                /// <summary>Gets the children.</summary>
                 /// <returns>The collection of children.</returns>
                 public override IEnumerable<T> GetChildren()
                 {
@@ -198,9 +193,7 @@
 
                 #region Protected Methods
 
-                /// <summary>
-                ///     Determines the next item to activate based on the last active index.
-                /// </summary>
+                /// <summary>Determines the next item to activate based on the last active index.</summary>
                 /// <param name="list">The list of possible active items.</param>
                 /// <param name="lastIndex">The index of the last active item.</param>
                 /// <returns>The next item to activate.</returns>
@@ -222,9 +215,7 @@
                     return default(T);
                 }
 
-                /// <summary>
-                ///     Ensures that an item is ready to be activated.
-                /// </summary>
+                /// <summary>Ensures that an item is ready to be activated.</summary>
                 /// <param name="newItem">The item that is about to be activated.</param>
                 /// <returns>The item to be activated.</returns>
                 protected override T EnsureItem(T newItem)
@@ -252,9 +243,7 @@
                     return base.EnsureItem(newItem);
                 }
 
-                /// <summary>
-                ///     Called when activating.
-                /// </summary>
+                /// <summary>Called when activating.</summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 protected override UniTask OnActivateAsync(CancellationToken cancellationToken)
@@ -262,13 +251,13 @@
                     return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
                 }
 
-                /// <summary>
-                ///     Called when deactivating.
-                /// </summary>
+                /// <summary>Called when deactivating.</summary>
                 /// <param name="close">Indicates whether this instance will be closed.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+                protected override async UniTask OnDeactivateAsync(
+                    bool close,
+                    CancellationToken cancellationToken)
                 {
                     if (close)
                     {
@@ -281,7 +270,10 @@
                     }
                     else
                     {
-                        await ScreenExtensions.TryDeactivateAsync(ActiveItem, false, cancellationToken);
+                        await ScreenExtensions.TryDeactivateAsync(
+                            ActiveItem,
+                            false,
+                            cancellationToken);
                     }
                 }
 
@@ -289,7 +281,9 @@
 
                 #region Private Methods
 
-                private async UniTask CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
+                private async UniTask CloseItemCoreAsync(T item,
+                                                         CancellationToken cancellationToken =
+                                                             default)
                 {
                     if (item.Equals(ActiveItem))
                     {

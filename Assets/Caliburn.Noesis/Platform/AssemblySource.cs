@@ -13,23 +13,21 @@
 
     #endregion
 
-    /// <summary>
-    ///     A source of assemblies that contain view or view-model types relevant to the framework.
-    /// </summary>
+    /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
     public class AssemblySource
     {
         #region Constants and Fields
 
-        private readonly IBindableCollection<Assembly> typeAssemblies = new BindableCollection<Assembly>();
+        private readonly IBindableCollection<Assembly> typeAssemblies =
+            new BindableCollection<Assembly>();
+
         private readonly IDictionary<string, Type> typeNameCache = new Dictionary<string, Type>();
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AssemblySource" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="AssemblySource" /> class.</summary>
         public AssemblySource()
         {
             this.typeAssemblies.CollectionChanged += OnTypeAssembliesCollectionChanged;
@@ -40,9 +38,7 @@
 
         #region Public Properties
 
-        /// <summary>
-        ///     Gets all extracted view-model types.
-        /// </summary>
+        /// <summary>Gets all extracted view-model types.</summary>
         public IEnumerable<Type> ViewModelTypes => this.typeNameCache.Values.Where(
             type => type.IsDerivedFromOrImplements(typeof(INotifyPropertyChanged)));
 
@@ -50,26 +46,20 @@
 
         #region Public Methods
 
-        /// <summary>
-        ///     Adds a range of assemblies to the <see cref="AssemblySource" />.
-        /// </summary>
+        /// <summary>Adds a range of assemblies to the <see cref="AssemblySource" />.</summary>
         /// <param name="assemblies">The range of assemblies to add.</param>
         public void AddRange(IEnumerable<Assembly> assemblies)
         {
             this.typeAssemblies.AddRange(assemblies);
         }
 
-        /// <summary>
-        ///     Removes all assemblies from the <see cref="AssemblySource" />.
-        /// </summary>
+        /// <summary>Removes all assemblies from the <see cref="AssemblySource" />.</summary>
         public void Clear()
         {
             this.typeAssemblies.Clear();
         }
 
-        /// <summary>
-        ///     Finds a type which matches the specified name.
-        /// </summary>
+        /// <summary>Finds a type which matches the specified name.</summary>
         /// <param name="name">The name to search for.</param>
         public Type FindTypeByName(string name)
         {
@@ -80,20 +70,21 @@
                     });
         }
 
-        /// <summary>
-        ///     Finds a type which matches one of the elements in the sequence of names.
-        /// </summary>
+        /// <summary>Finds a type which matches one of the elements in the sequence of names.</summary>
         /// <param name="names">A sequence of names to search for.</param>
         public Type FindTypeByNames(IEnumerable<string> names)
         {
-            return names?.Select(n => this.typeNameCache.GetValueOrDefault(n)).NotNull().FirstOrDefault();
+            return names?.Select(n => this.typeNameCache.GetValueOrDefault(n))
+                        .NotNull()
+                        .FirstOrDefault();
         }
 
         #endregion
 
         #region Event Handlers
 
-        private void OnTypeAssembliesCollectionChanged(object s, NotifyCollectionChangedEventArgs eventArgs)
+        private void OnTypeAssembliesCollectionChanged(object s,
+                                                       NotifyCollectionChangedEventArgs eventArgs)
         {
             switch (eventArgs.Action)
             {

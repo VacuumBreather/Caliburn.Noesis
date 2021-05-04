@@ -7,9 +7,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     The bootstrapper for the sample UI.
-    /// </summary>
+    /// <summary>The bootstrapper for the sample UI.</summary>
     public class SampleBootstrapper : BootstrapperBase<MainViewModel>
     {
         #region Protected Methods

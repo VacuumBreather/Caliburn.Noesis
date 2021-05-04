@@ -7,9 +7,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     A logger implementation which only logs to the unity console.
-    /// </summary>
+    /// <summary>A logger implementation which only logs to the unity console.</summary>
     public class UnityConsoleLogger : ILogger
     {
         #region Constants and Fields
@@ -20,9 +18,7 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="UnityConsoleLogger" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="UnityConsoleLogger" /> class.</summary>
         /// <param name="context">The context the logger should operate on.</param>
         public UnityConsoleLogger(object context)
         {

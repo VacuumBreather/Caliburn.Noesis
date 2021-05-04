@@ -7,21 +7,20 @@
 
     #endregion
 
-    /// <summary>
-    ///     Provides extension methods for the <see cref="DirectoryInfo" /> type.
-    /// </summary>
+    /// <summary>Provides extension methods for the <see cref="DirectoryInfo" /> type.</summary>
     public static class DirectoryInfoExtensions
     {
         #region Public Methods
 
         /// <summary>
-        ///     Checks whether the current directory is an ancestor directory of the specified potential descendant directory.
+        ///     Checks whether the current directory is an ancestor directory of the specified potential
+        ///     descendant directory.
         /// </summary>
         /// <param name="directory">The current directory.</param>
         /// <param name="descendant">The potential descendant directory.</param>
         /// <returns>
-        ///     <c>true</c> if the current directory is an ancestor directory of the specified potential descendant directory;
-        ///     <c>false</c> otherwise.
+        ///     <c>true</c> if the current directory is an ancestor directory of the specified potential
+        ///     descendant directory; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsAncestorOf(this DirectoryInfo directory, DirectoryInfo descendant)
         {
@@ -36,19 +35,20 @@
             return false;
         }
 
-        /// <summary>
-        ///     Checks whether the current directory is identical to the specified other directory.
-        /// </summary>
+        /// <summary>Checks whether the current directory is identical to the specified other directory.</summary>
         /// <param name="directory">The current directory.</param>
         /// <param name="otherDirectory">The directory to compare.</param>
-        /// <returns><c>true</c> if the current directory is identical to the specified other directory; <c>false</c> otherwise.</returns>
+        /// <returns>
+        ///     <c>true</c> if the current directory is identical to the specified other directory;
+        ///     otherwise, <c>false</c>.
+        /// </returns>
         public static bool IsSameAs(this DirectoryInfo directory, DirectoryInfo otherDirectory)
         {
-            return 0 ==
-                   string.Compare(
+            return string.Compare(
                        Path.GetFullPath(directory.FullName).TrimEnd('\\'),
                        Path.GetFullPath(otherDirectory.FullName).TrimEnd('\\'),
-                       StringComparison.InvariantCultureIgnoreCase);
+                       StringComparison.InvariantCultureIgnoreCase) ==
+                   0;
         }
 
         #endregion

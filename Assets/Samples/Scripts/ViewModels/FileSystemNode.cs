@@ -12,9 +12,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     Base class for nodes representing parts of a file system.
-    /// </summary>
+    /// <summary>Base class for nodes representing parts of a file system.</summary>
     public abstract class FileSystemNode : PropertyChangedBase
     {
         #region Constants and Fields
@@ -27,9 +25,7 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="FileSystemNode" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="FileSystemNode" /> class.</summary>
         /// <param name="startingDirectory">The starting directory.</param>
         /// <param name="name">(Optional) The name of this node.</param>
         protected FileSystemNode(DirectoryInfo startingDirectory, string name = "New Node")
@@ -42,21 +38,16 @@
 
         #region Public Properties
 
-        /// <summary>
-        ///     Gets the children nodes.
-        /// </summary>
+        /// <summary>Gets the children nodes.</summary>
         [UsedImplicitly]
-        public BindableCollection<FileSystemNode> Children { get; } = new BindableCollection<FileSystemNode>();
+        public BindableCollection<FileSystemNode> Children { get; } =
+            new BindableCollection<FileSystemNode>();
 
-        /// <summary>
-        ///     Gets the the files under this node (if any).
-        /// </summary>
+        /// <summary>Gets the the files under this node (if any).</summary>
         [UsedImplicitly]
         public ObservableCollection<FileInfo> Files { get; } = new ObservableCollection<FileInfo>();
 
-        /// <summary>
-        ///     Gets or sets a value indicating if this node is expanded.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating if this node is expanded.</summary>
         [UsedImplicitly]
         public bool IsExpanded
         {
@@ -75,15 +66,11 @@
             }
         }
 
-        /// <summary>
-        ///     Gets a value indicating if this node has been populated with data.
-        /// </summary>
+        /// <summary>Gets a value indicating if this node has been populated with data.</summary>
         [UsedImplicitly]
         public bool IsPopulated { get; private set; }
 
-        /// <summary>
-        ///     Gets or sets a value indicating if this node is selected.
-        /// </summary>
+        /// <summary>Gets or sets a value indicating if this node is selected.</summary>
         [UsedImplicitly]
         public bool IsSelected
         {
@@ -103,9 +90,7 @@
             }
         }
 
-        /// <summary>
-        ///     Gets the name of this node.
-        /// </summary>
+        /// <summary>Gets the name of this node.</summary>
         [UsedImplicitly]
         public string Name
         {
@@ -117,34 +102,29 @@
 
         #region Protected Properties
 
-        /// <summary>
-        ///     Gets the starting directory of the tree.
-        /// </summary>
+        /// <summary>Gets the starting directory of the tree.</summary>
         protected DirectoryInfo StartingDirectory { get; }
 
         #endregion
 
         #region Protected Methods
 
-        /// <summary>
-        ///     Override this to provide the children of this node.
-        /// </summary>
+        /// <summary>Override this to provide the children of this node.</summary>
         /// <param name="startingDirectory">The starting directory of the tree.</param>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the child nodes.
+        ///     A task that represents the asynchronous operation. The task result contains the child
+        ///     nodes.
         /// </returns>
-        protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
+        protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(
+            DirectoryInfo startingDirectory)
         {
             return await UniTask.FromResult(Array.Empty<FileSystemNode>());
         }
 
-        /// <summary>
-        ///     Override this to provide the files under this node.
-        /// </summary>
+        /// <summary>Override this to provide the files under this node.</summary>
         /// <returns>
-        ///     A task that represents the asynchronous operation.
-        ///     The task result contains the files under this nodes.
+        ///     A task that represents the asynchronous operation. The task result contains the files
+        ///     under this nodes.
         /// </returns>
         protected virtual async UniTask<IEnumerable<FileInfo>> GetFilesAsync()
         {
@@ -152,16 +132,15 @@
         }
 
         /// <summary>
-        ///     Override this to expand the node if it is part of the path of the specified starting directory.
+        ///     Override this to expand the node if it is part of the path of the specified starting
+        ///     directory.
         /// </summary>
         /// <param name="startingDirectory">The starting directory.</param>
         protected virtual void PotentiallyExpand(DirectoryInfo startingDirectory)
         {
         }
 
-        /// <summary>
-        ///     Populates this node with its sub directories.
-        /// </summary>
+        /// <summary>Populates this node with its sub directories.</summary>
         protected async UniTask PopulateDirectories()
         {
             if (IsPopulated)

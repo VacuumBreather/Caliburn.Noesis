@@ -7,25 +7,20 @@
 
     #endregion
 
-    /// <summary>
-    ///     Helper class responsible for creating a logger for an instance.
-    /// </summary>
+    /// <summary>Helper class responsible for creating a logger for an instance.</summary>
     public static class LogManager
     {
         #region Public Properties
 
-        /// <summary>
-        ///     Gets or sets the factory method for an <see cref="ILogger" />.
-        /// </summary>
-        public static Func<object, ILogger> GetLogger { get; set; } = context => new UnityConsoleLogger(context);
+        /// <summary>Gets or sets the factory method for an <see cref="ILogger" />.</summary>
+        public static Func<object, ILogger> GetLogger { get; set; } =
+            context => new UnityConsoleLogger(context);
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>
-        ///     Gets a <see cref="ILogger" /> implementation which does doing nothing.
-        /// </summary>
+        /// <summary>Gets a <see cref="ILogger" /> implementation which does doing nothing.</summary>
         /// <remarks>Use this to override the <see cref="GetLogger" /> factory to deactivate logging.</remarks>
         /// <returns>A <see cref="ILogger" /> implementation which does nothing.</returns>
         public static ILogger GetNullLogger()
@@ -43,9 +38,7 @@
             {
             }
 
-            /// <summary>
-            ///     Static instance of this logger implementation.
-            /// </summary>
+            /// <summary>Static instance of this logger implementation.</summary>
             public static NullLogger Instance { get; } = new NullLogger();
 
             /// <inheritdoc />
@@ -64,7 +57,10 @@
             }
 
             /// <inheritdoc />
-            public void Assert(Func<bool> test, Object context, string message, params object[] args)
+            public void Assert(Func<bool> test,
+                               Object context,
+                               string message,
+                               params object[] args)
             {
             }
 
@@ -84,7 +80,10 @@
             }
 
             /// <inheritdoc />
-            public void Debug(Exception exception, Object context, string message, params object[] args)
+            public void Debug(Exception exception,
+                              Object context,
+                              string message,
+                              params object[] args)
             {
             }
 
@@ -104,7 +103,10 @@
             }
 
             /// <inheritdoc />
-            public void Error(Exception exception, Object context, string message, params object[] args)
+            public void Error(Exception exception,
+                              Object context,
+                              string message,
+                              params object[] args)
             {
             }
 
@@ -124,7 +126,10 @@
             }
 
             /// <inheritdoc />
-            public void Fatal(Exception exception, Object context, string message, params object[] args)
+            public void Fatal(Exception exception,
+                              Object context,
+                              string message,
+                              params object[] args)
             {
             }
 
@@ -144,7 +149,10 @@
             }
 
             /// <inheritdoc />
-            public void Info(Exception exception, Object context, string message, params object[] args)
+            public void Info(Exception exception,
+                             Object context,
+                             string message,
+                             params object[] args)
             {
             }
 
@@ -164,7 +172,10 @@
             }
 
             /// <inheritdoc />
-            public void Trace(Exception exception, Object context, string message, params object[] args)
+            public void Trace(Exception exception,
+                              Object context,
+                              string message,
+                              params object[] args)
             {
             }
 
@@ -184,7 +195,10 @@
             }
 
             /// <inheritdoc />
-            public void Warn(Exception exception, Object context, string message, params object[] args)
+            public void Warn(Exception exception,
+                             Object context,
+                             string message,
+                             params object[] args)
             {
             }
         }

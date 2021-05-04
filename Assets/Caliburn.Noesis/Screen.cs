@@ -9,9 +9,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     A base implementation of <see cref="IScreen" />.
-    /// </summary>
+    /// <summary>A base implementation of <see cref="IScreen" />.</summary>
     public abstract class Screen : PropertyChangedBase, IScreen, IChild
     {
         #region Constants and Fields
@@ -26,9 +24,7 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Screen" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="Screen" /> class.</summary>
         protected Screen()
         {
             this.displayName = GetType().Name;
@@ -38,9 +34,7 @@
 
         #region Public Properties
 
-        /// <summary>
-        ///     Indicates whether or not this instance is currently initialized.
-        /// </summary>
+        /// <summary>Indicates whether or not this instance is currently initialized.</summary>
         public bool IsInitialized
         {
             get => this.isInitialized;
@@ -51,9 +45,7 @@
 
         #region Protected Properties
 
-        /// <summary>
-        ///     Gets the logger for this instance.
-        /// </summary>
+        /// <summary>Gets the logger for this instance.</summary>
         protected ILogger Logger => this.logger ??= LogManager.GetLogger(this);
 
         #endregion
@@ -99,9 +91,7 @@
 
         #region IChild Implementation
 
-        /// <summary>
-        ///     Gets or sets the parent <see cref="IConductor" />.
-        /// </summary>
+        /// <summary>Gets or sets the parent <see cref="IConductor" />.</summary>
         public object Parent
         {
             get => this.parent;
@@ -145,7 +135,9 @@
 #endif
                 IsActive = false;
 
-                await (Deactivated?.InvokeAllAsync(this, new DeactivationEventArgs { WasClosed = close }) ??
+                await (Deactivated?.InvokeAllAsync(
+                           this,
+                           new DeactivationEventArgs { WasClosed = close }) ??
                        UniTask.FromResult(true));
 
                 if (close)
@@ -193,17 +185,13 @@
 
         #region Protected Methods
 
-        /// <summary>
-        ///     Called when activating.
-        /// </summary>
+        /// <summary>Called when activating.</summary>
         protected virtual UniTask OnActivateAsync(CancellationToken cancellationToken)
         {
             return UniTask.CompletedTask;
         }
 
-        /// <summary>
-        ///     Called when deactivating.
-        /// </summary>
+        /// <summary>Called when deactivating.</summary>
         /// <param name="close">Indicates whether this instance will be closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
@@ -212,9 +200,7 @@
             return UniTask.CompletedTask;
         }
 
-        /// <summary>
-        ///     Called when initializing.
-        /// </summary>
+        /// <summary>Called when initializing.</summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual UniTask OnInitializeAsync(CancellationToken cancellationToken)
