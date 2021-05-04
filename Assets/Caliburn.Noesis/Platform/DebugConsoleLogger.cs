@@ -1,15 +1,17 @@
-﻿#if UNITY_5_5_OR_NEWER
+﻿#if !UNITY_5_5_OR_NEWER
 namespace Caliburn.Noesis
 {
     #region Using Directives
 
     using System;
-    using Object = UnityEngine.Object;
 
     #endregion
 
-    /// <summary>A logger implementation which only logs to the unity console.</summary>
-    public class UnityConsoleLogger : ILogger
+    /// <summary>
+    ///     A <see cref="ILogger" /> implementation which writes to
+    ///     <see cref="System.Diagnostics.Debug" />.
+    /// </summary>
+    public class DebugConsoleLogger : ILogger
     {
         #region Constants and Fields
 
@@ -19,11 +21,11 @@ namespace Caliburn.Noesis
 
         #region Constructors and Destructors
 
-        /// <summary>Initializes a new instance of the <see cref="UnityConsoleLogger" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="DebugConsoleLogger" /> class.</summary>
         /// <param name="context">The context the logger should operate on.</param>
-        public UnityConsoleLogger(object context)
+        public DebugConsoleLogger(object context)
         {
-            this.ctx = GetFinalContext(context);
+            this.ctx = context;
         }
 
         #endregion
@@ -41,7 +43,7 @@ namespace Caliburn.Noesis
         {
             if (!test)
             {
-                UnityEngine.Debug.LogAssertionFormat(context, $"[Assert]{message}", args);
+                System.Diagnostics.Debug.WriteLine($"[Assert]{message}", args);
             }
         }
 
@@ -56,7 +58,7 @@ namespace Caliburn.Noesis
         {
             if (!test())
             {
-                UnityEngine.Debug.LogAssertionFormat(context, $"[Assert]{message}", args);
+                System.Diagnostics.Debug.WriteLine($"[Assert]{message}", args);
             }
         }
 
@@ -69,7 +71,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Debug(Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogFormat(context, $"[Debug]{message}", args);
+            System.Diagnostics.Debug.WriteLine($"[Debug]{message}", args);
         }
 
         /// <inheritdoc />
@@ -81,7 +83,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Debug(Exception exception, Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogException(exception, context);
+            System.Diagnostics.Debug.WriteLine($"{exception}");
         }
 
         /// <inheritdoc />
@@ -93,7 +95,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Error(Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogErrorFormat(context, $"[Error]{message}", args);
+            System.Diagnostics.Debug.WriteLine($"[Error]{message}", args);
         }
 
         /// <inheritdoc />
@@ -105,7 +107,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Error(Exception exception, Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogException(exception, context);
+            System.Diagnostics.Debug.WriteLine($"{exception}");
         }
 
         /// <inheritdoc />
@@ -117,7 +119,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Fatal(Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogErrorFormat(context, $"[Fatal]{message}", args);
+            System.Diagnostics.Debug.WriteLine($"[Fatal]{message}", args);
         }
 
         /// <inheritdoc />
@@ -129,7 +131,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Fatal(Exception exception, Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogException(exception, context);
+            System.Diagnostics.Debug.WriteLine($"{exception}");
         }
 
         /// <inheritdoc />
@@ -141,7 +143,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Info(Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogFormat(context, $"[Info]{message}", args);
+            System.Diagnostics.Debug.WriteLine($"[Info]{message}", args);
         }
 
         /// <inheritdoc />
@@ -153,7 +155,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Info(Exception exception, Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogException(exception, context);
+            System.Diagnostics.Debug.WriteLine($"{exception}");
         }
 
         /// <inheritdoc />
@@ -165,7 +167,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Trace(Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogFormat(context, $"[Trace]{message}", args);
+            System.Diagnostics.Debug.WriteLine($"[Trace]{message}", args);
         }
 
         /// <inheritdoc />
@@ -177,7 +179,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Trace(Exception exception, Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogException(exception, context);
+            System.Diagnostics.Debug.WriteLine($"{exception}");
         }
 
         /// <inheritdoc />
@@ -189,7 +191,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Warn(Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogWarningFormat(context, $"[Warn]{message}", args);
+            System.Diagnostics.Debug.WriteLine($"[Warn]{message}", args);
         }
 
         /// <inheritdoc />
@@ -201,16 +203,7 @@ namespace Caliburn.Noesis
         /// <inheritdoc />
         public void Warn(Exception exception, Object context, string message, params object[] args)
         {
-            UnityEngine.Debug.LogException(exception, context);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private static object GetFinalContext(object context)
-        {
-            return context is Type type ? type.Name : context;
+            System.Diagnostics.Debug.WriteLine($"{exception}");
         }
 
         #endregion

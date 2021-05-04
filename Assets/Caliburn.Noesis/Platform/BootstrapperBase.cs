@@ -69,8 +69,17 @@
 
         #region Protected Properties
 
-        /// <summary>Gets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger => this.logger ??= LogManager.GetLogger(this);
+        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
+        /// <remarks>Override this to specify a custom logger.</remarks>
+        protected virtual ILogger Logger
+        {
+#if UNITY_5_5_OR_NEWER
+            get => this.logger ??= LogManager.CreateLogger(this);
+#else
+            get => this.logger ??= LogManager.CreateLogger(GetType());
+#endif
+            set => this.logger = value;
+        }
 
         #endregion
 
