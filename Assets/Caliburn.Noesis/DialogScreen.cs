@@ -2,6 +2,7 @@
 {
     #region Using Directives
 
+    using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
 
@@ -30,17 +31,22 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public override async UniTask TryCloseAsync(bool? dialogResult = null)
+        public override sealed UniTask<bool> CanCloseAsync(CancellationToken cancellationToken =
+                                                               default)
         {
-            if (Parent is DialogConductor conductor)
+            return UniTask.FromResult(true);
+        }
+
+        /// <inheritdoc />
+        public override sealed async UniTask TryCloseAsync(bool? dialogResult = null)
+        {
+            if (!(Parent is DialogConductor dialogConductor))
             {
-                await conductor.CloseDialogAsync(this, dialogResult, CancellationToken.None);
+                throw new InvalidOperationException(
+                    $"{this} must be conducted by a {nameof(DialogConductor)}.");
             }
-            else
-            {
-                Logger.Warn($"{this} should be hosted in a {nameof(DialogConductor)}.");
-                await base.TryCloseAsync(dialogResult);
-            }
+
+            await dialogConductor.CloseDialogAsync(this, dialogResult, CancellationToken.None);
         }
 
         #endregion
