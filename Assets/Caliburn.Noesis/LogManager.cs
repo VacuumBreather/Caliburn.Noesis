@@ -3,36 +3,115 @@
     #region Using Directives
 
     using System;
+    using System.Collections.Generic;
 #if UNITY_5_5_OR_NEWER
+    using UnityEngine;
     using Object = UnityEngine.Object;
 
 #endif
 
     #endregion
 
-    /// <summary>Helper class responsible for creating a logger for an instance.</summary>
+    /// <summary>Responsible for creating various <see cref="ILogger" /> types.</summary>
     public static class LogManager
     {
+        #region Constants and Fields
+
+        private static readonly Dictionary<string, ILogger> StaticLoggers =
+            new Dictionary<string, ILogger>();
+
+        #endregion
+
         #region Public Properties
 
-        /// <summary>Gets or sets the factory method for an <see cref="ILogger" />.</summary>
-        public static Func<object, ILogger> GetLogger { get; set; } =
+        /// <summary>
+        ///     Gets or sets the function which creates a <see cref="ILogger" /> for the given context
+        ///     intended for development in the editor.
+        /// </summary>
+        /// <returns>
+        ///     A function which creates a <see cref="ILogger" /> for the given context intended for
+        ///     development in the editor.
+        /// </returns>
+        public static Func<object, ILogger> CreateForEditor { get; set; } = context =>
 #if UNITY_5_5_OR_NEWER
-            context => new UnityConsoleLogger(context);
+            new UnityConsoleLogger(context);
 #else
-            _ => new DebugConsoleLogger();
+            new DebugConsoleLogger(context);
 #endif
+
+        /// <summary>
+        ///     Gets or sets the function which creates a <see cref="ILogger" /> for the given context
+        ///     intended for runtime use.
+        /// </summary>
+        /// <returns>
+        ///     A function which creates a <see cref="ILogger" /> for the given context intended for
+        ///     runtime use.
+        /// </returns>
+        public static Func<object, ILogger> CreateForRuntime { get; set; } = context =>
+#if UNITY_5_5_OR_NEWER
+            new UnityConsoleLogger(context);
+#else
+            new DebugConsoleLogger(context);
+#endif
+
+        /// <summary>
+        ///     Gets or sets the function which creates a <see cref="ILogger" /> for the given context
+        ///     intended for testing only.
+        /// </summary>
+        /// <returns>
+        ///     A function which creates a <see cref="ILogger" /> for the given context intended for
+        ///     testing only.
+        /// </returns>
+        public static Func<object, ILogger> CreateForTesting { get; set; } =
+            context => NullLogger.Instance;
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>Gets a <see cref="ILogger" /> implementation which does doing nothing.</summary>
-        /// <remarks>Use this to override the <see cref="GetLogger" /> factory to deactivate logging.</remarks>
-        /// <returns>A <see cref="ILogger" /> implementation which does nothing.</returns>
-        public static ILogger GetNullLogger()
+        /// <summary>Creates a <see cref="ILogger" /> for the specified context.</summary>
+        /// <param name="context">
+        ///     The context of the logger. This should be a game object or a type for non
+        ///     unity classes.
+        /// </param>
+        /// <returns>The logger for the specified context.</returns>
+        public static ILogger CreateLogger(object context)
         {
-            return NullLogger.Instance;
+            if (!(context is Type type))
+            {
+                return CreateLoggerInternal(context);
+            }
+
+            if (StaticLoggers.TryGetValue(type.Name, out var staticLogger))
+            {
+                return staticLogger;
+            }
+
+            staticLogger = CreateLoggerInternal(type.Name);
+
+            StaticLoggers[type.Name] = staticLogger;
+
+            return staticLogger;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private static ILogger CreateLoggerInternal(object context)
+        {
+            if (UnitTestDetector.IsInUnitTest)
+            {
+                return CreateForTesting?.Invoke(context) ?? NullLogger.Instance;
+            }
+
+#if UNITY_5_5_OR_NEWER
+            return Application.isEditor
+                       ? CreateForEditor?.Invoke(context) ?? NullLogger.Instance
+                       : CreateForRuntime?.Invoke(context) ?? NullLogger.Instance;
+#else
+            return CreateForEditor?.Invoke(context) ?? NullLogger.Instance;
+#endif
         }
 
         #endregion
@@ -45,8 +124,8 @@
             {
             }
 
-            /// <summary>Static instance of this logger implementation.</summary>
-            public static NullLogger Instance { get; } = new NullLogger();
+            /// <summary>Gets the static singleton instance of this logger.</summary>
+            public static ILogger Instance { get; } = new NullLogger();
 
             /// <inheritdoc />
             public void Assert(bool test, string message, params object[] args)

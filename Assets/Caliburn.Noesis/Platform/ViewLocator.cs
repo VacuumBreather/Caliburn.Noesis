@@ -21,7 +21,6 @@
         private string defaultSubNsViews;
 
         private bool includeViewSuffixInVmNames;
-        private ILogger logger;
         private string nameFormat;
         private bool useNameSuffixesInMappings;
         private string viewModelSuffix;
@@ -31,8 +30,10 @@
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="ViewLocator" /> class.</summary>
-        public ViewLocator()
+        /// <param name="logger">(Optional) The logger for this instance.</param>
+        public ViewLocator(ILogger logger = null)
         {
+            Logger = logger ?? LogManager.CreateLogger(GetType());
             ConfigureTypeMappings(new TypeMappingConfiguration());
         }
 
@@ -40,7 +41,7 @@
 
         #region Private Properties
 
-        private ILogger Logger => this.logger ??= LogManager.GetLogger(this);
+        private ILogger Logger { get; }
 
         private NameTransformer NameTransformer { get; } = new NameTransformer();
 
