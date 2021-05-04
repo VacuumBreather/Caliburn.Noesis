@@ -1,13 +1,16 @@
-﻿namespace Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
     #region Using Directives
 
+#if !UNITY_5_5_OR_NEWER
+    using System;
+#endif
     using System.IO;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Caliburn.Noesis;
-    using Caliburn.Noesis.Extensions;
     using Cysharp.Threading.Tasks;
+    using Extensions;
     using JetBrains.Annotations;
 
     #endregion
@@ -130,15 +133,35 @@
             using var streamReader = File.OpenText(FileDialog.SelectedFile.FullName);
 
             FileContent = string.Empty;
+            var stringBuilder = new StringBuilder();
 
+#if UNITY_5_5_OR_NEWER
             while (!(streamReader.EndOfStream || cancelled))
             {
-                FileContent += $"{await streamReader.ReadLineAsync()}\n";
+                stringBuilder.AppendLine(await streamReader.ReadLineAsync());
+                FileContent = stringBuilder.ToString();
 
-                cancelled = await UniTask.Delay(100, cancellationToken: cancellationToken)
+                cancelled = await UniTask.Delay(10, cancellationToken: cancellationToken)
                                          .SuppressCancellationThrow();
                 cancelled = cancelled || cancellationToken.IsCancellationRequested;
             }
+#else
+            try
+            {
+                while (!(streamReader.EndOfStream || cancelled))
+                {
+                    stringBuilder.AppendLine(await streamReader.ReadLineAsync());
+                    FileContent = stringBuilder.ToString();
+
+                    await Task.Delay(10, cancellationToken);
+                    cancelled = cancellationToken.IsCancellationRequested;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                cancelled = true;
+            }
+#endif
 
             if (!cancelled)
             {

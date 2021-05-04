@@ -1,4 +1,4 @@
-﻿namespace Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
     #region Using Directives
 
