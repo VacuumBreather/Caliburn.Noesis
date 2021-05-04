@@ -1,4 +1,4 @@
-﻿namespace Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
     #region Using Directives
 
@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
-    using Caliburn.Noesis;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
 
@@ -148,9 +147,7 @@
                 return;
             }
 
-            await UniTask.SwitchToThreadPool();
             var children = await GetChildrenAsync(StartingDirectory);
-            await UniTask.SwitchToMainThread();
 
             foreach (var child in children)
             {
@@ -168,9 +165,7 @@
 
         private async UniTask PopulateFiles()
         {
-            await UniTask.SwitchToThreadPool();
             var files = await GetFilesAsync();
-            await UniTask.SwitchToMainThread();
 
             foreach (var file in files)
             {

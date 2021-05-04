@@ -13,12 +13,12 @@
                                               INotifyPropertyChangedEx,
                                               INotifyCollectionChanged
     {
-        /// <summary>Adds the range.</summary>
-        /// <param name="items">The items.</param>
+        /// <summary>Adds a range of items to this collection.</summary>
+        /// <param name="items">The items to add.</param>
         void AddRange(IEnumerable<T> items);
 
-        /// <summary>Removes the range.</summary>
-        /// <param name="items">The items.</param>
+        /// <summary>Removes a range of items from this collection.</summary>
+        /// <param name="items">The items to remove.</param>
         void RemoveRange(IEnumerable<T> items);
     }
 }

@@ -3,7 +3,10 @@
     #region Using Directives
 
     using System;
+#if UNITY_5_5_OR_NEWER
     using Object = UnityEngine.Object;
+
+#endif
 
     #endregion
 
