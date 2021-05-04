@@ -17,6 +17,7 @@
         private string displayName;
         private bool isActive;
         private bool isInitialized;
+
         private ILogger logger;
         private object parent;
 
@@ -45,8 +46,13 @@
 
         #region Protected Properties
 
-        /// <summary>Gets the logger for this instance.</summary>
-        protected ILogger Logger => this.logger ??= LogManager.GetLogger(this);
+        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
+        /// <remarks>Override this to specify a custom logger.</remarks>
+        protected virtual ILogger Logger
+        {
+            get => this.logger ??= LogManager.CreateLogger(GetType());
+            set => this.logger = value;
+        }
 
         #endregion
 

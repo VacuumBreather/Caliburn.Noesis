@@ -91,7 +91,6 @@
     <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionAllActive.cs" />
     <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionOneActive.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DeactivationEventArgs.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\DebugConsoleLogger.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DefaultCloseStrategy.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DialogConductor.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DialogScreen.cs" />
@@ -130,6 +129,7 @@
     <Compile Include="Assets\Caliburn.Noesis\Platform\CaliburnConfiguration.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\CloseDialog.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\DataTemplateManager.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\DebugConsoleLogger.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\DialogResult.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\Execute.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\NameTransformer.cs" />
@@ -141,12 +141,13 @@
     </Compile>
     <Compile Include="Assets\Caliburn.Noesis\Platform\ShellViewModel.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\TypeMappingConfiguration.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\UnitTestDetector.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\UnityConsoleLogger.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\ViewLocator.cs" />
     <Compile Include="Assets\Caliburn.Noesis\PropertyChangedBase.cs" />
     <Compile Include="Assets\Caliburn.Noesis\RelayCommand.cs" />
     <Compile Include="Assets\Caliburn.Noesis\SafeCancellationTokenSource.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Screen.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\UnityConsoleLogger.cs" />
     <Compile Include="Assets\Samples\Scripts\SampleBootstrapper.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\DirectoryInfoExtensions.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\DirectoryNode.cs" />
