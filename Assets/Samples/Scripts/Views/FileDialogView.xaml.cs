@@ -6,16 +6,12 @@
 
     #endregion
 
-    /// <summary>
-    ///     Interaction logic for FileDialogView.xaml
-    /// </summary>
+    /// <summary>Interaction logic for FileDialogView.xaml</summary>
     public partial class FileDialogView : UserControl
     {
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="FileDialogView" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="FileDialogView" /> class.</summary>
         public FileDialogView()
         {
             InitializeComponent();
@@ -29,7 +25,9 @@
         private void OnInitialized(object sender, EventArgs args)
         {
             var treeView = (TreeView)FindName("TreeView");
-            treeView.AddHandler(TreeViewItem.SelectedEvent, new RoutedEventHandler(OnTreeViewItemSelected));
+            treeView.AddHandler(
+                TreeViewItem.SelectedEvent,
+                new RoutedEventHandler(OnTreeViewItemSelected));
         }
 
         #endregion

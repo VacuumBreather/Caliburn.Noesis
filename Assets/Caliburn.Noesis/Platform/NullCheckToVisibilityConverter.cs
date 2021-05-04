@@ -8,9 +8,7 @@
 
     #endregion
 
-    /// <summary>
-    ///     Converter used to set a visibility depending on whether a value is null.
-    /// </summary>
+    /// <summary>Converter used to set a visibility depending on whether a value is null.</summary>
     public class NullCheckToVisibilityConverter : IValueConverter
     {
         #region IValueConverter Implementation
@@ -22,7 +20,10 @@
         }
 
         /// <inheritdoc />
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value,
+                                  Type targetType,
+                                  object parameter,
+                                  CultureInfo culture)
         {
             throw new InvalidOperationException();
         }
