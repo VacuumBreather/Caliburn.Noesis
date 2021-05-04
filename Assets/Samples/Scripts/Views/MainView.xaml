@@ -12,13 +12,28 @@
     <DockPanel>
         <ToolBar VerticalAlignment="Top" DockPanel.Dock="Top">
             <Button
+                Content="Open File"
                 Width="150"
                 Height="50"
                 Margin="5"
                 VerticalAlignment="Center"
                 Command="{Binding OpenDialogCommand, Mode=OneTime}">
-                OpenDialog
+            </Button>
+            <Button
+                Content="Cancel"
+                Width="150"
+                Height="50"
+                Margin="5"
+                VerticalAlignment="Center"
+                Command="{Binding CancelCommand, Mode=OneTime}">
             </Button>
         </ToolBar>
+        <TextBox
+            x:Name="TextContent"
+            Text="{Binding FileContent, Mode=OneWay}"
+            Focusable="False"
+            IsReadOnly="True"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Auto" />
     </DockPanel>
 </UserControl>

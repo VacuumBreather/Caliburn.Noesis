@@ -15,12 +15,12 @@
 
     #endregion
 
-    /// <summary>
-    ///     A view-model representing a dialog used to open files.
-    /// </summary>
+    /// <summary>A view-model representing a dialog used to open files.</summary>
     public class FileDialogViewModel : DialogScreen
     {
         #region Constants and Fields
+
+        private bool isClosing;
 
         private FileInfo selectedFile;
 
@@ -28,43 +28,33 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="FileDialogViewModel" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="FileDialogViewModel" /> class.</summary>
         public FileDialogViewModel()
         {
             DisplayName = "Open File";
-            CloseDialogCommand = new RelayCommand<bool?>(
-                dialogResult => TryCloseAsync(dialogResult).Forget(),
-                dialogResult => (dialogResult != true) || (SelectedFile != null));
         }
 
         #endregion
 
         #region Public Properties
 
-        /// <summary>
-        ///     Gets the opened file.
-        /// </summary>
-        public FileInfo FileInfo { get; private set; }
-
-        /// <summary>
-        ///     Gets the root node collection.
-        /// </summary>
+        /// <summary>Gets the root node collection.</summary>
         [UsedImplicitly]
-        public ObservableCollection<FileSystemNode> Root { get; } = new ObservableCollection<FileSystemNode>();
+        public ObservableCollection<FileSystemNode> Root { get; } =
+            new ObservableCollection<FileSystemNode>();
 
-        /// <summary>
-        ///     Gets the selected file.
-        /// </summary>
+        /// <summary>Gets the selected file.</summary>
         [UsedImplicitly]
         public FileInfo SelectedFile
         {
             get => this.selectedFile;
             set
             {
-                Set(ref this.selectedFile, value);
-                CloseDialogCommand.RaiseCanExecuteChanged();
+                if (!this.isClosing)
+                {
+                    Set(ref this.selectedFile, value);
+                    CloseDialogCommand.RaiseCanExecuteChanged();
+                }
             }
         }
 
@@ -73,20 +63,30 @@
         #region Protected Methods
 
         /// <inheritdoc />
+        protected override bool CanCloseDialog(bool? dialogResult)
+        {
+            return (dialogResult != true) || (SelectedFile != null);
+        }
+
+        /// <inheritdoc />
         protected override async UniTask OnActivateAsync(CancellationToken cancellationToken)
         {
-            var directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+            this.isClosing = false;
+            SelectedFile = null;
 
+            var directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
             var rootNode = new RootNode(directoryInfo);
+
             Root.Add(rootNode);
 
             await rootNode.Initialize();
         }
 
         /// <inheritdoc />
-        protected override UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        protected override UniTask OnDeactivateAsync(bool close,
+                                                     CancellationToken cancellationToken)
         {
-            FileInfo = SelectedFile;
+            this.isClosing = true;
             Root.Clear();
 
             return UniTask.CompletedTask;
@@ -104,16 +104,15 @@
             {
             }
 
-            /// <summary>
-            ///     Initializes this instance.
-            /// </summary>
+            /// <summary>Initializes this instance.</summary>
             public async UniTask Initialize()
             {
                 await PopulateDirectories();
             }
 
             /// <inheritdoc />
-            protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
+            protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(
+                DirectoryInfo startingDirectory)
             {
                 IEnumerable<FileSystemNode> driveNodes;
 
@@ -121,7 +120,10 @@
                 {
                     driveNodes = DriveInfo.GetDrives()
                                           .Where(drive => drive.IsReady)
-                                          .Select(drive => new DirectoryNode(drive.RootDirectory, StartingDirectory))
+                                          .Select(
+                                              drive => new DirectoryNode(
+                                                  drive.RootDirectory,
+                                                  StartingDirectory))
                                           .ToList();
                 }
                 catch (SecurityException)

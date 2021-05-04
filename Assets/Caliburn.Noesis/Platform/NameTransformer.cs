@@ -9,7 +9,8 @@
     #endregion
 
     /// <summary>
-    ///     Class for managing the list of rules for transforming view-model type names into view type names.
+    ///     Class for managing the list of rules for transforming view-model type names into view type
+    ///     names.
     /// </summary>
     public class NameTransformer : BindableCollection<NameTransformer.Rule>
     {
@@ -24,8 +25,8 @@
         #region Public Properties
 
         /// <summary>
-        ///     Flag to indicate if transformations from all matched rules are returned.
-        ///     Otherwise, transformations from only the first matched rule are returned.
+        ///     Flag to indicate if transformations from all matched rules are returned. Otherwise,
+        ///     transformations from only the first matched rule are returned.
         /// </summary>
         public bool UseEagerRuleSelection
         {
@@ -37,9 +38,7 @@
 
         #region Public Methods
 
-        /// <summary>
-        ///     Adds a transform using a single replacement value and a global filter pattern.
-        /// </summary>
+        /// <summary>Adds a transform using a single replacement value and a global filter pattern.</summary>
         /// <param name="replacePattern">Regular expression pattern for replacing text.</param>
         /// <param name="replaceValue">The replacement value.</param>
         /// <param name="globalFilterPattern">Regular expression pattern for global filtering.</param>
@@ -47,20 +46,23 @@
         ///     <code>
         ///         NameTransformer.AddRule("Model$", string.Empty);
         ///     </code>
-        ///     This transformation rule looks for the substring “Model” terminating the ViewModel name and strips out that
-        ///     substring (i.e. replace with string.Empty or “null string”).<br />
-        ///     The “$” in the first argument indicates that the pattern must match at the end of the source string. If “Model”
-        ///     exists anywhere else, the pattern is not matched. Because this call did not include the optional
-        ///     “globalFilterPattern” argument, this rule applies to all ViewModel names.<br />
-        ///     This rule yields the following results:
+        ///     This transformation rule looks for the substring “Model” terminating the ViewModel name and
+        ///     strips out that substring (i.e. replace with string.Empty or “null string”).<br /> The “$” in
+        ///     the first argument indicates that the pattern must match at the end of the source string. If
+        ///     “Model” exists anywhere else, the pattern is not matched. Because this call did not include the
+        ///     optional “globalFilterPattern” argument, this rule applies to all ViewModel names.<br /> This
+        ///     rule yields the following results:
         ///     <list type="bullet">
         ///         <item>MainViewModel => MainView</item>
         ///         <item>ModelAirplaneViewModel => ModelAirplaneView</item>
         ///         <item>CustomerViewModelBase => CustomerViewModelBase</item>
         ///     </list>
-        ///     For examples of the use of the global filter pattern check the defaults used in <see cref="ViewLocator" />.
+        ///     For examples of the use of the global filter pattern check the defaults used in
+        ///     <see cref="ViewLocator" />.
         /// </example>
-        public void AddRule(string replacePattern, string replaceValue, string globalFilterPattern = null)
+        public void AddRule(string replacePattern,
+                            string replaceValue,
+                            string globalFilterPattern = null)
         {
             AddRule(
                 replacePattern,
@@ -71,9 +73,7 @@
                 globalFilterPattern);
         }
 
-        /// <summary>
-        ///     Adds a transform using a list of replacement values and a global filter pattern.
-        /// </summary>
+        /// <summary>Adds a transform using a list of replacement values and a global filter pattern.</summary>
         /// <param name="replacePattern">Regular expression pattern for replacing text.</param>
         /// <param name="replaceValueList">The list of replacement values.</param>
         /// <param name="globalFilterPattern">Regular expression pattern for global filtering.</param>
@@ -81,23 +81,23 @@
         ///     <code>
         ///         NameTransformer.AddRule("Model$", new string[] { string.Empty });
         ///     </code>
-        ///     This transformation rule looks for the substring “Model” terminating the ViewModel name and strips out that
-        ///     substring (i.e. replace with string.Empty or “null string”).<br />
-        ///     The “$” in the first argument indicates that the pattern must match at the end of the source string. If “Model”
-        ///     exists anywhere else, the pattern is not matched. Because this call did not include the optional
-        ///     “globalFilterPattern” argument, this rule applies to all ViewModel names.<br />
-        ///     This rule yields the following results:
+        ///     This transformation rule looks for the substring “Model” terminating the ViewModel name and
+        ///     strips out that substring (i.e. replace with string.Empty or “null string”).<br /> The “$” in
+        ///     the first argument indicates that the pattern must match at the end of the source string. If
+        ///     “Model” exists anywhere else, the pattern is not matched. Because this call did not include the
+        ///     optional “globalFilterPattern” argument, this rule applies to all ViewModel names.<br /> This
+        ///     rule yields the following results:
         ///     <list type="bullet">
         ///         <item>MainViewModel => MainView</item>
         ///         <item>ModelAirplaneViewModel => ModelAirplaneView</item>
         ///         <item>CustomerViewModelBase => CustomerViewModelBase</item>
         ///     </list>
-        ///     For examples of the use of the global filter pattern check the defaults used in <see cref="ViewLocator" />.
+        ///     For examples of the use of the global filter pattern check the defaults used in
+        ///     <see cref="ViewLocator" />.
         /// </example>
-        public void AddRule(
-            string replacePattern,
-            IEnumerable<string> replaceValueList,
-            string globalFilterPattern = null)
+        public void AddRule(string replacePattern,
+                            IEnumerable<string> replaceValueList,
+                            string globalFilterPattern = null)
         {
             Add(
                 new Rule
@@ -108,9 +108,7 @@
                     });
         }
 
-        /// <summary>
-        ///     Gets the list of transformations for a given name based on the currently rule set.
-        /// </summary>
+        /// <summary>Gets the list of transformations for a given name based on the currently rule set.</summary>
         /// <param name="source">The name to transform into the resolved name list.</param>
         /// <returns>The transformed names.</returns>
         public IEnumerable<string> Transform(string source)
@@ -120,7 +118,8 @@
 
             foreach (var rule in rules)
             {
-                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source))
+                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) &&
+                    !rule.GlobalFilterPatternRegex.IsMatch(source))
                 {
                     continue;
                 }
@@ -131,7 +130,8 @@
                 }
 
                 nameList.AddRange(
-                    rule.ReplacementValues.Select(repString => rule.ReplacePatternRegex.Replace(source, repString)));
+                    rule.ReplacementValues.Select(
+                        repString => rule.ReplacePatternRegex.Replace(source, repString)));
 
                 if (!this.useEagerRuleSelection)
                 {
@@ -146,26 +146,18 @@
 
         #region Nested Types
 
-        /// <summary>
-        ///     A rule that describes a name transform.
-        /// </summary>
+        /// <summary>A rule that describes a name transform.</summary>
         public class Rule
         {
             #region Constants and Fields
 
-            /// <summary>
-            ///     Regular expression pattern for global filtering.
-            /// </summary>
+            /// <summary>Regular expression pattern for global filtering.</summary>
             public string GlobalFilterPattern;
 
-            /// <summary>
-            ///     The list of replacement values
-            /// </summary>
+            /// <summary>The list of replacement values</summary>
             public IEnumerable<string> ReplacementValues;
 
-            /// <summary>
-            ///     Regular expression pattern for replacing text.
-            /// </summary>
+            /// <summary>Regular expression pattern for replacing text.</summary>
             public string ReplacePattern;
 
             private Regex globalFilterPatternRegex;
@@ -175,19 +167,17 @@
 
             #region Public Properties
 
-            /// <summary>
-            ///     Regular expression for global filtering.
-            /// </summary>
+            /// <summary>Regular expression for global filtering.</summary>
             public Regex GlobalFilterPatternRegex => this.globalFilterPatternRegex ??
                                                      (this.globalFilterPatternRegex = new Regex(
                                                           this.GlobalFilterPattern,
                                                           Options));
 
-            /// <summary>
-            ///     Regular expression for replacing text.
-            /// </summary>
+            /// <summary>Regular expression for replacing text.</summary>
             public Regex ReplacePatternRegex => this.replacePatternRegex ??
-                                                (this.replacePatternRegex = new Regex(this.ReplacePattern, Options));
+                                                (this.replacePatternRegex = new Regex(
+                                                     this.ReplacePattern,
+                                                     Options));
 
             #endregion
         }

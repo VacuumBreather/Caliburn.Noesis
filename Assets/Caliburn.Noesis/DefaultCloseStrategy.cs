@@ -9,7 +9,8 @@
     #endregion
 
     /// <summary>
-    ///     Used to gather the results from multiple child elements which may or may not prevent closing.
+    ///     Used to gather the results from multiple child elements which may or may not prevent
+    ///     closing.
     /// </summary>
     /// <typeparam name="T">The type of child element.</typeparam>
     public class DefaultCloseStrategy<T> : ICloseStrategy<T>
@@ -22,16 +23,15 @@
 
         #region Constructors and Destructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="DefaultCloseStrategy{T}" /> class.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="DefaultCloseStrategy{T}" /> class.</summary>
         /// <param name="closeConductedItemsWhenConductorCannotClose">
-        ///     Indicates that even if all conducted items are not closable,
-        ///     those that are should be closed. The default is <c>false</c>.
+        ///     Indicates that even if all conducted
+        ///     items are not closable, those that are should be closed. The default is <c>false</c>.
         /// </param>
         public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false)
         {
-            this.closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
+            this.closeConductedItemsWhenConductorCannotClose =
+                closeConductedItemsWhenConductorCannotClose;
         }
 
         #endregion
@@ -39,9 +39,9 @@
         #region ICloseStrategy<T> Implementation
 
         /// <inheritdoc />
-        public async UniTask<ICloseResult<T>> ExecuteAsync(
-            IEnumerable<T> toClose,
-            CancellationToken cancellationToken = default)
+        public async UniTask<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose,
+                                                           CancellationToken cancellationToken =
+                                                               default)
         {
             var closeableChildren = new List<T>();
             var closeCanOccur = true;

@@ -9,11 +9,7 @@
         </Grid.Resources>
         <ContentControl Content="{Binding MainContent.ActiveItem, Mode=OneWay}" />
         <Grid Background="Transparent" Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
-            <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}">
-                <ContentControl.Effect>
-                    <DropShadowEffect />
-                </ContentControl.Effect>
-            </ContentControl>
+            <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}" />
         </Grid>
     </Grid>
 </Page>
