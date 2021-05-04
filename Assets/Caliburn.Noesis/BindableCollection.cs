@@ -34,8 +34,7 @@
 
         #region IBindableCollection<T> Implementation
 
-        /// <summary>Adds the range.</summary>
-        /// <param name="items">The items.</param>
+        /// <inheritdoc />
         public virtual void AddRange(IEnumerable<T> items)
         {
             Execute.OnUIThread(
@@ -61,8 +60,7 @@
                     });
         }
 
-        /// <summary>Removes the range.</summary>
-        /// <param name="items">The items.</param>
+        /// <inheritdoc />
         public virtual void RemoveRange(IEnumerable<T> items)
         {
             Execute.OnUIThread(
@@ -90,11 +88,10 @@
 
         #region INotifyPropertyChangedEx Implementation
 
-        /// <summary>Enables/Disables property change notification.</summary>
+        /// <inheritdoc />
         public bool IsNotifying { get; set; }
 
-        /// <summary>Notifies subscribers of the property change.</summary>
-        /// <param name="propertyName">Name of the property.</param>
+        /// <inheritdoc />
         public virtual void NotifyOfPropertyChange(string propertyName)
         {
             if (IsNotifying)
@@ -104,7 +101,7 @@
             }
         }
 
-        /// <summary>Raises a change notification indicating that all bindings should be refreshed.</summary>
+        /// <inheritdoc />
         public void Refresh()
         {
             Execute.OnUIThread(

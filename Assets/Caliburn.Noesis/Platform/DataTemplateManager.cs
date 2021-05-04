@@ -5,7 +5,13 @@
     using System;
     using System.Linq;
     using Extensions;
+#if UNITY_5_5_OR_NEWER
     using global::Noesis;
+
+#else
+    using System.Windows;
+    using System.Windows.Markup;
+#endif
 
     #endregion
 
@@ -27,7 +33,11 @@
         {
             var dataTemplate = CreateTemplate(viewModelType, viewType);
 
+#if UNITY_5_5_OR_NEWER
             dictionary.Add(viewModelType, dataTemplate);
+#else
+            dictionary.Add(dataTemplate.DataTemplateKey!, dataTemplate);
+#endif
         }
 
         /// <summary>
@@ -86,7 +96,7 @@
                                "    xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n" +
                                "    xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\"\n" +
                                "    xmlns:system=\"clr-namespace:System;assembly=mscorlib\"\n" +
-                               "    DataType=\"{x:Type vm:DialogScreen}\">\n" +
+                               $"    DataType=\"{{x:Type vm:{viewModelType.Name}}}\">\n" +
                                "    <Grid\n" +
                                "      Control.FontSize=\"20\"\n" +
                                "      Control.FontWeight=\"Bold\">\n" +

@@ -1,4 +1,4 @@
-﻿namespace Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
     #region Using Directives
 
@@ -9,7 +9,6 @@
     using System.Linq;
     using System.Security;
     using System.Threading;
-    using Caliburn.Noesis;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
 

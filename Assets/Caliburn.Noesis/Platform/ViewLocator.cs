@@ -282,19 +282,19 @@
         /// <returns>The located view type or <c>null</c> if no such type could be found.</returns>
         public Type LocateTypeForModelType(Type modelType, AssemblySource assemblySource)
         {
-            var viewTypeName = modelType.FullName;
+            var modelTypeName = modelType.FullName;
 
-            viewTypeName = viewTypeName?.Substring(
+            modelTypeName = modelTypeName?.Substring(
                 0,
-                viewTypeName.IndexOf('`') < 0 ? viewTypeName.Length : viewTypeName.IndexOf('`'));
+                modelTypeName.IndexOf('`') < 0 ? modelTypeName.Length : modelTypeName.IndexOf('`'));
 
-            var viewTypeList = TransformName(viewTypeName).ToList();
+            var viewTypeList = TransformName(modelTypeName).ToList();
             var viewType = assemblySource.FindTypeByNames(viewTypeList);
 
             if (viewType == null)
             {
                 Logger.Info(
-                    $"No view not found for {modelType.Name}. {(viewTypeList.Any() ? "Searched:" + string.Join(", ", viewTypeList.ToArray()) : "No mappings found.")}.");
+                    $"No view not found for {modelType.Name}. {(viewTypeList.Any() ? "Searched:" + string.Join(", ", viewTypeList.ToArray()) : "No mappings found")}.");
             }
 
             return viewType;

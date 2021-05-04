@@ -3,7 +3,10 @@
     #region Using Directives
 
     using System;
+#if UNITY_5_5_OR_NEWER
     using Object = UnityEngine.Object;
+
+#endif
 
     #endregion
 
@@ -14,7 +17,11 @@
 
         /// <summary>Gets or sets the factory method for an <see cref="ILogger" />.</summary>
         public static Func<object, ILogger> GetLogger { get; set; } =
+#if UNITY_5_5_OR_NEWER
             context => new UnityConsoleLogger(context);
+#else
+            _ => new DebugConsoleLogger();
+#endif
 
         #endregion
 
