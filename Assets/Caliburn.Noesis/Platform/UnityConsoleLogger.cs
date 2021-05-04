@@ -1,30 +1,39 @@
-﻿namespace Caliburn.Noesis
+﻿#if UNITY_5_5_OR_NEWER
+namespace Caliburn.Noesis
 {
     #region Using Directives
 
     using System;
-#if UNITY_5_5_OR_NEWER
     using Object = UnityEngine.Object;
-
-#endif
 
     #endregion
 
-    /// <summary>
-    ///     A <see cref="ILogger" /> implementation which writes to
-    ///     <see cref="System.Diagnostics.Debug" />.
-    /// </summary>
-    public class DebugConsoleLogger : ILogger
+    /// <summary>A logger implementation which only logs to the unity console.</summary>
+    public class UnityConsoleLogger : ILogger
     {
+        #region Constants and Fields
+
+        private readonly object ctx;
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>Initializes a new instance of the <see cref="UnityConsoleLogger" /> class.</summary>
+        /// <param name="context">The context the logger should operate on.</param>
+        public UnityConsoleLogger(object context)
+        {
+            this.ctx = context;
+        }
+
+        #endregion
+
         #region ILogger Implementation
 
         /// <inheritdoc />
         public void Assert(bool test, string message, params object[] args)
         {
-            if (!test)
-            {
-                System.Diagnostics.Debug.WriteLine("[Assert] " + message, args);
-            }
+            Assert(test, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
@@ -32,17 +41,14 @@
         {
             if (!test)
             {
-                System.Diagnostics.Debug.WriteLine("[Assert] " + message, args);
+                UnityEngine.Debug.LogAssertionFormat(context, $"[Assert]{message}", args);
             }
         }
 
         /// <inheritdoc />
         public void Assert(Func<bool> test, string message, params object[] args)
         {
-            if (!test())
-            {
-                System.Diagnostics.Debug.WriteLine("[Assert] " + message, args);
-            }
+            Assert(test, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
@@ -50,154 +56,155 @@
         {
             if (!test())
             {
-                System.Diagnostics.Debug.WriteLine("[Assert] " + message, args);
+                UnityEngine.Debug.LogAssertionFormat(context, $"[Assert]{message}", args);
             }
         }
 
         /// <inheritdoc />
         public void Debug(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Debug] " + message, args);
+            Debug(this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Debug(Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Debug] " + message, args);
+            UnityEngine.Debug.LogFormat(context, $"[Debug]{message}", args);
         }
 
         /// <inheritdoc />
         public void Debug(Exception exception, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Debug] " + message, args);
+            Debug(exception, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Debug(Exception exception, Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Debug] " + message, args);
+            UnityEngine.Debug.LogException(exception, context);
         }
 
         /// <inheritdoc />
         public void Error(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Error] " + message, args);
+            Error(this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Error(Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Error] " + message, args);
+            UnityEngine.Debug.LogErrorFormat(context, $"[Error]{message}", args);
         }
 
         /// <inheritdoc />
         public void Error(Exception exception, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Error] " + message, args);
+            Error(exception, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Error(Exception exception, Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Error] " + message, args);
+            UnityEngine.Debug.LogException(exception, context);
         }
 
         /// <inheritdoc />
         public void Fatal(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Fatal] " + message, args);
+            Fatal(this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Fatal(Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Fatal] " + message, args);
+            UnityEngine.Debug.LogErrorFormat(context, $"[Fatal]{message}", args);
         }
 
         /// <inheritdoc />
         public void Fatal(Exception exception, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Fatal] " + message, args);
+            Fatal(exception, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Fatal(Exception exception, Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Fatal] " + message, args);
+            UnityEngine.Debug.LogException(exception, context);
         }
 
         /// <inheritdoc />
         public void Info(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Info] " + message, args);
+            Info(this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Info(Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Info] " + message, args);
+            UnityEngine.Debug.LogFormat(context, $"[Info]{message}", args);
         }
 
         /// <inheritdoc />
         public void Info(Exception exception, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Info] " + message, args);
+            Info(exception, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Info(Exception exception, Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Info] " + message, args);
+            UnityEngine.Debug.LogException(exception, context);
         }
 
         /// <inheritdoc />
         public void Trace(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Trace] " + message, args);
+            Trace(this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Trace(Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Trace] " + message, args);
+            UnityEngine.Debug.LogFormat(context, $"[Trace]{message}", args);
         }
 
         /// <inheritdoc />
         public void Trace(Exception exception, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Trace] " + message, args);
+            Trace(exception, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Trace(Exception exception, Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Trace] " + message, args);
+            UnityEngine.Debug.LogException(exception, context);
         }
 
         /// <inheritdoc />
         public void Warn(string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Warn] " + message, args);
+            Warn(this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Warn(Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Warn] " + message, args);
+            UnityEngine.Debug.LogWarningFormat(context, $"[Warn]{message}", args);
         }
 
         /// <inheritdoc />
         public void Warn(Exception exception, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Warn] " + message, args);
+            Warn(exception, this.ctx as Object, message, args);
         }
 
         /// <inheritdoc />
         public void Warn(Exception exception, Object context, string message, params object[] args)
         {
-            System.Diagnostics.Debug.WriteLine("[Warn] " + message, args);
+            UnityEngine.Debug.LogException(exception, context);
         }
 
         #endregion
     }
 }
+#endif
