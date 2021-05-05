@@ -24,7 +24,7 @@
         #region Public Properties
 
         /// <summary>Gets or sets the command to close the dialog.</summary>
-        public AsyncRelayCommand<bool?> CloseDialogCommand { get; }
+        public IAsyncCommand<bool?> CloseDialogCommand { get; }
 
         #endregion
 
