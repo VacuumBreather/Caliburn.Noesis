@@ -24,12 +24,14 @@
                             BorderThickness="2">
                         <DockPanel>
                             <Border Height="25"
+                                    cal:Draggable.IsDragHandle="True"
                                     Background="DarkSlateGray"
                                     DockPanel.Dock="Top">
                                 <Grid>
                                     <TextBlock HorizontalAlignment="Center"
                                                VerticalAlignment="Center"
                                                FontSize="14"
+                                               FontWeight="Bold"
                                                Foreground="White"
                                                Text="{Binding DisplayName, Mode=OneWay}" />
                                     <Button Width="25"
@@ -37,6 +39,8 @@
                                             Background="DarkRed"
                                             Command="{Binding CloseWindowCommand, Mode=OneWay}"
                                             Content="X"
+                                            FontSize="10"
+                                            FontWeight="Bold"
                                             Foreground="FloralWhite" />
                                 </Grid>
                             </Border>

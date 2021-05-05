@@ -131,6 +131,7 @@
     <Compile Include="Assets\Caliburn.Noesis\Platform\DataTemplateManager.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\DebugConsoleLogger.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\DialogResult.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\Draggable.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\Execute.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\NameTransformer.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\NullCheckToVisibilityConverter.cs" />
