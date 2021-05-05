@@ -44,6 +44,6 @@
         ///     (Optional) A cancellation token that can be used by other objects
         ///     or threads to receive notice of cancellation.
         /// </param>
-        UniTask ShowWindowAsync(Screen rootModel, CancellationToken cancellationToken = default);
+        UniTask ShowWindowAsync(WindowScreen rootModel, CancellationToken cancellationToken = default);
     }
 }

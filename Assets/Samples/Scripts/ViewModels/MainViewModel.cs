@@ -35,13 +35,19 @@
             WindowManager = windowManager;
             OpenDialogCommand =
                 new AsyncRelayCommand(OpenDialogAsync, () => IsActive).RaiseWith(this);
-            CancelCommand = new RelayCommand(CancelReadingFile, () => this.asyncGuard.IsOngoing)
-                .RaiseWith(this.asyncGuard);
+            CancelCommand =
+                new RelayCommand(CancelReadingFile, () => this.asyncGuard.IsOngoing).RaiseWith(
+                    this.asyncGuard);
+            AddWindowCommand = new AsyncRelayCommand(AddWindow, () => IsActive).RaiseWith(this);
         }
 
         #endregion
 
         #region Public Properties
+
+        /// <summary>The command to add another window.</summary>
+        [UsedImplicitly]
+        public IRaisingCommand AddWindowCommand { get; }
 
         /// <summary>The command to cancel reading the opened file.</summary>
         [UsedImplicitly]
@@ -85,6 +91,11 @@
         #endregion
 
         #region Private Methods
+
+        private async UniTask AddWindow()
+        {
+            await WindowManager.ShowWindowAsync(new SampleWindowViewModel());
+        }
 
         private void CancelReadingFile()
         {

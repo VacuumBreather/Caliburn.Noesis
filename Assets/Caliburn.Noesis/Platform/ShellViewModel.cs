@@ -21,6 +21,7 @@
             DisplayName = "RootConductor";
             MainContent.DisplayName = "MainConductor";
             DialogContent.DisplayName = "DialogConductor";
+            WindowContent.DisplayName = "WindowConductor";
         }
 
         #endregion
@@ -32,6 +33,10 @@
 
         /// <summary>Gets the conductor which hosts the main content.</summary>
         public Conductor<Screen> MainContent { get; } = new Conductor<Screen>();
+
+        /// <summary>Gets the conductor which hosts windows.</summary>
+        public Conductor<WindowScreen>.Collection.OneActive WindowContent { get; } =
+            new Conductor<WindowScreen>.Collection.OneActive();
 
         #endregion
 
@@ -59,10 +64,10 @@
         }
 
         /// <inheritdoc />
-        public UniTask ShowWindowAsync(Screen rootModel,
+        public async UniTask ShowWindowAsync(WindowScreen rootModel,
                                        CancellationToken cancellationToken = default)
         {
-            return UniTask.CompletedTask;
+            await WindowContent.ActivateItemAsync(rootModel, cancellationToken);
         }
 
         #endregion
