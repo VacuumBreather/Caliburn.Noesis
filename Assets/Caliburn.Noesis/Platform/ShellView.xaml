@@ -1,18 +1,98 @@
-﻿<Page
-    x:Class="Caliburn.Noesis.ShellView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cal="clr-namespace:Caliburn.Noesis"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DataContext="{d:DesignInstance cal:ShellViewModel}"
-    mc:Ignorable="d">
+﻿<Page x:Class="Caliburn.Noesis.ShellView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:cal="clr-namespace:Caliburn.Noesis"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      d:DataContext="{d:DesignInstance cal:ShellViewModel}"
+      mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="WindowHost">
+            <Border cal:Draggable.BringToFrontOnClick="True"
+                    d:DataContext="{d:DesignInstance cal:WindowScreen,
+                                                     IsDesignTimeCreatable=False}"
+                    BorderBrush="Black"
+                    BorderThickness="2">
+                <DockPanel>
+                    <Border Height="25"
+                            cal:Draggable.IsDragHandle="True"
+                            Background="DarkSlateGray"
+                            DockPanel.Dock="Top">
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Text="{Binding DisplayName, Mode=OneWay}" />
+                            <Button Width="25"
+                                    HorizontalAlignment="Right"
+                                    Background="DarkRed"
+                                    Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                                    Content="X"
+                                    FontSize="10"
+                                    FontWeight="Bold"
+                                    Foreground="FloralWhite" />
+                        </Grid>
+                    </Border>
+                    <Rectangle Height="2"
+                               DockPanel.Dock="Top"
+                               Fill="Black" />
+                    <ContentControl Content="{Binding Mode=OneWay}" />
+                </DockPanel>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
     <Grid>
         <Grid.Resources>
             <cal:NullCheckToVisibilityConverter x:Key="NullToHidden" />
         </Grid.Resources>
         <ContentControl Content="{Binding MainContent.ActiveItem, Mode=OneWay}" />
-        <Grid Background="Transparent" Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
+        <ItemsControl Background="{x:Null}"
+                      ItemsSource="{Binding WindowContent.Items, Mode=OneWay}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas Background="{x:Null}" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type cal:WindowScreen}">
+                    <Border cal:Draggable.BringToFrontOnClick="True"
+                            BorderBrush="Black"
+                            BorderThickness="2">
+                        <DockPanel>
+                            <Border Height="25"
+                                    cal:Draggable.IsDragHandle="True"
+                                    Background="DarkSlateGray"
+                                    DockPanel.Dock="Top">
+                                <Grid>
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               Text="{Binding DisplayName, Mode=OneWay}" />
+                                    <Button Width="25"
+                                            HorizontalAlignment="Right"
+                                            Background="DarkRed"
+                                            Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                                            Content="X"
+                                            FontSize="10"
+                                            FontWeight="Bold"
+                                            Foreground="FloralWhite" />
+                                </Grid>
+                            </Border>
+                            <Rectangle Height="2"
+                                       DockPanel.Dock="Top"
+                                       Fill="Black" />
+                            <ContentControl Content="{Binding Mode=OneWay}" />
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Grid Background="Transparent"
+              Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
             <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}" />
         </Grid>
     </Grid>
