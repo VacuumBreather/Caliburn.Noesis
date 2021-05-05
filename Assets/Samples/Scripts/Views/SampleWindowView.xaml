@@ -6,12 +6,15 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              mc:Ignorable="d">
-    <Grid Width="320"
-          Height="240"
-          Background="CornflowerBlue">
+    <StackPanel Width="320"
+                Height="240"
+                Background="CornflowerBlue">
         <TextBlock HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="16"
                    Text="Hello World" />
-    </Grid>
+        <TextBox Width="100"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Center" />
+    </StackPanel>
 </UserControl>

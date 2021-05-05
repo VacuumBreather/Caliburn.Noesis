@@ -1,5 +1,11 @@
 ﻿namespace Caliburn.Noesis
 {
+    #region Using Directives
+
+    using JetBrains.Annotations;
+
+    #endregion
+
     /// <summary>A base class for a screen that is displayed as a draggable window.</summary>
     /// <seealso cref="Caliburn.Noesis.Screen" />
     public abstract class WindowScreen : Screen
@@ -17,6 +23,7 @@
         #region Public Properties
 
         /// <summary>Gets or sets the command to close the window.</summary>
+        [UsedImplicitly]
         public IAsyncCommand<bool?> CloseWindowCommand { get; }
 
         #endregion
