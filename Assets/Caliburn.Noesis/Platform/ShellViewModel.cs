@@ -35,8 +35,7 @@
         public Conductor<Screen> MainContent { get; } = new Conductor<Screen>();
 
         /// <summary>Gets the conductor which hosts windows.</summary>
-        public Conductor<WindowScreen>.Collection.OneActive WindowContent { get; } =
-            new Conductor<WindowScreen>.Collection.OneActive();
+        public WindowConductor WindowContent { get; } = new WindowConductor();
 
         #endregion
 
@@ -65,7 +64,7 @@
 
         /// <inheritdoc />
         public async UniTask ShowWindowAsync(WindowScreen rootModel,
-                                       CancellationToken cancellationToken = default)
+                                             CancellationToken cancellationToken = default)
         {
             await WindowContent.ActivateItemAsync(rootModel, cancellationToken);
         }

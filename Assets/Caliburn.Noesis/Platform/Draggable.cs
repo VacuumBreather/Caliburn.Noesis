@@ -3,6 +3,8 @@
     #region Using Directives
 
     using System;
+    using System.Linq;
+    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
@@ -33,9 +35,21 @@
                 typeof(Draggable),
                 new PropertyMetadata(default(bool), OnIsDragHandleChanged));
 
-        private static readonly DependencyProperty DraggableElementProperty =
+        /// <summary>
+        ///     BringToFrontOnClick property. This is an attached property. Draggable defines the
+        ///     property, so that it can be set on any <see cref="FrameworkElement" /> that is supposed to be
+        ///     brought to the front of a canvas whenever it is left-clicked.
+        /// </summary>
+        public static readonly DependencyProperty BringToFrontOnClickProperty =
             DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(DraggableElementProperty)),
+                PropertyNameHelper.GetName(nameof(BringToFrontOnClickProperty)),
+                typeof(bool),
+                typeof(Draggable),
+                new PropertyMetadata(default(bool), OnBringToFrontOnClickChanged));
+
+        private static readonly DependencyProperty AttachedElementProperty =
+            DependencyProperty.RegisterAttached(
+                PropertyNameHelper.GetName(nameof(AttachedElementProperty)),
                 typeof(FrameworkElement),
                 typeof(Draggable),
                 new PropertyMetadata(default(FrameworkElement)));
@@ -59,6 +73,20 @@
         #region Public Methods
 
         /// <summary>
+        ///     Gets a value indicating whether the specified element will be brought to the from of its
+        ///     hosting canvas whenever it is left-clicked.
+        /// </summary>
+        /// <param name="element">The element in the host canvas.</param>
+        /// <returns>
+        ///     <c>true</c> if the specified element will be brought to the from of its hosting canvas
+        ///     whenever it is left-clicked; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool GetBringToFrontOnClick(FrameworkElement element)
+        {
+            return (bool)element.GetValue(BringToFrontOnClickProperty);
+        }
+
+        /// <summary>
         ///     Gets a value indicating whether the specified element is the handle of a draggable element
         ///     inside a canvas.
         /// </summary>
@@ -70,6 +98,21 @@
         public static bool GetIsDragHandle(FrameworkElement element)
         {
             return (bool)element.GetValue(IsDragHandleProperty);
+        }
+
+        /// <summary>
+        ///     Sets a value indicating whether the specified element should be brought to the from of its
+        ///     hosting canvas whenever it is left-clicked.
+        /// </summary>
+        /// <param name="element">The element to bring to the front of its host canvas.</param>
+        /// <param name="value">
+        ///     If this is set to <c>true</c>, the specified element will be brought to the
+        ///     from of its hosting canvas whenever it is left-clicked.
+        /// </param>
+        /// s>
+        public static void SetBringToFrontOnClick(FrameworkElement element, bool value)
+        {
+            element.SetValue(BringToFrontOnClickProperty, value);
         }
 
         /// <summary>
@@ -91,39 +134,55 @@
 
         #region Event Handlers
 
-        private static void OnElementPreviewMouseLeftButtonDown(
-            object sender,
-            MouseButtonEventArgs args)
+        private static void OnElementMouseLeftButtonDown(object sender, MouseButtonEventArgs args)
         {
             var element = (FrameworkElement)sender;
 
-            element.PreviewMouseLeftButtonUp += OnElementPreviewMouseLeftButtonUp;
-            element.PreviewMouseMove += OnElementPreviewMouseMove;
-            element.CaptureMouse();
+            if (GetIsDragHandle(element))
+            {
+                element.MouseLeftButtonUp += OnElementMouseLeftButtonUp;
+                element.MouseMove += OnElementMouseMove;
+                element.CaptureMouse();
 
-            var draggableElement = GetDraggableElement(element);
+                var draggableElement = GetAttachedElement(element);
 
-            SetInitialDragMousePosition(element, args.GetPosition(draggableElement));
+                SetInitialDragMousePosition(element, args.GetPosition(draggableElement));
+            }
+
+            if (GetBringToFrontOnClick(element))
+            {
+                var canvas = GetParentCanvas(element);
+                var hostedElement = GetAttachedElement(element);
+
+                var zIndex = 0;
+
+                // Cast is necessary in WPF.
+                var children = canvas.Children.Cast<UIElement>();
+
+                children.Where(child => !ReferenceEquals(child, hostedElement))
+                        .OrderBy(child => child.GetValue(Panel.ZIndexProperty))
+                        .ThenBy(child => canvas.Children.IndexOf(child))
+                        .Append(hostedElement)
+                        .ForEach(child => { child.SetValue(Panel.ZIndexProperty, zIndex++); });
+            }
         }
 
-        private static void OnElementPreviewMouseLeftButtonUp(
-            object sender,
-            MouseButtonEventArgs args)
+        private static void OnElementMouseLeftButtonUp(object sender, MouseButtonEventArgs args)
         {
             var element = (FrameworkElement)sender;
 
-            element.PreviewMouseMove -= OnElementPreviewMouseMove;
-            element.PreviewMouseLeftButtonUp -= OnElementPreviewMouseLeftButtonUp;
+            element.MouseMove -= OnElementMouseMove;
+            element.MouseLeftButtonUp -= OnElementMouseLeftButtonUp;
 
             element.ReleaseMouseCapture();
         }
 
-        private static void OnElementPreviewMouseMove(object sender, MouseEventArgs args)
+        private static void OnElementMouseMove(object sender, MouseEventArgs args)
         {
             var element = (FrameworkElement)sender;
 
             var canvas = GetParentCanvas(element);
-            var draggableElement = GetDraggableElement(element);
+            var draggableElement = GetAttachedElement(element);
             var initialPosition = GetInitialDragMousePosition(element);
             var position = args.GetPosition(canvas);
 
@@ -160,9 +219,9 @@
             return default;
         }
 
-        private static FrameworkElement GetDraggableElement(DependencyObject element)
+        private static FrameworkElement GetAttachedElement(DependencyObject element)
         {
-            return (FrameworkElement)element.GetValue(DraggableElementProperty);
+            return (FrameworkElement)element.GetValue(AttachedElementProperty);
         }
 
         private static Point GetInitialDragMousePosition(DependencyObject element)
@@ -173,6 +232,34 @@
         private static Canvas GetParentCanvas(DependencyObject element)
         {
             return (Canvas)element.GetValue(ParentCanvasProperty);
+        }
+
+        private static void OnBringToFrontOnClickChanged(DependencyObject d,
+                                                         DependencyPropertyChangedEventArgs e)
+        {
+            if (!(d is FrameworkElement element) || (e.NewValue == e.OldValue))
+            {
+                return;
+            }
+
+            if (Equals(e.NewValue, true))
+            {
+                var (canvas, draggableElement) = FindRelevantElements(element);
+
+                if (canvas is null || draggableElement is null)
+                {
+                    return;
+                }
+
+                SetParentCanvas(element, canvas);
+                SetAttachedElement(element, draggableElement);
+
+                element.MouseLeftButtonDown += OnElementMouseLeftButtonDown;
+            }
+            else
+            {
+                element.MouseLeftButtonDown -= OnElementMouseLeftButtonDown;
+            }
         }
 
         private static void OnIsDragHandleChanged(DependencyObject d,
@@ -193,19 +280,19 @@
                 }
 
                 SetParentCanvas(element, canvas);
-                SetDraggableElement(element, draggableElement);
+                SetAttachedElement(element, draggableElement);
 
-                element.PreviewMouseLeftButtonDown += OnElementPreviewMouseLeftButtonDown;
+                element.MouseLeftButtonDown += OnElementMouseLeftButtonDown;
             }
             else
             {
-                element.PreviewMouseLeftButtonDown -= OnElementPreviewMouseLeftButtonDown;
+                element.MouseLeftButtonDown -= OnElementMouseLeftButtonDown;
             }
         }
 
-        private static void SetDraggableElement(DependencyObject element, FrameworkElement value)
+        private static void SetAttachedElement(DependencyObject element, FrameworkElement value)
         {
-            element.SetValue(DraggableElementProperty, value);
+            element.SetValue(AttachedElementProperty, value);
         }
 
         private static void SetInitialDragMousePosition(DependencyObject element, Point value)
