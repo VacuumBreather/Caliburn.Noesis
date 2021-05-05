@@ -131,6 +131,7 @@
     <Compile Include="Assets\Caliburn.Noesis\Platform\DataTemplateManager.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\DebugConsoleLogger.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\DialogResult.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\Draggable.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\Execute.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\NameTransformer.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\NullCheckToVisibilityConverter.cs" />
@@ -148,17 +149,23 @@
     <Compile Include="Assets\Caliburn.Noesis\RelayCommand.cs" />
     <Compile Include="Assets\Caliburn.Noesis\SafeCancellationTokenSource.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Screen.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\WindowConductor.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\WindowScreen.cs" />
     <Compile Include="Assets\Samples\Scripts\SampleBootstrapper.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\DirectoryInfoExtensions.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\DirectoryNode.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\FileDialogViewModel.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\FileSystemNode.cs" />
     <Compile Include="Assets\Samples\Scripts\ViewModels\MainViewModel.cs" />
+    <Compile Include="Assets\Samples\Scripts\ViewModels\SampleWindowViewModel.cs" />
     <Compile Include="Assets\Samples\Scripts\Views\FileDialogView.xaml.cs">
       <DependentUpon>FileDialogView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assets\Samples\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\Samples\Scripts\Views\SampleWindowView.xaml.cs">
+      <DependentUpon>SampleWindowView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Blend\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -186,6 +193,10 @@
     <Page Include="Assets\Samples\Scripts\Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Samples\Scripts\Views\SampleWindowView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
