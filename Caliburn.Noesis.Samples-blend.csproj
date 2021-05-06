@@ -90,6 +90,8 @@
     <Compile Include="Assets\Caliburn.Noesis\ConductorBaseWithActiveItem.cs" />
     <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionAllActive.cs" />
     <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionOneActive.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Controls\WindowCanvas.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Controls\WindowHost.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DeactivationEventArgs.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DefaultCloseStrategy.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DialogConductor.cs" />
@@ -185,6 +187,10 @@
     <Page Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Caliburn.Noesis\Themes\generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Assets\Samples\Scripts\Views\FileDialogView.xaml">
       <Generator>MSBuild:Compile</Generator>

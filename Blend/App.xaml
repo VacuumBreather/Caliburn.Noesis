@@ -1,8 +1,7 @@
-﻿<Application
-    x:Class="Caliburn.Noesis.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:samples="clr-namespace:Caliburn.Noesis.Samples">
+﻿<Application x:Class="Caliburn.Noesis.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:samples="clr-namespace:Caliburn.Noesis.Samples">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
