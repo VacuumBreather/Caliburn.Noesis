@@ -259,7 +259,7 @@
                 return;
             }
 
-            var dictionary = this.noesisView.Content.Resources;
+            var dictionary = global::Noesis.GUI.GetApplicationResources();
 #else
             var dictionary = Application.Current.Resources;
 #endif
