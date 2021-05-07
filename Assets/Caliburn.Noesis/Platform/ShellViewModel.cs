@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
-
-    #endregion
 
     /// <summary>The root view model of the UI.</summary>
     [UsedImplicitly]

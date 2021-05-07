@@ -1,18 +1,13 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
-    using System;
-    using System.Globalization;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Data;
 #endif
-
-    #endregion
+    using System;
+    using System.Globalization;
 
     /// <summary>Converter used to set a visibility depending on whether a value is null.</summary>
     public class NullCheckToVisibilityConverter : IValueConverter

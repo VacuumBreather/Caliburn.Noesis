@@ -1,22 +1,16 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
-    using System;
-    using System.Linq;
-    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
     using System.Windows.Media;
-
 #endif
-
-    #endregion
+    using System;
+    using System.Linq;
+    using Extensions;
 
     /// <summary>Contains attached properties used to drag elements hosted inside a canvas.</summary>
     public static class Draggable

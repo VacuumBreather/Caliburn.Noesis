@@ -1,21 +1,16 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
-    using System;
-    using Cysharp.Threading.Tasks;
 #if UNITY_5_5_OR_NEWER
     using System.Collections.Generic;
     using JetBrains.Annotations;
     using UnityEngine;
-
 #else
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Threading;
 #endif
-
-    #endregion
+    using System;
+    using Cysharp.Threading.Tasks;
 
     /// <summary>Inherit from this class to configure and run the framework.</summary>
 #if UNITY_5_5_OR_NEWER
@@ -40,7 +35,6 @@
         #endregion
 
 #if UNITY_5_5_OR_NEWER
-
         #region Serialized Fields
 
         [SerializeField]
@@ -52,6 +46,7 @@
 #endif
 
 #if !UNITY_5_5_OR_NEWER
+
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="BootstrapperBase{T}" /> class.</summary>
@@ -59,12 +54,13 @@
         {
             Execute.Dispatcher = Dispatcher.CurrentDispatcher;
             Application.Current.Startup += (_, __) => Execute.OnUIThreadAsync(Start).Forget();
-            Application.Current.Activated += (_, __) =>  Execute.OnUIThreadAsync(OnEnable).Forget();
+            Application.Current.Activated += (_, __) => Execute.OnUIThreadAsync(OnEnable).Forget();
             Application.Current.Deactivated +=
-                (_, __) =>  Execute.OnUIThreadAsync(OnDisable).Forget();
+                (_, __) => Execute.OnUIThreadAsync(OnDisable).Forget();
         }
 
         #endregion
+
 #endif
 
         #region Protected Properties
@@ -148,12 +144,7 @@
 #endif
         {
 #if !UNITY_5_5_OR_NEWER
-            var window = new Window
-                             {
-                                 Content = new ShellView(),
-                                 Width = 1280,
-                                 Height = 720
-                             };
+            var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
             window.Show();
             window.Closing += OnWindowClosing;
             await OnEnable();

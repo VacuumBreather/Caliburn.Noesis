@@ -1,19 +1,14 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
-    using System;
-    using System.Linq;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Markup;
 #endif
+    using System;
+    using System.Linq;
     using Extensions;
-
-    #endregion
 
     /// <summary>Creates data templates for view-models.</summary>
     public static class DataTemplateManager
@@ -162,6 +157,7 @@
             }
 
             var template = (DataTemplate)XamlReader.Parse(xamlTemplate);
+            template.Seal();
 
             return template;
         }

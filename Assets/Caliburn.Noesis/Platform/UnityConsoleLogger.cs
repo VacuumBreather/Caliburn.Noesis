@@ -1,12 +1,8 @@
 ﻿#if UNITY_5_5_OR_NEWER
 namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using Object = UnityEngine.Object;
-
-    #endregion
 
     /// <summary>A logger implementation which only logs to the unity console.</summary>
     public class UnityConsoleLogger : ILogger
