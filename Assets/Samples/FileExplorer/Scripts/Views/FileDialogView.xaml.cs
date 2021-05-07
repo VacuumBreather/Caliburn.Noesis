@@ -1,8 +1,8 @@
-﻿namespace Caliburn.Noesis.Samples.Views
+﻿namespace Caliburn.Noesis.Samples.FileExplorer.Views
 {
+    using global::Noesis;
 #if UNITY_5_5_OR_NEWER
     using System;
-    using global::Noesis;
 
 #else
     using System;
@@ -40,7 +40,7 @@
 #if UNITY_5_5_OR_NEWER
         private void InitializeComponent()
         {
-            GUI.LoadComponent(this, "Assets/Samples/Scripts/Views/FileDialogView.xaml");
+            GUI.LoadComponent(this, "Assets/Samples/FileExplorer/Scripts/Views/FileDialogView.xaml");
         }
 #endif
 

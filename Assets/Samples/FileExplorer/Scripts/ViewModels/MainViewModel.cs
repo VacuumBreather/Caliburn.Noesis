@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.FileExplorer.ViewModels
 {
 #if !UNITY_5_5_OR_NEWER
     using System;

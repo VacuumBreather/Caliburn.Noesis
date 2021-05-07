@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.FileExplorer.ViewModels
 {
     /// <summary>The view-model for a sample window.</summary>
     public class SampleWindowViewModel : WindowScreen

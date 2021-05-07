@@ -10,59 +10,7 @@
     <projectFile>HelloWorld-blend/HelloWorld-blend.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assembly-CSharp.csproj.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly-CSharp.csproj.DotSettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/LogManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/NullCheckToVisibilityConverter.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/ShellView.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/ShellView.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/UnitTestDetector.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/SampleScene.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/SampleScene.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/SampleBootstrapper.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/SampleBootstrapper.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/DirectoryInfoExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/DirectoryInfoExtensions.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/DirectoryNode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/DirectoryNode.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/FileDialogViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/FileDialogViewModel.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/FileSystemNode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/FileSystemNode.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/MainViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/MainViewModel.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/SampleWindowViewModel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/ViewModels/SampleWindowViewModel.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/FileDialogView.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/FileDialogView.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/FileDialogView.xaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/FileDialogView.xaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/FileDialogView.xaml.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/FileDialogView.xaml.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/MainView.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/MainView.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/MainView.xaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/MainView.xaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/MainView.xaml.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/MainView.xaml.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/SampleWindowView.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/SampleWindowView.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/SampleWindowView.xaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/SampleWindowView.xaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/SampleWindowView.xaml.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Scripts/Views/SampleWindowView.xaml.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/App.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/App.xaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/App.xaml.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/Properties/AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.csproj.DotSettings" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages.config" beforeDir="false" afterPath="$PROJECT_DIR$/packages.config" afterDir="false" />
-    </list>
+    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -245,6 +193,7 @@
       <workItem from="1620425588337" duration="191000" />
       <workItem from="1620425795255" duration="526000" />
       <workItem from="1620427347333" duration="32000" />
+      <workItem from="1620428337557" duration="266000" />
     </task>
     <servers />
   </component>

@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="Caliburn.Noesis.Samples.Views.FileDialogView"
+﻿<UserControl x:Class="Caliburn.Noesis.Samples.FileExplorer.Views.FileDialogView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cal="clr-namespace:Caliburn.Noesis"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:io="clr-namespace:System.IO;assembly=mscorlib"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:Caliburn.Noesis.Samples.ViewModels"
+             xmlns:vm="clr-namespace:Caliburn.Noesis.Samples.FileExplorer.ViewModels"
              Margin="50"
              d:DataContext="{d:DesignInstance vm:FileDialogViewModel,
                                               IsDesignTimeCreatable=True}"
