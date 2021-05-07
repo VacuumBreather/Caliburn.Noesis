@@ -13,6 +13,8 @@
     using System.Windows.Markup;
 #endif
 
+    #endregion
+
     /// <summary>Creates data templates for view-models.</summary>
     [PublicAPI]
     public static class DataTemplateManager

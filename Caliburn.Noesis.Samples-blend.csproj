@@ -91,6 +91,7 @@
     <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionAllActive.cs" />
     <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionOneActive.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Controls\WindowCanvas.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Controls\Window.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Controls\WindowHost.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DeactivationEventArgs.cs" />
     <Compile Include="Assets\Caliburn.Noesis\DefaultCloseStrategy.cs" />
