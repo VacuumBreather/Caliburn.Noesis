@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis.HelloWorld
 {
     using System.Windows;
 
