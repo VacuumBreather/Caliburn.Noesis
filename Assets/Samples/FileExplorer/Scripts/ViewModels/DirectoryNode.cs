@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Samples.ViewModels
+﻿namespace Caliburn.Noesis.Samples.FileExplorer.ViewModels
 {
     using System;
     using System.Collections.Generic;
