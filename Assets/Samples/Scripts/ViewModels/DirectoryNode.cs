@@ -1,15 +1,11 @@
 ﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Security;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>A <see cref="FileSystemNode" /> representing a directory.</summary>
     public class DirectoryNode : FileSystemNode

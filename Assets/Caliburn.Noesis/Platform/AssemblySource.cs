@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -15,8 +13,6 @@
 #else
     using System.Windows;
 #endif
-
-    #endregion
 
     /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
     public class AssemblySource

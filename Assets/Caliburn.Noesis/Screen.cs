@@ -1,13 +1,9 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
-
-    #endregion
 
     /// <summary>A base implementation of <see cref="IScreen" />.</summary>
     public abstract class Screen : PropertyChangedBase, IScreen, IChild

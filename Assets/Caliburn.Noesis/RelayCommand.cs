@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Windows.Input;
-
-    #endregion
 
     /// <summary>A command which relays its execution to a delegate.</summary>
     public class RelayCommand : IRaisingCommand

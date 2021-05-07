@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.Noesis.Samples.Views
 {
-    #region Using Directives
-
     using System;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
@@ -9,8 +7,6 @@
 #else
     using System.Windows.Controls;
 #endif
-
-    #endregion
 
     /// <summary>Interaction logic for MainView.xaml</summary>
     public partial class MainView : UserControl

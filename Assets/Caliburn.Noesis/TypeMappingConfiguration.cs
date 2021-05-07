@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     /// <summary>
     ///     Specifies settings for configuring type mappings performed by the

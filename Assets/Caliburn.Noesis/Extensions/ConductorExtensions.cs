@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System.Threading;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="IConductor" /> type.</summary>
     public static class ConductorExtensions

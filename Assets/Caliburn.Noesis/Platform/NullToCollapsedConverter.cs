@@ -1,28 +1,23 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
-    using System;
-    using System.Globalization;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Data;
 #endif
+    using System;
+    using System.Globalization;
 
-    #endregion
-
-    /// <summary>Converter used to set a visibility depending on whether a value is null.</summary>
-    public class NullCheckToVisibilityConverter : IValueConverter
+    /// <summary>Coverts a null value to <see cref="Visibility.Collapsed" />.</summary>
+    public class NullToCollapsedConverter : IValueConverter
     {
         #region IValueConverter Implementation
 
         /// <inheritdoc />
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value != null ? Visibility.Visible : Visibility.Hidden;
+            return value != null ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <inheritdoc />

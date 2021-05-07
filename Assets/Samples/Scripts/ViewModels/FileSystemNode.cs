@@ -1,15 +1,11 @@
 ﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
-
-    #endregion
 
     /// <summary>Base class for nodes representing parts of a file system.</summary>
     public abstract class FileSystemNode : PropertyChangedBase

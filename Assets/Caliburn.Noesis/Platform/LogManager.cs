@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
 
     using System;
     using System.Collections.Generic;
@@ -10,7 +9,6 @@
 
 #endif
 
-    #endregion
 
     /// <summary>Responsible for creating various <see cref="ILogger" /> types.</summary>
     public static class LogManager

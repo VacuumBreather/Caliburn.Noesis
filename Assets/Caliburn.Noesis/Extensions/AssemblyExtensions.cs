@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System.Reflection;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="Assembly" /> type.</summary>
     public static class AssemblyExtensions

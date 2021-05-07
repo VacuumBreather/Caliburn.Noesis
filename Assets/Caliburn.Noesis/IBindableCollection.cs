@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.Collections.Specialized;
-
-    #endregion
 
     /// <summary>Represents a collection that is bindable.</summary>
     /// <typeparam name="T">The type of elements contained in the collection.</typeparam>

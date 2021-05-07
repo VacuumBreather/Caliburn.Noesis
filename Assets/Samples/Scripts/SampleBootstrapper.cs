@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis.Samples
 {
-    #region Using Directives
-
     using ViewModels;
-
-    #endregion
 
     /// <summary>The bootstrapper for the sample UI.</summary>
     public class SampleBootstrapper : BootstrapperBase<MainViewModel>

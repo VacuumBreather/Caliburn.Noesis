@@ -1,10 +1,9 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using Cysharp.Threading.Tasks;
 #if UNITY_5_5_OR_NEWER
+    using GUI = global::Noesis.GUI;
     using System.Collections.Generic;
     using JetBrains.Annotations;
     using UnityEngine;
@@ -14,8 +13,6 @@
     using System.Windows;
     using System.Windows.Threading;
 #endif
-
-    #endregion
 
     /// <summary>Inherit from this class to configure and run the framework.</summary>
 #if UNITY_5_5_OR_NEWER
@@ -59,12 +56,13 @@
         {
             Execute.Dispatcher = Dispatcher.CurrentDispatcher;
             Application.Current.Startup += (_, __) => Execute.OnUIThreadAsync(Start).Forget();
-            Application.Current.Activated += (_, __) =>  Execute.OnUIThreadAsync(OnEnable).Forget();
+            Application.Current.Activated += (_, __) => Execute.OnUIThreadAsync(OnEnable).Forget();
             Application.Current.Deactivated +=
-                (_, __) =>  Execute.OnUIThreadAsync(OnDisable).Forget();
+                (_, __) => Execute.OnUIThreadAsync(OnDisable).Forget();
         }
 
         #endregion
+
 #endif
 
         #region Protected Properties
@@ -148,12 +146,7 @@
 #endif
         {
 #if !UNITY_5_5_OR_NEWER
-            var window = new Window
-                             {
-                                 Content = new ShellView(),
-                                 Width = 1280,
-                                 Height = 720
-                             };
+            var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
             window.Show();
             window.Closing += OnWindowClosing;
             await OnEnable();
@@ -259,7 +252,7 @@
                 return;
             }
 
-            var dictionary = global::Noesis.GUI.GetApplicationResources();
+            var dictionary = GUI.GetApplicationResources();
 #else
             var dictionary = Application.Current.Resources;
 #endif

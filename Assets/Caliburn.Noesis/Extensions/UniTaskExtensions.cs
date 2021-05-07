@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="UniTask" /> type.</summary>
     public static class UniTaskExtensions

@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
-    #region Using Directives
-
     using System;
     using System.IO;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="DirectoryInfo" /> type.</summary>
     public static class DirectoryInfoExtensions
