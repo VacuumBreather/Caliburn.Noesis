@@ -2,15 +2,14 @@
 {
     using System;
     using System.Linq;
-    using JetBrains.Annotations;
 
     /// <summary>Responsible for checking if the code is framework is executing inside a unit test.</summary>
-    [PublicAPI]
     public static class UnitTestDetector
     {
         #region Constants and Fields
 
-        private const string TestAssemblyName = "Microsoft.VisualStudio.QualityTools.UnitTestFramework";
+        private const string TestAssemblyName =
+            "Microsoft.VisualStudio.QualityTools.UnitTestFramework";
 
         #endregion
 
@@ -19,7 +18,8 @@
         /// <summary>Initializes static members of the <see cref="UnitTestDetector" /> class.</summary>
         static UnitTestDetector()
         {
-            IsInUnitTest = AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith(TestAssemblyName));
+            IsInUnitTest = AppDomain.CurrentDomain.GetAssemblies()
+                                    .Any(a => a.FullName.StartsWith(TestAssemblyName));
         }
 
         #endregion

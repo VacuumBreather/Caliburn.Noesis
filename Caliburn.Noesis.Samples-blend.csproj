@@ -148,6 +148,7 @@
     <Compile Include="Assets\Caliburn.Noesis\Platform\UnitTestDetector.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\UnityConsoleLogger.cs" />
     <Compile Include="Assets\Caliburn.Noesis\Platform\ViewLocator.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\VisualTreeHelperEx.cs" />
     <Compile Include="Assets\Caliburn.Noesis\PropertyChangedBase.cs" />
     <Compile Include="Assets\Caliburn.Noesis\RelayCommand.cs" />
     <Compile Include="Assets\Caliburn.Noesis\SafeCancellationTokenSource.cs" />

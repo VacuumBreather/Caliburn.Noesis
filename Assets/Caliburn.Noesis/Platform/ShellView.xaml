@@ -6,15 +6,17 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       d:DataContext="{d:DesignInstance cal:ShellViewModel}"
+      d:DesignHeight="720"
+      d:DesignWidth="1280"
       mc:Ignorable="d">
 
     <Page.Resources>
         <Style TargetType="controls:Window">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="ContentControl">
-                        <Border cal:Draggable.BringToFrontOnClick="True"
-                                BorderBrush="Black"
+                    <ControlTemplate TargetType="ContentControl"
+                                     d:DataContext="{d:DesignInstance cal:WindowScreen}">
+                        <Border BorderBrush="Black"
                                 BorderThickness="2">
                             <DockPanel>
                                 <Border Height="25"

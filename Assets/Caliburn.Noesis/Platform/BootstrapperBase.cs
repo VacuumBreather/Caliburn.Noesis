@@ -11,11 +11,12 @@
     using System.Collections.Generic;
     using global::Noesis;
     using UnityEngine;
-
 #else
     using System.ComponentModel;
     using System.Windows;
 #endif
+
+    #endregion
 
     /// <summary>Inherit from this class to configure and run the framework.</summary>
     [PublicAPI]
@@ -44,6 +45,9 @@
         private CancellationTokenSource onDisableCancellation;
 
 #if UNITY_5_5_OR_NEWER
+
+        #region Serialized Fields
+
         [SerializeField]
         [UsedImplicitly]
         private List<NoesisXaml> xamls;
@@ -52,27 +56,17 @@
         #endregion
 
 #if !UNITY_5_5_OR_NEWER
+
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="BootstrapperBase{T}" /> class.</summary>
         protected BootstrapperBase()
         {
-            Application.Current.Startup += async (_, __) =>
-                {
-                    this.onEnableCancellation = new CancellationTokenSource();
-                    await OnEnableAsync(this.onEnableCancellation.Token);
-                    await StartAsync();
-                };
-            Application.Current.Activated += async (_, __) =>
-                {
-                    this.onEnableCancellation = new CancellationTokenSource();
-                    await OnEnableAsync(this.onEnableCancellation.Token);
-                };
-            Application.Current.Deactivated += async (_, __) =>
-                {
-                    this.onDisableCancellation = new CancellationTokenSource();
-                    await OnDisableAsync(this.onDisableCancellation.Token);
-                };
+            Execute.Dispatcher = Dispatcher.CurrentDispatcher;
+            Application.Current.Startup += (_, __) => Execute.OnUIThreadAsync(Start).Forget();
+            Application.Current.Activated += (_, __) =>  Execute.OnUIThreadAsync(OnEnable).Forget();
+            Application.Current.Deactivated +=
+                (_, __) =>  Execute.OnUIThreadAsync(OnDisable).Forget();
         }
 
         #endregion
@@ -270,11 +264,20 @@
         #endregion
 
 #if !UNITY_5_5_OR_NEWER
-        #region Event Handlers
+            var window = new Window
+                             {
+                                 Content = new ShellView(),
+                                 Width = 1280,
+                                 Height = 720
+                             };
+            window.Show();
+            window.Closing += OnWindowClosing;
+            await OnEnable();
+#endif
 
-        private async void OnWindowClosing(object _, CancelEventArgs args)
-        {
-            if (args.Cancel)
+            await OnStartup();
+
+            if (!this.isInitialized)
             {
                 return;
             }

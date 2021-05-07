@@ -1,5 +1,10 @@
 ﻿namespace Caliburn.Noesis
 {
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
+    using System.Windows;
+#endif
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -7,17 +12,16 @@
     using System.Linq;
     using System.Reflection;
     using Extensions;
-    using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
 #else
     using System.Windows;
-    using System.Windows.Controls;
 #endif
 
-    /// <summary>A source of assemblies that contain view and view-model types relevant to the framework.</summary>
-    [PublicAPI]
+    #endregion
+
+    /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
     public class AssemblySource
     {
         #region Constants and Fields

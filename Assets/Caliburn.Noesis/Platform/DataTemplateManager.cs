@@ -7,11 +7,11 @@
     using Microsoft.Extensions.Logging;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Markup;
 #endif
+    using Extensions;
 
     #endregion
 
@@ -180,6 +180,7 @@
             }
 
             var template = (DataTemplate)XamlReader.Parse(xamlTemplate);
+            template.Seal();
 
             return template;
         }

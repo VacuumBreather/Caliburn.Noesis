@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Extensions;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     ///     Class for managing the list of rules for transforming view-model type names into view type
@@ -34,12 +32,6 @@
 
         #endregion
 
-        #region Private Properties
-
-        private static ILogger Logger => LogManager.FrameworkLogger;
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>Adds a transform using a single replacement value and a global filter pattern.</summary>
@@ -64,10 +56,10 @@
         ///     For examples of the use of the global filter pattern check the defaults used in
         ///     <see cref="ViewLocator" />.
         /// </example>
-        public void AddRule(string replacePattern, string replaceValue, string globalFilterPattern = null)
+        public void AddRule(string replacePattern,
+                            string replaceValue,
+                            string globalFilterPattern = null)
         {
-            using var _ = Logger.GetMethodTracer(replacePattern, replaceValue, globalFilterPattern);
-
             AddRule(
                 replacePattern,
                 new[]
@@ -103,15 +95,10 @@
                             IEnumerable<string> replaceValueList,
                             string globalFilterPattern = null)
         {
-            // ReSharper disable once PossibleMultipleEnumeration
-            using var _ = Logger.GetMethodTracer(replacePattern, replaceValueList, globalFilterPattern);
-
             Add(
                 new Rule
                     {
                         ReplacePattern = replacePattern,
-
-                        // ReSharper disable once PossibleMultipleEnumeration
                         ReplacementValues = replaceValueList,
                         GlobalFilterPattern = globalFilterPattern
                     });
@@ -122,14 +109,13 @@
         /// <returns>The transformed names.</returns>
         public IEnumerable<string> Transform(string source)
         {
-            using var _ = Logger.GetMethodTracer(source);
-
             var nameList = new List<string>();
             var rules = this.Reverse();
 
             foreach (var rule in rules)
             {
-                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source))
+                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) &&
+                    !rule.GlobalFilterPatternRegex.IsMatch(source))
                 {
                     continue;
                 }
@@ -140,7 +126,8 @@
                 }
 
                 nameList.AddRange(
-                    rule.ReplacementValues.Select(repString => rule.ReplacePatternRegex.Replace(source, repString)));
+                    rule.ReplacementValues.Select(
+                        repString => rule.ReplacePatternRegex.Replace(source, repString)));
 
                 if (!this.useEagerRuleSelection)
                 {
@@ -184,7 +171,9 @@
 
             /// <summary>Regular expression for replacing text.</summary>
             public Regex ReplacePatternRegex => this.replacePatternRegex ??
-                                                (this.replacePatternRegex = new Regex(this.ReplacePattern, Options));
+                                                (this.replacePatternRegex = new Regex(
+                                                     this.ReplacePattern,
+                                                     Options));
 
             #endregion
         }
