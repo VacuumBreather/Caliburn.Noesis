@@ -9,6 +9,8 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
+    using System.Windows.Media;
+
 #endif
 
     #endregion
@@ -36,7 +38,7 @@
         /// <inheritdoc />
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new ContentControl();
+            return new Window();
         }
 
         /// <inheritdoc />

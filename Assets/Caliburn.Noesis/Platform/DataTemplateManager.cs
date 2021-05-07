@@ -4,7 +4,6 @@
 
     using System;
     using System.Linq;
-    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
@@ -12,6 +11,7 @@
     using System.Windows;
     using System.Windows.Markup;
 #endif
+    using Extensions;
 
     #endregion
 

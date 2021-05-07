@@ -7,60 +7,56 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       d:DataContext="{d:DesignInstance cal:ShellViewModel}"
       mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="controls:Window">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Border cal:Draggable.BringToFrontOnClick="True"
+                                BorderBrush="Black"
+                                BorderThickness="2">
+                            <DockPanel>
+                                <Border Height="25"
+                                        cal:Draggable.IsDragHandle="True"
+                                        Background="DarkSlateGray"
+                                        DockPanel.Dock="Top">
+                                    <Grid>
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="14"
+                                                   FontWeight="Bold"
+                                                   Foreground="White"
+                                                   Text="{Binding DisplayName, Mode=OneWay}" />
+                                        <Button Width="25"
+                                                HorizontalAlignment="Right"
+                                                Background="DarkRed"
+                                                Command="{Binding CloseWindowCommand, Mode=OneWay}"
+                                                Content="X"
+                                                FontSize="10"
+                                                FontWeight="Bold"
+                                                Foreground="FloralWhite" />
+                                    </Grid>
+                                </Border>
+                                <Rectangle Height="2"
+                                           DockPanel.Dock="Top"
+                                           Fill="Black" />
+                                <ContentPresenter />
+                            </DockPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.Resources>
             <cal:NullCheckToVisibilityConverter x:Key="NullToHidden" />
         </Grid.Resources>
         <ContentControl Content="{Binding MainContent.ActiveItem, Mode=OneWay}" />
         <controls:WindowHost Background="{x:Null}"
-                             ItemsSource="{Binding WindowContent.Items, Mode=OneWay}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <controls:WindowCanvas />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <controls:WindowHost.ItemContainerStyle>
-                <Style>
-                    <Setter Property="Control.Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="ContentControl">
-                                <Border cal:Draggable.BringToFrontOnClick="True"
-                                        BorderBrush="Black"
-                                        BorderThickness="2">
-                                    <DockPanel>
-                                        <Border Height="25"
-                                                cal:Draggable.IsDragHandle="True"
-                                                Background="DarkSlateGray"
-                                                DockPanel.Dock="Top">
-                                            <Grid>
-                                                <TextBlock HorizontalAlignment="Center"
-                                                           VerticalAlignment="Center"
-                                                           FontSize="14"
-                                                           FontWeight="Bold"
-                                                           Foreground="White"
-                                                           Text="{Binding DisplayName, Mode=OneWay}" />
-                                                <Button Width="25"
-                                                        HorizontalAlignment="Right"
-                                                        Background="DarkRed"
-                                                        Command="{Binding CloseWindowCommand, Mode=OneWay}"
-                                                        Content="X"
-                                                        FontSize="10"
-                                                        FontWeight="Bold"
-                                                        Foreground="FloralWhite" />
-                                            </Grid>
-                                        </Border>
-                                        <Rectangle Height="2"
-                                                   DockPanel.Dock="Top"
-                                                   Fill="Black" />
-                                        <ContentPresenter />
-                                    </DockPanel>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </controls:WindowHost.ItemContainerStyle>
-        </controls:WindowHost>
+                             ItemsSource="{Binding WindowContent.Items, Mode=OneWay}" />
         <Grid Background="Transparent"
               Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
             <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}" />
