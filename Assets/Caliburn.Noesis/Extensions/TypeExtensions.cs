@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="Type" /> type.</summary>
     public static class TypeExtensions

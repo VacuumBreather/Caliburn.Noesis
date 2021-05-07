@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>Denotes an object that can be closed.</summary>
     public interface IClose

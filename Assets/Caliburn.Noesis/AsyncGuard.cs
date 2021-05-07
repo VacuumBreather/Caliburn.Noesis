@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Threading;
-
-    #endregion
 
     /// <summary>Helper class to keep track of ongoing asynchronous operations.</summary>
     /// <example>

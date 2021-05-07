@@ -1,13 +1,9 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Windows.Input;
     using Cysharp.Threading.Tasks;
     using Extensions;
-
-    #endregion
 
     /// <summary>A command which relays its execution to an asynchronous delegate.</summary>
     public class AsyncRelayCommand : IAsyncCommand

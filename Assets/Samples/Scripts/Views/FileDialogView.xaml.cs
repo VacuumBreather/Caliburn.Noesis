@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.Noesis.Samples.Views
 {
-    #region Using Directives
-
 #if UNITY_5_5_OR_NEWER
     using System;
     using global::Noesis;
@@ -11,8 +9,6 @@
     using System.Windows;
     using System.Windows.Controls;
 #endif
-
-    #endregion
 
     /// <summary>Interaction logic for FileDialogView.xaml</summary>
     public partial class FileDialogView : UserControl

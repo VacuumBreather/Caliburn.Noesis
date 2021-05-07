@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>
     ///     Provides extension methods for the <see cref="IScreen" /> and <see cref="IConductor" />

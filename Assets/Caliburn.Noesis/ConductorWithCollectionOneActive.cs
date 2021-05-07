@@ -1,15 +1,11 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Linq;
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
-
-    #endregion
 
     public partial class Conductor<T>
     {

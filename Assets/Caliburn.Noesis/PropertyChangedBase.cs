@@ -1,13 +1,9 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
-
-    #endregion
 
     /// <summary>A base class that implements the infrastructure for property change notification.</summary>
     [DataContract]

@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-
-    #endregion
 
     /// <summary>
     ///     Class for managing the list of rules for transforming view-model type names into view type

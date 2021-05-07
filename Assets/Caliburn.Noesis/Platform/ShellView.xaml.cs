@@ -1,21 +1,15 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
 #else
     using System.Windows.Controls;
-#endif
 
-    #endregion
+#endif
 
     /// <summary>Interaction logic for ShellView.xaml</summary>
-    public partial class ShellView
-#if UNITY_5_5_OR_NEWER
-        : Page
-#endif
+    public partial class ShellView : Page
     {
         #region Constructors and Destructors
 

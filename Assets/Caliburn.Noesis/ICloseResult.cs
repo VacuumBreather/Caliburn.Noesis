@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     /// <summary>Results from the close strategy.</summary>
     /// <typeparam name="T">The type of child element.</typeparam>

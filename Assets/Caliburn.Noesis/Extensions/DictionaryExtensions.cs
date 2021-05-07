@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="IDictionary{TKey,TValue}" /> type.</summary>
     public static class DictionaryExtensions

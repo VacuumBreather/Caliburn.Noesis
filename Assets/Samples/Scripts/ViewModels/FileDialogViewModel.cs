@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -11,8 +9,6 @@
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
-
-    #endregion
 
     /// <summary>A view-model representing a dialog used to open files.</summary>
     public class FileDialogViewModel : DialogScreen

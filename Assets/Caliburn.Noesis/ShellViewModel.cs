@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
-
-    #endregion
 
     /// <summary>The root view model of the UI.</summary>
     [UsedImplicitly]
@@ -19,9 +15,9 @@
             : base(true)
         {
             DisplayName = "RootConductor";
-            MainContent.DisplayName = "MainConductor";
-            DialogContent.DisplayName = "DialogConductor";
-            WindowContent.DisplayName = "WindowConductor";
+            MainContentConductor.DisplayName = "MainContentConductor";
+            DialogConductor.DisplayName = "DialogConductor";
+            WindowConductor.DisplayName = "WindowConductor";
         }
 
         #endregion
@@ -29,13 +25,13 @@
         #region Public Properties
 
         /// <summary>Gets the conductor which hosts any dialog content.</summary>
-        public DialogConductor DialogContent { get; } = new DialogConductor();
+        public DialogConductor DialogConductor { get; } = new DialogConductor();
 
         /// <summary>Gets the conductor which hosts the main content.</summary>
-        public Conductor<Screen> MainContent { get; } = new Conductor<Screen>();
+        public Conductor<Screen> MainContentConductor { get; } = new Conductor<Screen>();
 
         /// <summary>Gets the conductor which hosts windows.</summary>
-        public WindowConductor WindowContent { get; } = new WindowConductor();
+        public WindowConductor WindowConductor { get; } = new WindowConductor();
 
         #endregion
 
@@ -45,14 +41,14 @@
         public async UniTask<bool?> ShowDialogAsync(DialogScreen rootModel,
                                                     CancellationToken cancellationToken = default)
         {
-            return await DialogContent.ShowDialogAsync(rootModel, cancellationToken);
+            return await DialogConductor.ShowDialogAsync(rootModel, cancellationToken);
         }
 
         /// <inheritdoc />
         public async UniTask ShowMainContentAsync(Screen rootModel,
                                                   CancellationToken cancellationToken = default)
         {
-            await MainContent.ActivateItemAsync(rootModel, cancellationToken);
+            await MainContentConductor.ActivateItemAsync(rootModel, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -66,7 +62,7 @@
         public async UniTask ShowWindowAsync(WindowScreen rootModel,
                                              CancellationToken cancellationToken = default)
         {
-            await WindowContent.ActivateItemAsync(rootModel, cancellationToken);
+            await WindowConductor.ActivateItemAsync(rootModel, cancellationToken);
         }
 
         #endregion

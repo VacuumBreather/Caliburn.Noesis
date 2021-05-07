@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System;
     using System.ComponentModel;
     using System.Windows.Input;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="IRaisingCommand" /> type.</summary>
     public static class RaisingCommandExtensions

@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
-
-    #endregion
 
     /// <summary>Responsible for checking if the code is framework is executing inside a unit test.</summary>
     public static class UnitTestDetector

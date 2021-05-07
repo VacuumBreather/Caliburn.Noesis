@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>A base class for dialog screens.</summary>
     public abstract class DialogScreen : Screen

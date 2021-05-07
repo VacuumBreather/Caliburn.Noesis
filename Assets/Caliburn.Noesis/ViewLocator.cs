@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    #endregion
 
     /// <summary>Responsible for mapping view-model types to their corresponding view types.</summary>
     public class ViewLocator

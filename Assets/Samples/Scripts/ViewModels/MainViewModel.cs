@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.Noesis.Samples.ViewModels
 {
-    #region Using Directives
-
 #if !UNITY_5_5_OR_NEWER
     using System;
 #endif
@@ -12,8 +10,6 @@
     using Cysharp.Threading.Tasks;
     using Extensions;
     using JetBrains.Annotations;
-
-    #endregion
 
     /// <summary>The main view-model of the sample UI.</summary>
     /// <seealso cref="Screen" />
