@@ -245,13 +245,6 @@
             this.configuration = GetConfiguration();
 
 #if UNITY_5_5_OR_NEWER
-            if (this.noesisView.Content is null)
-            {
-                Logger.Error($"The {nameof(NoesisView)} root XAML must be set.");
-
-                return;
-            }
-
             var dictionary = GUI.GetApplicationResources();
 #else
             var dictionary = Application.Current.Resources;
