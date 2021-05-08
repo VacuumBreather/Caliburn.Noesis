@@ -1,0 +1,39 @@
+<UserControl x:Class="Caliburn.Noesis.Samples.Conductors.Views.MainView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:Caliburn.Noesis.Samples.Conductors.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.Conductors.ViewModels"
+             d:DataContext="{d:DesignInstance viewModels:MainViewModel,
+                                              IsDesignTimeCreatable=False}"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             mc:Ignorable="d">
+    <controls:FlipView IsCycling="True"
+                       ItemsSource="{Binding Items, Mode=OneWay}"
+                       SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
+        <controls:FlipView.ContextItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListViewItem">
+                            <Ellipse Name="Ellipse"
+                                     Width="15"
+                                     Height="15"
+                                     Fill="#888888"
+                                     Stroke="Black"
+                                     StrokeThickness="1" />
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Ellipse" Property="Fill" Value="Gold" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </controls:FlipView.ContextItemContainerStyle>
+    </controls:FlipView>
+</UserControl>

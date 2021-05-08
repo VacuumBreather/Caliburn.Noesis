@@ -12,28 +12,7 @@
     <projectFile>Caliburn.Noesis.Samples.Conductor.OneActive-blend.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ConductorOneActiveBootstrapper.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ConductorOneActiveBootstrapper.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/BestiaryScreen.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/ISubScreen.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/ISubscreen.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/MainViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/MainViewModel.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/QuestsScreen.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/StashScreen.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/Views.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/Views/MainView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assembly-CSharp.csproj.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/Assembly-CSharp.csproj.DotSettings" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/HelloWorldBootstrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/HelloWorldBootstrapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/FileExplorer/App.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/FileExplorer/App.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/HelloWorld/App.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/HelloWorld/App.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.sln" afterDir="false" />
-    </list>
+    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -49,6 +28,7 @@
     <setting file="file://$PROJECT_DIR$/Blend/FileExplorer/App.xaml.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Blend/FileExplorer/Properties/AssemblyInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C5EC303C-34CA-4964-8FE7-744590F7A693/44/877c89c9/ResourcePart.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/BestiaryScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis.meta" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/ActivationEventArgs.cs.meta" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/ISubScreen.cs.meta" root0="SKIP_HIGHLIGHTING" />
@@ -71,6 +51,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/IDeactivate.cs.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/FileDialogView.asset.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/ILogger.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Samples/ConductorOneActive/Scripts/ViewModels/QuestsScreen.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Blend/Conductor.OneActive/Properties/AssemblyInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/Extensions/UserControlExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Resources/AllResources.xaml" root0="FORCE_HIGHLIGHTING" />
@@ -261,7 +242,7 @@
       <workItem from="1620439369253" duration="954000" />
       <workItem from="1620441775436" duration="753000" />
       <workItem from="1620442572763" duration="8000" />
-      <workItem from="1620442700476" duration="1044000" />
+      <workItem from="1620442700476" duration="1281000" />
     </task>
     <servers />
   </component>

@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Conductor.OneActive
+﻿namespace Caliburn.Noesis.Conductors
 {
     using System.Windows;
 

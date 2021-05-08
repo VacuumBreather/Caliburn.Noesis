@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Caliburn.Noesis.Samples.Conductor.OneActive")]
+[assembly: AssemblyTitle("Caliburn.Noesis.Samples.Conductors")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Caliburn.Noesis.Samples.Conductor.OneActive")]
+[assembly: AssemblyProduct("Caliburn.Noesis.Samples.Conductors")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
