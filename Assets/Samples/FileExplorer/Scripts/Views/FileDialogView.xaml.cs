@@ -1,11 +1,11 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer.Views
 {
-    using global::Noesis;
-#if UNITY_5_5_OR_NEWER
     using System;
+    using Extensions;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
 
 #else
-    using System;
     using System.Windows;
     using System.Windows.Controls;
 #endif
@@ -18,7 +18,7 @@
         /// <summary>Initializes a new instance of the <see cref="FileDialogView" /> class.</summary>
         public FileDialogView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             var weakReference = new WeakReference(this);
             Loaded += (_, __) => ((FileDialogView)weakReference.Target)?.OnLoaded();
@@ -36,13 +36,6 @@
             (e.OriginalSource as TreeViewItem)?.BringIntoView();
 #endif
         }
-
-#if UNITY_5_5_OR_NEWER
-        private void InitializeComponent()
-        {
-            GUI.LoadComponent(this, "Assets/Samples/FileExplorer/Scripts/Views/FileDialogView.xaml");
-        }
-#endif
 
         private void OnLoaded()
         {

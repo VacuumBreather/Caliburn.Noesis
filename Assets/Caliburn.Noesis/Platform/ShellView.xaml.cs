@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
+    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
@@ -16,25 +17,8 @@
         /// <summary>Initializes a new instance of the <see cref="ShellView" /> class.</summary>
         public ShellView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-
-        #endregion
-
-        #region Private Methods
-
-#if UNITY_5_5_OR_NEWER
-
-        #region Private Methods
-
-        private void InitializeComponent()
-        {
-            GUI.LoadComponent(this, "Assets/Caliburn.Noesis/Platform/ShellView.xaml");
-        }
-
-        #endregion
-
-#endif
 
         #endregion
     }

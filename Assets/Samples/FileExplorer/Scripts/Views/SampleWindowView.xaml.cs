@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer.Views
 {
-    using System.Linq;
-    using System.Runtime.CompilerServices;
+    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
@@ -16,27 +15,8 @@
 
         public SampleWindowView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
-
-        #endregion
-
-        #region Private Methods
-
-#if UNITY_5_5_OR_NEWER
-
-        #region Private Methods
-
-        private void InitializeComponent()
-        {
-            GUI.LoadComponent(
-                this,
-                "Assets/Samples/FileExplorer/Scripts/Views/SampleWindowView.xaml");
-        }
-
-        #endregion
-
-#endif
 
         #endregion
     }
