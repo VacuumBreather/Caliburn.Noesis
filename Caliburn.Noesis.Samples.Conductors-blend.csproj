@@ -154,11 +154,21 @@
     <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipView.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipViewItem.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryScreen.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\MarkupExtensions\SolidBrushExtension.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\ISubScreen.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\MainViewModel.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\QuestsScreen.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\StashScreen.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\QuestsViewModel.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\MeditationViewModel.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\QuestsView.xaml.cs">
+      <DependentUpon>QuestsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\MeditationView.xaml.cs">
+      <DependentUpon>MeditationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\BestiaryView.xaml.cs">
+      <DependentUpon>BestiaryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -172,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <AppDesigner Include="Blend\Conductors\Properties\" />
+    <Resource Include="Assets\Samples\Conductors\Fonts\NO.TTF" />
     <None Include="Blend\Conductors\App.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -183,7 +194,39 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml" />
-    <Page Include="Assets\Samples\Conductors\Scripts\Controls\FlipViewResources.xaml">
+    <Page Include="Assets\Samples\Conductors\Resources\AllResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\ColorResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\FlipViewResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\FontResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\ImageResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\TextBlockResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Scripts\Views\QuestsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Scripts\Views\MeditationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Scripts\Views\BestiaryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -191,6 +234,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Samples\Conductors\Images\Background.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

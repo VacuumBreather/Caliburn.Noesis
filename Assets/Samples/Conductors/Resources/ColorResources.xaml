@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="Color.Foreground.Default">#A4A39C</Color>
+    <Color x:Key="Color.Foreground.Header">#FFFFFF</Color>
+    <Color x:Key="Color.Foreground.HeaderSmall">#614A39</Color>
+
+</ResourceDictionary>
