@@ -1,13 +1,9 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="AsyncEventHandler{TEventArgs}" /> type.</summary>
     public static class AsyncEventHandlerExtensions

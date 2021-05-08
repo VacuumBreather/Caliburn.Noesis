@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Windows.Input;
-
-    #endregion
 
     /// <summary>
     ///     Defines a command which can be told to raise its <see cref="ICommand.CanExecuteChanged" />

@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.ComponentModel;
-
-    #endregion
 
     /// <summary>
     ///     Extends <see cref="INotifyPropertyChanged" /> such that the change event can be raised by

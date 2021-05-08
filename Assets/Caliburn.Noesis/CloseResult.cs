@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
-
-    #endregion
 
     /// <summary>The result of a test whether an instance can be closed.</summary>
     /// <typeparam name="T">The type of the children of the instance.</typeparam>

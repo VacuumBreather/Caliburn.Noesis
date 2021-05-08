@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
-
-    #endregion
 
     /// <summary>Event arguments for the <see cref="IActivate.Activated" /> event.</summary>
     public class ActivationEventArgs : EventArgs

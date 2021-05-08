@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.Linq;
     using Extensions;
@@ -12,8 +10,6 @@
     using System.Windows;
     using System.Windows.Markup;
 #endif
-
-    #endregion
 
     /// <summary>Creates data templates for view-models.</summary>
     public static class DataTemplateManager

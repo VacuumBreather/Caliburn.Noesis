@@ -1,0 +1,16 @@
+﻿<Application x:Class="Caliburn.Noesis.FileExplorer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fileExplorer="clr-namespace:Caliburn.Noesis.Samples.FileExplorer">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Noesis.GUI.Extensions;component/Theme/NoesisTheme.DarkBlue.xaml" />
+                <ResourceDictionary Source="/Noesis.GUI.Extensions;component/Theme/NoesisTheme.Fonts.xaml" />
+                <ResourceDictionary>
+                    <fileExplorer:FileExplorerBootstrapper x:Key="Bootstrapper" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

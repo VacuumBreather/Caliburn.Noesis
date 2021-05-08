@@ -1,28 +1,25 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using Cysharp.Threading.Tasks;
 
 #if !UNITY_5_5_OR_NEWER
     using System.Windows.Threading;
-#endif
 
-    #endregion
+#endif
 
     /// <summary>Enables easy marshalling of code to the UI thread.</summary>
     public static class Execute
     {
+        #region Public Properties
+
 #if !UNITY_5_5_OR_NEWER
-        /// <summary>
-        /// Gets or sets the dispatcher.
-        /// </summary>
-        /// <value>
-        /// The dispatcher.
-        /// </value>
+        /// <summary>Gets or sets the dispatcher.</summary>
+        /// <value>The dispatcher.</value>
         public static Dispatcher Dispatcher { get; set; }
 #endif
+
+        #endregion
 
         #region Public Methods
 

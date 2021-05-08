@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Threading;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>A conductor for dialogs.</summary>
     public class DialogConductor : Conductor<DialogScreen>
