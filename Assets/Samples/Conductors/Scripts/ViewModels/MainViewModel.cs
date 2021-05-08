@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Samples.ConductorOneActive.ViewModels
+﻿namespace Caliburn.Noesis.Samples.Conductors.ViewModels
 {
     using System.Collections.Generic;
     using System.Linq;

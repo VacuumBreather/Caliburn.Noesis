@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis.Samples.ConductorOneActive
+﻿namespace Caliburn.Noesis.Samples.Conductors
 {
     using System;
     using System.Linq;
@@ -10,11 +10,11 @@
 
 #endif
 
-    /// <summary>Bootstrapper for the Conductor.OneActive sample.</summary>
+    /// <summary>Bootstrapper for the Conductors sample.</summary>
 #if UNITY_5_5_OR_NEWER
-    [AddComponentMenu("Bootstrappers/Conductor.OneActive Bootstrapper")]
+    [AddComponentMenu("Bootstrappers/Conductors Bootstrapper")]
 #endif
-    public class ConductorOneActiveBootstrapper : BootstrapperBase<MainViewModel>
+    public class ConductorsBootstrapper : BootstrapperBase<MainViewModel>
     {
         #region Protected Methods
 

@@ -1,4 +1,4 @@
-namespace Caliburn.Noesis.Samples.ConductorOneActive.Views
+namespace Caliburn.Noesis.Samples.Conductors.Views
 {
     using Extensions;
 #if UNITY_5_5_OR_NEWER

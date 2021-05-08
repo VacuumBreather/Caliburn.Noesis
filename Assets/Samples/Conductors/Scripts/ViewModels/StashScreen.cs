@@ -1,4 +1,4 @@
-namespace Caliburn.Noesis.Samples.ConductorOneActive.ViewModels
+namespace Caliburn.Noesis.Samples.Conductors.ViewModels
 {
     /// <summary>
     /// The screen providing access to the stash.

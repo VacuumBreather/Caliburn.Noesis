@@ -217,10 +217,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1090284656}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 751700a657a142a3b6d60ecdbd3c2fe5, type: 3}
+  m_Script: {fileID: 11500000, guid: 9529e51285e6f41449b465ac0f04c200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xamls: []
+  xamls:
+  - {fileID: 11400000, guid: 3077be2950e2def41a7f7d88b26e2bfc, type: 2}
 --- !u!114 &1090284661
 MonoBehaviour:
   m_ObjectHideFlags: 0

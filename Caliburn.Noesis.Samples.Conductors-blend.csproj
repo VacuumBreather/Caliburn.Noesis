@@ -11,15 +11,15 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FB2C2EBA-B911-49F5-B366-2D8798090562}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Blend\Conductor.OneActive\Properties</AppDesignerFolder>
+    <AppDesignerFolder>Blend\Conductors\Properties</AppDesignerFolder>
     <RootNamespace>Caliburn.Noesis</RootNamespace>
-    <AssemblyName>Caliburn.Noesis.Samples.Conductor.OneActive</AssemblyName>
+    <AssemblyName>Caliburn.Noesis.Samples.Conductors</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <OutputPath>Blend\Conductor.OneActive\bin\$(Configuration)\</OutputPath>
-    <BaseIntermediateOutputPath>Blend\Conductor.OneActive\obj\$(Configuration)\</BaseIntermediateOutputPath>
+    <OutputPath>Blend\Conductors\bin\$(Configuration)\</OutputPath>
+    <BaseIntermediateOutputPath>Blend\Conductors\obj\$(Configuration)\</BaseIntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -151,38 +151,48 @@
     <Compile Include="Assets\Caliburn.Noesis\ViewLocator.cs" />
     <Compile Include="Assets\Caliburn.Noesis\WindowConductor.cs" />
     <Compile Include="Assets\Caliburn.Noesis\WindowScreen.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\ConductorOneActiveBootstrapper.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\ViewModels\BestiaryScreen.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\ViewModels\ISubScreen.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\ViewModels\MainViewModel.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\ViewModels\QuestsScreen.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\ViewModels\StashScreen.cs" />
-    <Compile Include="Assets\Samples\ConductorOneActive\Scripts\Views\MainView.xaml.cs">
+    <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipView.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipViewItem.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryScreen.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\ISubScreen.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\MainViewModel.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\QuestsScreen.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\StashScreen.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Blend\Conductor.OneActive\App.xaml.cs">
+    <Compile Include="Blend\Conductors\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Blend\Conductor.OneActive\Properties\AssemblyInfo.cs">
+    <Compile Include="Blend\Conductors\Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <AppDesigner Include="Blend\Conductor.OneActive\Properties\" />
-    <None Include="Blend\Conductor.OneActive\App.config" />
+    <AppDesigner Include="Blend\Conductors\Properties\" />
+    <None Include="Blend\Conductors\App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Blend\Conductor.OneActive\App.xaml">
+    <ApplicationDefinition Include="Blend\Conductors\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml" />
-    <Page Include="Assets\Samples\ConductorOneActive\Scripts\Views\MainView.xaml" />
+    <Page Include="Assets\Samples\Conductors\Scripts\Controls\FlipViewResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Scripts\Views\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
