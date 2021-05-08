@@ -6,7 +6,7 @@
              xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.HelloWorld.ViewModels"
              d:DataContext="{d:DesignInstance viewModels:MainViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d">
-    <Grid TextElement.FontFamily="./#Aero Matics"
+    <Grid TextElement.FontFamily="pack://application:,,,./#Aero Matics"
           TextElement.FontSize="24"
           Background="#FF124C7A">
         <Grid.Resources>

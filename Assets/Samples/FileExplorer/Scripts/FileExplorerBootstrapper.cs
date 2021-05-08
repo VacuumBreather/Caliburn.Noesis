@@ -2,8 +2,8 @@
 {
     using ViewModels;
 
-    /// <summary>The bootstrapper for the sample UI.</summary>
-    public class SampleBootstrapper : BootstrapperBase<MainViewModel>
+    /// <summary>The bootstrapper for the file explorer sample.</summary>
+    public class FileExplorerBootstrapper : BootstrapperBase<MainViewModel>
     {
         #region Protected Methods
 
