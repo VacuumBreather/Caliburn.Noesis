@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Threading;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>A service that manages windows.</summary>
     public interface IWindowManager

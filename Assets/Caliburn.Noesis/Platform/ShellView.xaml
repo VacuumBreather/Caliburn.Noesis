@@ -6,50 +6,13 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       d:DataContext="{d:DesignInstance cal:ShellViewModel}"
       mc:Ignorable="d">
-    <Page.Resources>
-        <DataTemplate x:Key="WindowHost">
-            <Border cal:Draggable.BringToFrontOnClick="True"
-                    d:DataContext="{d:DesignInstance cal:WindowScreen,
-                                                     IsDesignTimeCreatable=False}"
-                    BorderBrush="Black"
-                    BorderThickness="2">
-                <DockPanel>
-                    <Border Height="25"
-                            cal:Draggable.IsDragHandle="True"
-                            Background="DarkSlateGray"
-                            DockPanel.Dock="Top">
-                        <Grid>
-                            <TextBlock HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"
-                                       FontSize="14"
-                                       FontWeight="Bold"
-                                       Foreground="White"
-                                       Text="{Binding DisplayName, Mode=OneWay}" />
-                            <Button Width="25"
-                                    HorizontalAlignment="Right"
-                                    Background="DarkRed"
-                                    Command="{Binding CloseWindowCommand, Mode=OneWay}"
-                                    Content="X"
-                                    FontSize="10"
-                                    FontWeight="Bold"
-                                    Foreground="FloralWhite" />
-                        </Grid>
-                    </Border>
-                    <Rectangle Height="2"
-                               DockPanel.Dock="Top"
-                               Fill="Black" />
-                    <ContentControl Content="{Binding Mode=OneWay}" />
-                </DockPanel>
-            </Border>
-        </DataTemplate>
-    </Page.Resources>
     <Grid>
         <Grid.Resources>
-            <cal:NullCheckToVisibilityConverter x:Key="NullToHidden" />
+            <cal:NullToCollapsedConverter x:Key="NullToCollapsed" />
         </Grid.Resources>
-        <ContentControl Content="{Binding MainContent.ActiveItem, Mode=OneWay}" />
+        <ContentControl Content="{Binding MainContentConductor.ActiveItem, Mode=OneWay}" />
         <ItemsControl Background="{x:Null}"
-                      ItemsSource="{Binding WindowContent.Items, Mode=OneWay}">
+                      ItemsSource="{Binding WindowConductor.Items, Mode=OneWay}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Canvas Background="{x:Null}" />
@@ -92,8 +55,8 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <Grid Background="Transparent"
-              Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
-            <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}" />
+              Visibility="{Binding DialogConductor.ActiveItem, Mode=OneWay, Converter={StaticResource NullToCollapsed}}">
+            <ContentControl Content="{Binding DialogConductor.ActiveItem, Mode=OneWay}" />
         </Grid>
     </Grid>
 </Page>

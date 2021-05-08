@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
-    #region Using Directives
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    #endregion
 
     /// <summary>Provides extension methods for the <see cref="IEnumerable{T}" /> type.</summary>
     public static class EnumerableExtensions

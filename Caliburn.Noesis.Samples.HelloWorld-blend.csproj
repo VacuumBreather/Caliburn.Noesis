@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>Blend\obj\</BaseIntermediateOutputPath>
+    <LangVersion>8</LangVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E1BC9C7D-E154-418B-AA33-02370BF2A8D7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Blend\HelloWorld\Properties</AppDesignerFolder>
+    <RootNamespace>Caliburn.Noesis</RootNamespace>
+    <AssemblyName>Caliburn.Noesis.Samples.HelloWorld</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <OutputPath>Blend\HelloWorld\bin\$(Configuration)\</OutputPath>
+    <BaseIntermediateOutputPath>Blend\HelloWorld\obj\$(Configuration)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=2021.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>packages\JetBrains.Annotations.2021.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\Microsoft.Expression.Interactions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Noesis.GUI.Extensions, Version=3.0.5.10009, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)packages\Noesis.GUI.Extensions.3.0.5\lib\net45\Noesis.GUI.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>$(SolutionDir)packages\Expression.Blend.Sdk.WPF.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UniTask, Version=2.2.5.0, Culture=neutral, PublicKeyToken=7a576c6e8fde454a, processorArchitecture=MSIL">
+      <HintPath>packages\UniTask.2.2.5\lib\netstandard2.0\UniTask.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Assets\Caliburn.Noesis\ActivationEventArgs.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ActivationProcessedEventArgs.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\AsyncEventHandler.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\AsyncGuard.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\AsyncRelayCommand.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\BindableCollection.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\CaliburnConfiguration.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\CloseResult.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Conductor.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ConductorBase.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ConductorBaseWithActiveItem.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionAllActive.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionOneActive.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\DeactivationEventArgs.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\DefaultCloseStrategy.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\DialogConductor.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\DialogResult.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\DialogScreen.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\AssemblyExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\AsyncEventHandlerExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\ConductorExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\RaisingCommandExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\ScreenExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\TypeExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Extensions\UniTaskExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IActivate.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IAsyncCommand.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IBindableCollection.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IChild.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IClose.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ICloseResult.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ICloseStrategy.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ICommand.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IConductActiveItem.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IConductor.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IDeactivate.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IGuardClose.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IHaveActiveItem.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IHaveDisplayName.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\INotifyPropertyChangedEx.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IParent.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IRaisingCommand.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IScreen.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\IWindowManager.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\NameTransformer.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\AssemblySource.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\BootstrapperBase.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\CloseDialog.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\DataTemplateManager.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\DebugConsoleLogger.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\Draggable.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\Execute.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\Extensions\UserControlExtensions.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\ILogger.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\LogManager.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\NullToCollapsedConverter.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Platform\UnityConsoleLogger.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\PropertyChangedBase.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\PropertyNameHelper.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\RegExHelper.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\RelayCommand.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\SafeCancellationTokenSource.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\Screen.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ShellViewModel.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\TypeMappingConfiguration.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\UnitTestDetector.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\ViewLocator.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\WindowConductor.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\WindowScreen.cs" />
+    <Compile Include="Assets\Samples\HelloWorld\Scripts\HelloWorldBootstrapper.cs" />
+    <Compile Include="Assets\Samples\HelloWorld\Scripts\ViewModels\MainViewModel.cs" />
+    <Compile Include="Assets\Samples\HelloWorld\Scripts\Views\MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Blend\HelloWorld\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Blend\HelloWorld\Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppDesigner Include="Blend\HelloWorld\Properties\" />
+    <None Include="Blend\HelloWorld\App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Assets\Samples\HelloWorld\Scripts\Resources\AllResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Samples\HelloWorld\Scripts\Views\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <ApplicationDefinition Include="Blend\HelloWorld\App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Samples\HelloWorld\Scripts\Views\Aero Matics Regular.ttf" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

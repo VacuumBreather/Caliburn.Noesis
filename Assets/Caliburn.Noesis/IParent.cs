@@ -1,11 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections;
     using System.Collections.Generic;
-
-    #endregion
 
     /// <summary>Interface used to define an object associated to a collection of children.</summary>
     public interface IParent
