@@ -22,11 +22,62 @@
         private Button backButton;
         private Button forwardButton;
 
-        public static readonly DependencyProperty ContextItemTemplateProperty = DependencyProperty.Register(
-            nameof(ContextItemTemplate),
-            typeof(DataTemplate),
+        public static readonly DependencyProperty PreviousItemProperty =
+            DependencyProperty.Register(
+                nameof(PreviousItem),
+                typeof(object),
+                typeof(FlipView),
+                new PropertyMetadata(default(object)));
+
+        public object PreviousItem
+        {
+            get => GetValue(PreviousItemProperty);
+            set => SetValue(PreviousItemProperty, value);
+        }
+
+        public static readonly DependencyProperty NextItemProperty = DependencyProperty.Register(
+            nameof(NextItem),
+            typeof(object),
             typeof(FlipView),
-            new PropertyMetadata(default(DataTemplate)));
+            new PropertyMetadata(default(object)));
+
+        public object NextItem
+        {
+            get => GetValue(NextItemProperty);
+            set => SetValue(NextItemProperty, value);
+        }
+
+        public static readonly DependencyProperty PreviewItemTemplateProperty =
+            DependencyProperty.Register(
+                nameof(PreviewItemTemplate),
+                typeof(DataTemplate),
+                typeof(FlipView),
+                new PropertyMetadata(default(DataTemplate)));
+
+        public DataTemplate PreviewItemTemplate
+        {
+            get => (DataTemplate)GetValue(PreviewItemTemplateProperty);
+            set => SetValue(PreviewItemTemplateProperty, value);
+        }
+
+        public static readonly DependencyProperty ButtonStyleProperty = DependencyProperty.Register(
+            nameof(ButtonStyle),
+            typeof(Style),
+            typeof(FlipView),
+            new PropertyMetadata(default(Style)));
+
+        public Style ButtonStyle
+        {
+            get => (Style)GetValue(ButtonStyleProperty);
+            set => SetValue(ButtonStyleProperty, value);
+        }
+
+        public static readonly DependencyProperty ContextItemTemplateProperty =
+            DependencyProperty.Register(
+                nameof(ContextItemTemplate),
+                typeof(DataTemplate),
+                typeof(FlipView),
+                new PropertyMetadata(default(DataTemplate)));
 
         public DataTemplate ContextItemTemplate
         {
@@ -34,11 +85,12 @@
             set => SetValue(ContextItemTemplateProperty, value);
         }
 
-        public static readonly DependencyProperty ContextItemContainerStyleProperty = DependencyProperty.Register(
-            nameof(ContextItemContainerStyle),
-            typeof(Style),
-            typeof(FlipView),
-            new PropertyMetadata(default(Style)));
+        public static readonly DependencyProperty ContextItemContainerStyleProperty =
+            DependencyProperty.Register(
+                nameof(ContextItemContainerStyle),
+                typeof(Style),
+                typeof(FlipView),
+                new PropertyMetadata(default(Style)));
 
         public Style ContextItemContainerStyle
         {
@@ -66,15 +118,19 @@
 
         public object Header
         {
-            get => (object)GetValue(HeaderProperty);
+            get => GetValue(HeaderProperty);
             set => SetValue(HeaderProperty, value);
         }
 
-        public static readonly DependencyProperty HeaderTemplateProperty = DependencyProperty.Register(
-            nameof(HeaderTemplate),
-            typeof(DataTemplate),
-            typeof(FlipView),
-            new PropertyMetadata(default(DataTemplate)));
+        /// <summary>
+        /// The header template property
+        /// </summary>
+        public static readonly DependencyProperty HeaderTemplateProperty =
+            DependencyProperty.Register(
+                nameof(HeaderTemplate),
+                typeof(DataTemplate),
+                typeof(FlipView),
+                new PropertyMetadata(default(DataTemplate)));
 
         public DataTemplate HeaderTemplate
         {
@@ -91,7 +147,7 @@
         /// <inheritdoc />
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
-            return false;
+            return (item is FlipViewItem);
         }
 
         /// <inheritdoc />
@@ -99,7 +155,25 @@
         {
             base.OnSelectionChanged(e);
 
-            Header = SelectedItem;
+            if (Items.Count == 0)
+            {
+                PreviousItem = null;
+                NextItem = null;
+
+                return;
+            }
+
+            var previousIndex = SelectedIndex - 1;
+            var nextIndex = SelectedIndex + 1;
+
+            if (IsCycling)
+            {
+                previousIndex = (previousIndex + Items.Count) % Items.Count;
+                nextIndex = (nextIndex + Items.Count) % Items.Count;
+            }
+
+            PreviousItem = previousIndex >= 0 ? Items[previousIndex] : null;
+            NextItem = nextIndex < Items.Count ? Items[nextIndex] : null;
         }
 
         /// <inheritdoc />
@@ -137,7 +211,7 @@
         {
             if (IsCycling)
             {
-                SelectedIndex = (++SelectedIndex) % Items.Count;
+                SelectedIndex = ++SelectedIndex % Items.Count;
             }
             else
             {

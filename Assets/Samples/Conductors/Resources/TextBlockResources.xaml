@@ -1,0 +1,39 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ex="clr-namespace:Caliburn.Noesis.Samples.Conductors.MarkupExtensions">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ImageResources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="Style.TextBlock.Normal"
+           TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontFamily.Default}" />
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Normal}" />
+        <Setter Property="Foreground" Value="{ex:SolidBrush {StaticResource Color.Foreground.Default}}" />
+    </Style>
+
+    <Style x:Key="Style.TextBlock.Header"
+           BasedOn="{StaticResource Style.TextBlock.Normal}"
+           TargetType="TextBlock">
+        <Setter Property="TextAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Large}" />
+        <Setter Property="Foreground" Value="{ex:SolidBrush {StaticResource Color.Foreground.Header}}" />
+    </Style>
+
+    <Style x:Key="Style.TextBlock.HeaderSmall"
+           BasedOn="{StaticResource Style.TextBlock.Header}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Normal}" />
+        <Setter Property="Foreground" Value="{ex:SolidBrush {StaticResource Color.Foreground.HeaderSmall}}" />
+    </Style>
+
+    <Style x:Key="Style.TextBlock.HeaderLarge"
+           BasedOn="{StaticResource Style.TextBlock.Header}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSize.ExtraLarge}" />
+    </Style>
+
+    <Style BasedOn="{StaticResource Style.TextBlock.Normal}"
+           TargetType="TextBlock" />
+
+</ResourceDictionary>
