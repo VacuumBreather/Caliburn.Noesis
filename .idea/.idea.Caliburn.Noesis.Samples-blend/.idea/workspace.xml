@@ -11,21 +11,7 @@
     <projectFile>Caliburn.Noesis.Samples.FileExplorer-blend.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/ShellView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/ShellView.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/SampleBootstrapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/FileExplorerBootstrapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/SampleBootstrapper.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/FileExplorerBootstrapper.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/FileDialogView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/FileDialogView.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/MainView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/MainView.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/SampleWindowView.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/SampleWindowView.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Views/MainView.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Views/MainView.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Views/MainView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Views/MainView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/HelloWorld/App.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/HelloWorld/App.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples-blend.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples.HelloWorld-blend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples.HelloWorld-blend.csproj" afterDir="false" />
-    </list>
+    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -216,7 +202,7 @@
       <workItem from="1620430801803" duration="2775000" />
       <workItem from="1620433714793" duration="580000" />
       <workItem from="1620434347920" duration="154000" />
-      <workItem from="1620434614791" duration="78000" />
+      <workItem from="1620434614791" duration="408000" />
     </task>
     <servers />
   </component>
