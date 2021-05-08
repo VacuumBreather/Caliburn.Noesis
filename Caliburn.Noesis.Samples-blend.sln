@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Noesis.Samples.Fil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Noesis.Samples.MarkupExtensions-blend", "Blend\MarkupExtensions\Caliburn.Noesis.Samples.MarkupExtensions-blend.csproj", "{8BB4926B-E270-491E-B29F-1AC9AFC9EB81}"
 EndProject
+Project("{FB2C2EBA-B911-49F5-B366-2D8798090562}") = "Caliburn.Noesis.Samples.Conductor.OneActive-blend", "Caliburn.Noesis.Samples.Conductor.OneActive-blend.csproj", "{E1BC9C7D-E154-418B-AA33-02370BF2A8D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
