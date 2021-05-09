@@ -47,6 +47,13 @@
 
         #region Public Methods
 
+        /// <summary>Adds an assembly to the <see cref="AssemblySource" />.</summary>
+        /// <param name="assembly">The assembly to add.</param>
+        public void Add(Assembly assembly)
+        {
+            this.typeAssemblies.Add(assembly);
+        }
+
         /// <summary>Adds a range of assemblies to the <see cref="AssemblySource" />.</summary>
         /// <param name="assemblies">The range of assemblies to add.</param>
         public void AddRange(IEnumerable<Assembly> assemblies)
