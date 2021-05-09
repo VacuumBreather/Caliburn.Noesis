@@ -152,6 +152,7 @@
     <Compile Include="Assets\Caliburn.Noesis\WindowConductor.cs" />
     <Compile Include="Assets\Caliburn.Noesis\WindowScreen.cs" />
     <Compile Include="Assets\Samples\FlipView\Scripts\FlipViewBootstrapper.cs" />
+    <Compile Include="Assets\Samples\FlipView\Scripts\ViewModels\ChildViewModel.cs" />
     <Compile Include="Assets\Samples\FlipView\Scripts\ViewModels\MainViewModel.cs" />
     <Compile Include="Assets\Samples\FlipView\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
