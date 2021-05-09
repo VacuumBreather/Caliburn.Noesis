@@ -6,5 +6,5 @@
              xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.FlipView.ViewModels"
              d:DataContext="{d:DesignInstance viewModels:MainViewModel, IsDesignTimeCreatable=True}"
              mc:Ignorable="d">
-    <Grid />
+    <FlipView></FlipView>
 </UserControl>
