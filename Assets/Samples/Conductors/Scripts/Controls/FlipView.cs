@@ -13,7 +13,7 @@
     /// <seealso cref="Selector" />
     [TemplatePart(Name = BackButtonName, Type = typeof(Button))]
     [TemplatePart(Name = ForwardButtonName, Type = typeof(Button))]
-    [StyleTypedProperty(Property = "ItemContainerStyle", StyleTargetType = typeof(FlipViewItem))]
+    [StyleTypedProperty(Property = "ItemContainerStyle", StyleTargetType = typeof(ContentControl))]
     public class FlipView : Selector
     {
         private const string BackButtonName = "PART_BackButton";
@@ -21,6 +21,11 @@
 
         private Button backButton;
         private Button forwardButton;
+
+        static FlipView()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FlipView), new FrameworkPropertyMetadata(typeof(FlipView)));
+        }
 
         public static readonly DependencyProperty PreviousItemProperty =
             DependencyProperty.Register(
@@ -141,13 +146,13 @@
         /// <inheritdoc />
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new FlipViewItem();
+            return new ContentControl();
         }
 
         /// <inheritdoc />
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
-            return (item is FlipViewItem);
+            return (item is ContentControl);
         }
 
         /// <inheritdoc />
