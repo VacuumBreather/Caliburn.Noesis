@@ -79,78 +79,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Caliburn.Noesis\ActivationEventArgs.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ActivationProcessedEventArgs.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\AsyncEventHandler.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\AsyncGuard.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\AsyncRelayCommand.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\BindableCollection.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\CaliburnConfiguration.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\CloseResult.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Conductor.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ConductorBase.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ConductorBaseWithActiveItem.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionAllActive.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ConductorWithCollectionOneActive.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\DeactivationEventArgs.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\DefaultCloseStrategy.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\DialogConductor.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\DialogResult.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\DialogScreen.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\AssemblyExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\AsyncEventHandlerExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\ConductorExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\DictionaryExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\RaisingCommandExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\ScreenExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\TypeExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Extensions\UniTaskExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IActivate.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IAsyncCommand.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IBindableCollection.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IChild.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IClose.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ICloseResult.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ICloseStrategy.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ICommand.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IConductActiveItem.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IConductor.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IDeactivate.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IGuardClose.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IHaveActiveItem.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IHaveDisplayName.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\INotifyPropertyChangedEx.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IParent.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IRaisingCommand.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IScreen.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\IWindowManager.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\NameTransformer.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\AssemblySource.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\BootstrapperBase.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\CloseDialog.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\DataTemplateManager.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\DebugConsoleLogger.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\Draggable.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\Execute.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\Extensions\UserControlExtensions.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\ILogger.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\LogManager.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\NullToCollapsedConverter.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Platform\UnityConsoleLogger.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\PropertyChangedBase.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\PropertyNameHelper.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\RegExHelper.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\RelayCommand.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\SafeCancellationTokenSource.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\Screen.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ShellViewModel.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\TypeMappingConfiguration.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\UnitTestDetector.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\ViewLocator.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\WindowConductor.cs" />
-    <Compile Include="Assets\Caliburn.Noesis\WindowScreen.cs" />
+    <Compile Include="Assets\Caliburn.Noesis\**\*.cs" />
+    <Page Include="Assets\Caliburn.Noesis\**\*.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\Samples\HelloWorld\Scripts\HelloWorldBootstrapper.cs" />
     <Compile Include="Assets\Samples\HelloWorld\Scripts\ViewModels\MainViewModel.cs" />
     <Compile Include="Assets\Samples\HelloWorld\Scripts\Views\MainView.xaml.cs">
@@ -182,9 +114,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Assets\Caliburn.Noesis\Platform\ShellView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Samples\HelloWorld\Scripts\Views\Aero Matics Regular.ttf" />
