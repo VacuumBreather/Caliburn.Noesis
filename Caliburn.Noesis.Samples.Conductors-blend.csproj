@@ -153,7 +153,6 @@
     <Compile Include="Assets\Caliburn.Noesis\WindowScreen.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipView.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipViewItem.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\MarkupExtensions\SolidBrushExtension.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\ISubScreen.cs" />
