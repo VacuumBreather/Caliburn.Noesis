@@ -10,25 +10,34 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
+    <UserControl.Background>
+        <ImageBrush ImageSource="{StaticResource Background}" />
+    </UserControl.Background>
 
-    <controls:FlipView Background="{StaticResource Background}"
-                       ButtonStyle="{StaticResource Style.Button.FlipView}"
-                       IsCycling="True"
-                       ItemsListItemContainerStyle="{StaticResource Style.ListViewItem.FlipView}"
-                       ItemsSource="{Binding Items, Mode=OneWay}"
-                       SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
-        <controls:FlipView.Header>
-            <TextBlock MinWidth="250"
-                       Style="{StaticResource Style.TextBlock.HeaderLarge}"
-                       Text="{Binding ActiveItem.DisplayName, Mode=OneWay}" />
-        </controls:FlipView.Header>
-        <controls:FlipView.PreviewItemTemplate>
-            <DataTemplate DataType="{x:Type viewModels:ISubScreen}">
-                <TextBlock HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource Style.TextBlock.HeaderSmall}"
-                           Text="{Binding DisplayName, Mode=OneWay}" />
-            </DataTemplate>
-        </controls:FlipView.PreviewItemTemplate>
-    </controls:FlipView>
+    <Viewbox Stretch="Uniform">
+        <Grid Width="1920"
+              Height="1080">
+            <controls:FlipView Margin="30"
+                               ButtonStyle="{StaticResource Style.Button.FlipView}"
+                               IsCycling="True"
+                               ItemsListItemContainerStyle="{StaticResource Style.ListViewItem.FlipView}"
+                               ItemsSource="{Binding Items, Mode=OneWay}"
+                               SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
+
+                <controls:FlipView.Header>
+                    <TextBlock MinWidth="250"
+                               Style="{StaticResource Style.TextBlock.HeaderLarge}"
+                               Text="{Binding ActiveItem.DisplayName, Mode=OneWay}" />
+                </controls:FlipView.Header>
+                <controls:FlipView.PreviewItemTemplate>
+                    <DataTemplate DataType="{x:Type viewModels:ISubScreen}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Style="{StaticResource Style.TextBlock.HeaderSmall}"
+                                   Text="{Binding DisplayName, Mode=OneWay}" />
+                    </DataTemplate>
+                </controls:FlipView.PreviewItemTemplate>
+            </controls:FlipView>
+        </Grid>
+    </Viewbox>
 </UserControl>

@@ -9,7 +9,19 @@
            TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource FontFamily.Default}" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.Normal}" />
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Default}}" />
+        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Normal}}" />
+    </Style>
+
+    <Style x:Key="Style.TextBlock.Small"
+           BasedOn="{StaticResource Style.TextBlock.Normal}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Small}" />
+    </Style>
+
+    <Style x:Key="Style.TextBlock.Large"
+           BasedOn="{StaticResource Style.TextBlock.Normal}"
+           TargetType="TextBlock">
+        <Setter Property="FontSize" Value="{StaticResource FontSize.Large}" />
     </Style>
 
     <Style x:Key="Style.TextBlock.Header"
@@ -17,14 +29,14 @@
            TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.Large}" />
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Header}}" />
+        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Highlight.Normal}}" />
     </Style>
 
     <Style x:Key="Style.TextBlock.HeaderSmall"
            BasedOn="{StaticResource Style.TextBlock.Header}"
            TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource FontSize.Normal}" />
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.HeaderSmall}}" />
+        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Darker}}" />
     </Style>
 
     <Style x:Key="Style.TextBlock.HeaderLarge"

@@ -1,28 +1,41 @@
-﻿namespace Caliburn.Noesis.MarkupExtensions
+﻿namespace Caliburn.Noesis
 {
-    using System;
-    using System.Collections.Generic;
-    using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
-    using global::Noesis;
-
+    using Noesis;
 #else
     using System.Windows.Markup;
     using System.Windows.Media;
 #endif
+    using System;
+    using System.Collections.Generic;
 
     /// <summary>
-    ///     Implements a markup extension that returns a <see cref="SolidColorBrush" /> corresponding
-    ///     to the specified <see cref="Color" />.
+    ///     Implements a markup extension that returns a SolidColorBrush corresponding to the
+    ///     specified color.
     /// </summary>
     /// <remarks>The brushes are frozen and cached.</remarks>
-    [PublicAPI]
-    public class BrushFromColorExtension : MarkupExtension
+    public class SolidBrushExtension : MarkupExtension
     {
         #region Constants and Fields
 
-        private static readonly IDictionary<Color, SolidColorBrush> CachedBrushes =
-            new Dictionary<Color, SolidColorBrush>();
+        private static readonly IDictionary<(Color, double), SolidColorBrush> CachedBrushes =
+            new Dictionary<(Color, double), SolidColorBrush>();
+
+        #endregion
+
+        #region Constructors and Destructors
+
+        /// <summary>Initializes a new instance of the <see cref="SolidBrushExtension" /> class.</summary>
+        public SolidBrushExtension()
+        {
+        }
+
+        /// <summary>Initializes a new instance of the <see cref="SolidBrushExtension" /> class.</summary>
+        /// <param name="color">The color of the brush.</param>
+        public SolidBrushExtension(Color color)
+        {
+            Color = color;
+        }
 
         #endregion
 
@@ -30,7 +43,11 @@
 
         /// <summary>Gets the color of the brush.</summary>
         /// <value>The color of the brush.</value>
-        public Color Color { get; set; }
+        public Color Color { get; set; } = Colors.Transparent;
+
+        /// <summary>Gets or sets the opacity.</summary>
+        /// <value>The opacity.</value>
+        public double Opacity { get; set; } = 1.0;
 
         #endregion
 
@@ -47,11 +64,12 @@
         /// <returns>The <see cref="SolidColorBrush" /> corresponding to the color specified by this extension.</returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (!CachedBrushes.TryGetValue(Color, out var solidColorBrush))
+            if (!CachedBrushes.TryGetValue((Color, Opacity), out var solidColorBrush))
             {
-                solidColorBrush = new SolidColorBrush(Color);
+                var color = Color.FromArgb((byte)(Color.A * Opacity), Color.R, Color.G, Color.B);
+                solidColorBrush = new SolidColorBrush(color);
                 solidColorBrush.Freeze();
-                CachedBrushes[Color] = solidColorBrush;
+                CachedBrushes[(Color, Opacity)] = solidColorBrush;
             }
 
             return solidColorBrush;

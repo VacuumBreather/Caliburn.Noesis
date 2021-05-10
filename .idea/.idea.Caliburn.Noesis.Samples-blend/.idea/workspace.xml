@@ -9,23 +9,16 @@
     <projectFile>Caliburn.Noesis.Samples.HelloWorld-blend.csproj</projectFile>
     <projectFile>HelloWorld-blend/HelloWorld-blend.csproj</projectFile>
     <projectFile>Caliburn.Noesis.Samples.FileExplorer-blend.csproj</projectFile>
-    <projectFile>Caliburn.Noesis.Samples.FlipView-blend.csproj</projectFile>
     <projectFile>Caliburn.Noesis.Samples.Conductors-blend.csproj</projectFile>
+    <projectFile>Caliburn.Noesis.Samples.FlipView-blend.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/FlipViewResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/FlipViewResources.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/TextBlockResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/TextBlockResources.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipView.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipView.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipViewItem.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipViewResources.xaml.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/NavigationControlResources.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/NavigationControlResources.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/MarkupExtensions/SolidBrushExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/MainView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/MainView.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/Character.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/Character.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/CharacterDatabase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/CharacterDatabase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/ViewModels/CharactersViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/ViewModels/CharactersViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/CharactersView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/CharactersView.xaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,9 +43,9 @@
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/Extensions/UserControlExtensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Resources/AllResources.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/ActivationEventArgs.cs.meta" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/LogManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/ActivationEventArgs.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/SampleWindowView.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/LogManager.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/IRaisingCommand.cs.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/Draggable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/NoesisGUI/Plugins/NoesisUnity.cs" root0="SKIP_HIGHLIGHTING" />
@@ -62,9 +55,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/220F2AAB-ED1D-4738-94A8-8B65AAF6C105/a6/cc72ffc2/__Error.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/ViewModels/DirectoryInfoExtensions.cs.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/FileExplorerBootstrapper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C5EC303C-34CA-4964-8FE7-744590F7A693/23/ea71761b/Application.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/AssemblySource.cs.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/LogManager.cs.meta" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C5EC303C-34CA-4964-8FE7-744590F7A693/23/ea71761b/Application.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/AssemblySource.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/FileDialogView.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/E90BEB44-6898-4ECF-B706-59AC067ECC5C/bb/392151e3/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
@@ -74,8 +67,8 @@
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/MainView.xaml" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/C5EC303C-34CA-4964-8FE7-744590F7A693/d9/97984b46/XamlReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/DialogResult.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/ViewModels/MainViewModel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/FileExplorer/Scripts/Views/MainView.xaml.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/ViewModels/MainViewModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/NullToCollapsedConverter.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Caliburn.Noesis/DialogResult.cs.meta" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/HelloWorldBootstrapper.cs" root0="FORCE_HIGHLIGHTING" />
@@ -110,8 +103,6 @@
       <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/ILogger.cs" />
       <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/LogManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Views/MainView.xaml.cs" />
-      <option value="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/HelloWorldBootstrapper.cs" />
-      <option value="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/ViewModels/MainViewModel.cs" />
       <option value="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/Resources/AllResources.xaml" />
       <option value="$PROJECT_DIR$/Caliburn.Noesis-blend/Class1.cs" />
       <option value="$PROJECT_DIR$/Blend/HelloWorld/App.xaml.cs" />
@@ -126,16 +117,11 @@
       <option value="$PROJECT_DIR$/Blend/FileExplorer/App.xaml" />
       <option value="$PROJECT_DIR$/Blend/FileExplorer/App.xaml.cs" />
       <option value="$PROJECT_DIR$/Blend/FileExplorer/Properties/AssemblyInfo.cs" />
-      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewItem.cs" />
-      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipView.cs" />
-      <option value="$PROJECT_DIR$/Assets/Samples/FlipView/Scripts/ViewModels/ChildViewModel.cs" />
-      <option value="$PROJECT_DIR$/Blend/FlipView/App.xaml.cs" />
-      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Extensions/DependencyObjectExtensions.cs" />
-      <option value="$PROJECT_DIR$/Assets/Samples/FlipView/Scripts/Views/MainView.xaml.cs" />
-      <option value="$PROJECT_DIR$/Assets/Samples/FlipView/Scripts/Views/ChildView.xaml.cs" />
-      <option value="$PROJECT_DIR$/Blend/FlipView/Properties/AssemblyInfo.cs" />
-      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewResources.xaml" />
       <option value="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/ViewModels/MainViewModel.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/HelloWorld/Scripts/HelloWorldBootstrapper.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/ViewModels/CharactersViewModel.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/CharactersView.xaml" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1sBXIrzMDWqkz0UCsaoXfRFt9X6" />
@@ -155,7 +141,7 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.XML" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected=".NET Project.HelloWorld">
@@ -234,8 +220,8 @@
     <list>
       <item itemvalue=".NET Project.FileExplorer" />
       <item itemvalue=".NET Project.HelloWorld" />
-      <item itemvalue=".NET Project.Caliburn.Noesis.Samples.FlipView-blend" />
       <item itemvalue=".NET Project.Caliburn.Noesis.Samples.Conductors-blend" />
+      <item itemvalue=".NET Project.Caliburn.Noesis.Samples.FlipView-blend" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -265,7 +251,8 @@
       <workItem from="1620433714793" duration="580000" />
       <workItem from="1620434347920" duration="154000" />
       <workItem from="1620434614791" duration="408000" />
-      <workItem from="1620604231915" duration="3869000" />
+      <workItem from="1620618328840" duration="6369000" />
+      <workItem from="1620627903895" duration="1017000" />
     </task>
     <servers />
   </component>

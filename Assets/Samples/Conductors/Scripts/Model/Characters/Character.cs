@@ -9,8 +9,8 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
 
         /// <summary>Gets the description entries.</summary>
         /// <value>The description entries.</value>
-        public IBindableCollection<string> DescriptionParagraphs { get; } =
-            new BindableCollection<string>();
+        public IBindableCollection<DescriptionParagraph> DescriptionParagraphs { get; } =
+            new BindableCollection<DescriptionParagraph>();
 
         #endregion
 
