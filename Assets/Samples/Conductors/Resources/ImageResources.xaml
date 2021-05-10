@@ -3,6 +3,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="FontResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
+
     <ImageBrush x:Key="Background"
                 ImageSource="../Images/Background.png" />
 

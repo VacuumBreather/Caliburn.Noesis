@@ -1,5 +1,5 @@
 {
-    "AttributesTolerance": 2,
+    "AttributesTolerance": 1,
     "KeepFirstAttributeOnSameLine": true,
     "MaxAttributeCharactersPerLine": 0,
     "MaxAttributesPerLine": 1,
@@ -22,7 +22,7 @@
         "mc:Ignorable, d:IsDataSource, d:LayoutOverrides, d:IsStaticText",
         "Storyboard.*, From, To, Duration"
     ],
-    "FirstLineAttributes": "",
+    "FirstLineAttributes": "Property, Value, KeyTime",
     "OrderAttributesByName": true,
     "PutEndingBracketOnNewLine": false,
     "RemoveEndingTagOfEmptyElement": true,

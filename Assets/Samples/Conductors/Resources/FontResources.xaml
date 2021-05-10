@@ -10,8 +10,6 @@
     <system:Double x:Key="FontSize.Large">36</system:Double>
     <system:Double x:Key="FontSize.ExtraLarge">48</system:Double>
 
-    <FontFamily x:Key="FontFamily.Default">
-        pack://application:,,,../Fonts/#Nosferatu
-    </FontFamily>
+    <FontFamily x:Key="FontFamily.Default">pack://application:,,,../Fonts/#Nosferatu</FontFamily>
 
 </ResourceDictionary>
