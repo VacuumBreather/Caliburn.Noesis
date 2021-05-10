@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Noesis.Controls
 {
 #if UNITY_5_5_OR_NEWER
-    using Noesis;
+    using global::Noesis;
 #else
     using System.Windows;
     using System.Windows.Controls;

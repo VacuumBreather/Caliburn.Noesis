@@ -1,9 +1,13 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors.Views
 {
     using System;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+#endif
 
     public class SolidColorBrushAnimation : AnimationTimeline
     {
@@ -31,8 +35,9 @@
             get => (SolidColorBrush)GetValue(FromProperty);
             set => SetValue(FromProperty, value);
         }
-
+#if !UNITY_5_5_OR_NEWER
         public override Type TargetPropertyType => typeof(SolidColorBrush);
+#endif
 
         public SolidColorBrush To
         {
@@ -42,6 +47,7 @@
 
         #endregion
 
+#if !UNITY_5_5_OR_NEWER
         #region Public Methods
 
         public override object GetCurrentValue(object defaultOriginValue,
@@ -108,7 +114,7 @@
 
             return this.BlendedBrush;
         }
-
         #endregion
+#endif
     }
 }

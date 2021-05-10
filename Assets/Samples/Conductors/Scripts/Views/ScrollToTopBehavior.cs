@@ -1,9 +1,13 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors.Views
 {
     using System.Collections.Specialized;
+    using Extensions;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
     using System.Windows.Controls;
-    using Extensions;
+#endif
 
     /// <summary>
     ///     Provides an attached property which handles scrolling a <see cref="ListBox" /> back to the

@@ -3,11 +3,15 @@
     using System;
     using System.Collections;
     using System.Globalization;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
     using System.Windows.Data;
+#endif
 
     /// <summary>Converts a key-value to its corresponding value in a dictionary provided as the parameter.</summary>
-    /// <seealso cref= IValueConverter" />
+    /// <seealso cref="IValueConverter" />
     public class DictionaryLookupConverter : IValueConverter
     {
         #region IValueConverter Implementation

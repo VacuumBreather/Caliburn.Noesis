@@ -83,7 +83,6 @@
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\SolidColorBrushAnimation.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\DictionaryLookupConverter.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\DecorativeBorder.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\Views\KeyValuePairWrapper.cs" />
     <Page Include="Assets\Caliburn.Noesis\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
