@@ -1,0 +1,185 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:Caliburn.Noesis.Controls"
+                    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity">
+
+    <Style x:Key="Style.Button.FlipView"
+           TargetType="Button">
+        <Setter Property="Width" Value="50" />
+        <Setter Property="Content" Value="&#x25C4;" />
+        <Setter Property="TextBlock.FontFamily" Value="Arial" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="controls:FlipView">
+        <Setter Property="ButtonStyle" Value="{StaticResource Style.Button.FlipView}" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Header" Value="{Binding SelectedItem, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
+        <Setter Property="PreviewItemTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Border Name="Border"
+                            Margin="10"
+                            BorderBrush="Black"
+                            BorderThickness="2">
+                        <Viewbox Width="240"
+                                 Stretch="Uniform">
+                            <ContentPresenter Content="{Binding}" />
+                        </Viewbox>
+                    </Border>
+                    <DataTemplate.Triggers>
+                        <Trigger Property="DataContext" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                    </DataTemplate.Triggers>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsListItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemsListItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border Name="Border"
+                                        Margin="10"
+                                        BorderBrush="Black"
+                                        BorderThickness="2">
+                                    <Viewbox Width="160">
+                                        <ContentPresenter>
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Selected"
+                                                                SourceObject="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}}">
+                                                    <ei:CallMethodAction MethodName="BringIntoView"
+                                                                         TargetObject="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </ContentPresenter>
+                                    </Viewbox>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="Gold" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <TextBlock Margin="20"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Text="{Binding Mode=OneWay}" />
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:FlipView">
+                    <Grid x:Name="Root"
+                          Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding SelectedItem}" />
+                        <DockPanel x:Name="OverlayPanel"
+                                   Opacity="0">
+                            <DockPanel.Triggers>
+                                <EventTrigger RoutedEvent="MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard TargetName="OverlayPanel">
+                                            <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                             To="0.5"
+                                                             Duration="0:0:0.25" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                                <EventTrigger RoutedEvent="MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard TargetName="OverlayPanel">
+                                            <DoubleAnimation BeginTime="0:0:1"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0"
+                                                             Duration="0:0:0.25" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </DockPanel.Triggers>
+
+                            <Button x:Name="PART_BackButton"
+                                    DockPanel.Dock="Left"
+                                    Style="{TemplateBinding ButtonStyle}" />
+
+                            <Button x:Name="PART_ForwardButton"
+                                    DockPanel.Dock="Right"
+                                    Style="{TemplateBinding ButtonStyle}">
+                                <Button.LayoutTransform>
+                                    <RotateTransform Angle="180" />
+                                </Button.LayoutTransform>
+                            </Button>
+
+                            <UniformGrid Rows="3">
+
+                                <ContentPresenter x:Name="HeaderPresenter"
+                                                  Margin="10,0"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Top"
+                                                  Content="{TemplateBinding Header}"
+                                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                                  DockPanel.Dock="Top"
+                                                  Focusable="False"
+                                                  IsHitTestVisible="False" />
+
+                                <DockPanel LastChildFill="False">
+
+                                    <ContentPresenter x:Name="PreviousItemPresenter"
+                                                      Margin="10,0"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding PreviousItem}"
+                                                      ContentTemplate="{TemplateBinding PreviewItemTemplate}"
+                                                      DockPanel.Dock="Left" />
+
+
+                                    <ContentPresenter x:Name="NextItemPresenter"
+                                                      Margin="10,0"
+                                                      VerticalAlignment="Center"
+                                                      Content="{TemplateBinding NextItem}"
+                                                      ContentTemplate="{TemplateBinding PreviewItemTemplate}"
+                                                      DockPanel.Dock="Right" />
+                                </DockPanel>
+
+                                <ListView x:Name="ItemsList"
+                                          Margin="10,0"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Bottom"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          ItemContainerStyle="{TemplateBinding ItemsListItemContainerStyle}"
+                                          ItemTemplate="{TemplateBinding ItemsListItemTemplate}"
+                                          ItemsPanel="{TemplateBinding ItemsListItemsPanel}"
+                                          ItemsSource="{TemplateBinding ItemsSource}"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                          ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                          SelectedItem="{TemplateBinding SelectedItem}"
+                                          SelectionMode="Single" />
+                            </UniformGrid>
+                        </DockPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
