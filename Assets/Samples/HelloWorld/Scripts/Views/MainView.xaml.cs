@@ -1,24 +1,24 @@
 namespace Caliburn.Noesis.Samples.HelloWorld.Views
 {
-#if UNITY_5_5_OR_NEWER
     using Extensions;
+#if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows.Controls;
 #endif
 
-    /// <summary>Interaction logic for MainView.xaml</summary>
+    /// <summary>
+    /// The main view-model of the HelloWorld sample.
+    /// </summary>
+    /// <seealso cref="UserControl" />
     public partial class MainView : UserControl
     {
-        #region Constructors and Destructors
-
-        /// <summary>Initializes a new instance of the <see cref="MainView" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainView"/> class.
+        /// </summary>
         public MainView()
         {
             this.InitializeComponent();
         }
-
-        #endregion
     }
 }

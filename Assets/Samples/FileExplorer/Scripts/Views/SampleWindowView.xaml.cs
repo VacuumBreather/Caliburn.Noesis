@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer.Views
 {
-#if UNITY_5_5_OR_NEWER
     using Extensions;
+#if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
 #else
@@ -13,7 +13,9 @@
     {
         #region Constructors and Destructors
 
-        /// <summary>Initializes a new instance of the <see cref="SampleWindowView" /> class.</summary>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SampleWindowView"/> class.
+        /// </summary>
         public SampleWindowView()
         {
             this.InitializeComponent();

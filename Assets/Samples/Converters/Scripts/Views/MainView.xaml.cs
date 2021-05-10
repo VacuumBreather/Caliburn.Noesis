@@ -20,18 +20,5 @@ namespace Caliburn.Noesis.Samples.Converters.Views
         {
             this.InitializeComponent();
         }
-
-#if UNITY_5_5_OR_NEWER
-
-        #region Private Methods
-
-        private void InitializeComponent()
-        {
-            GUI.LoadComponent(this, "Assets/Samples/Converters/Scripts/Views/MainView.xaml");
-        }
-
-        #endregion
-
-#endif
     }
 }
