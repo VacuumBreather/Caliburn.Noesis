@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis.Converters
 {
     using System;
     using System.Globalization;
