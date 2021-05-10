@@ -1,6 +1,10 @@
 namespace Caliburn.Noesis.Samples.FlipView.ViewModels
 {
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows.Media;
+#endif
 
     /// <summary>A demonstration sub-screen view-model.</summary>
     /// <seealso cref="Caliburn.Noesis.Screen" />
@@ -8,18 +12,18 @@ namespace Caliburn.Noesis.Samples.FlipView.ViewModels
     {
         #region Constants and Fields
 
-        private static readonly SolidColorBrush[] Brushes =
+        private static readonly SolidColorBrush[] BrushesList =
             {
-                System.Windows.Media.Brushes.Brown,
-                System.Windows.Media.Brushes.DarkSlateBlue,
-                System.Windows.Media.Brushes.Chocolate,
-                System.Windows.Media.Brushes.Crimson,
-                System.Windows.Media.Brushes.DarkRed,
-                System.Windows.Media.Brushes.DarkGreen,
-                System.Windows.Media.Brushes.DarkCyan,
-                System.Windows.Media.Brushes.DarkGoldenrod,
-                System.Windows.Media.Brushes.DarkSlateGray,
-                System.Windows.Media.Brushes.Purple
+                Brushes.Brown,
+                Brushes.DarkSlateBlue,
+                Brushes.Chocolate,
+                Brushes.Crimson,
+                Brushes.DarkRed,
+                Brushes.DarkGreen,
+                Brushes.DarkCyan,
+                Brushes.DarkGoldenrod,
+                Brushes.DarkSlateGray,
+                Brushes.Purple
             };
 
         private static int index;
@@ -34,7 +38,7 @@ namespace Caliburn.Noesis.Samples.FlipView.ViewModels
         {
             DisplayName = $"{GetType().Name} #{index++}";
 
-            Color = Brushes[(index + Brushes.Length) % Brushes.Length];
+            Color = BrushesList[(index + BrushesList.Length) % BrushesList.Length];
         }
 
         #endregion

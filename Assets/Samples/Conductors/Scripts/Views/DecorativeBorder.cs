@@ -1,9 +1,16 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors.Views
 {
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+    using Math = UnityEngine.Mathf;
+    using Float = System.Single;
+#else
     using System;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using Float = System.Double;
+#endif
 
     /// <summary>
     ///     The <see cref="DecorativeBorder" /> decorator is used to draw a decorative double border
@@ -12,7 +19,26 @@
     public class DecorativeBorder : Decorator
     {
         #region Constants and Fields
+        
+#if UNITY_5_5_OR_NEWER
+        private const Float Zero = 0.0f;
+        private const Float One = 1.0f;
+        private const Float Two = 2.0f;
+        private const Float Four = 4.0f;
+        private const Float Five = 5.0f;
+        private const Float Ten = 10.0f;
+        private const Float NinetySix = 96.0f;
+#else
+        private const Float Zero = 0.0;
+        private const Float One = 1.0;
+        private const Float Two = 2.0;
+        private const Float Four = 4.0;
+        private const Float Five = 5.0;
+        private const Float Ten = 10.0;
+        private const Float NinetySix = 96.0;
+#endif
 
+#if !UNITY_5_5_OR_NEWER
         /// <summary>DependencyProperty for <see cref="Padding" /> property.</summary>
         public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
             nameof(Padding),
@@ -23,6 +49,17 @@
                 FrameworkPropertyMetadataOptions.AffectsMeasure |
                 FrameworkPropertyMetadataOptions.AffectsRender),
             IsThicknessValid);
+#else
+        /// <summary>DependencyProperty for <see cref="Padding" /> property.</summary>
+        public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(
+            nameof(Padding),
+            typeof(Thickness),
+            typeof(DecorativeBorder),
+            new FrameworkPropertyMetadata(
+                new Thickness(),
+                FrameworkPropertyMetadataOptions.AffectsMeasure |
+                FrameworkPropertyMetadataOptions.AffectsRender));
+#endif
 
         /// <summary>DependencyProperty for <see cref="BorderBrush" /> property.</summary>
         public static readonly DependencyProperty BorderBrushProperty = DependencyProperty.Register(
@@ -35,6 +72,7 @@
                     .SubPropertiesDoNotAffectRender,
                 OnClearPenCache));
 
+#if !UNITY_5_5_OR_NEWER
         /// <summary>DependencyProperty for <see cref="Background" /> property.</summary>
         public static readonly DependencyProperty BackgroundProperty =
             Panel.BackgroundProperty.AddOwner(
@@ -48,14 +86,38 @@
         public static readonly DependencyProperty BorderThicknessProperty =
             DependencyProperty.Register(
                 nameof(BorderThickness),
-                typeof(double),
+                typeof(Float),
                 typeof(DecorativeBorder),
                 new FrameworkPropertyMetadata(
-                    default(double),
+                    default(Float),
                     FrameworkPropertyMetadataOptions.AffectsMeasure |
                     FrameworkPropertyMetadataOptions.AffectsRender,
                     OnClearPenCache),
                 IsValid);
+#else
+        /// <summary>DependencyProperty for <see cref="Background" /> property.</summary>
+        public static readonly DependencyProperty BackgroundProperty =
+            DependencyProperty.Register(
+                nameof(Background),
+                typeof(Brush),
+                typeof(DecorativeBorder),
+                new FrameworkPropertyMetadata(
+                    null,
+                    FrameworkPropertyMetadataOptions.AffectsRender |
+                    FrameworkPropertyMetadataOptions.SubPropertiesDoNotAffectRender));
+
+        /// <summary>DependencyProperty for <see cref="BorderThickness" /> property.</summary>
+        public static readonly DependencyProperty BorderThicknessProperty =
+            DependencyProperty.Register(
+                nameof(BorderThickness),
+                typeof(Float),
+                typeof(DecorativeBorder),
+                new FrameworkPropertyMetadata(
+                    default(Float),
+                    FrameworkPropertyMetadataOptions.AffectsMeasure |
+                    FrameworkPropertyMetadataOptions.AffectsRender,
+                    OnClearPenCache));
+#endif
 
         #endregion
 
@@ -80,9 +142,9 @@
         ///     a double representing a uniform value for each of the Left, Top, Right, and Bottom sides.
         ///     Values of Auto are interpreted as zero.
         /// </summary>
-        public double BorderThickness
+        public Float BorderThickness
         {
-            get => (double)GetValue(BorderThicknessProperty);
+            get => (Float)GetValue(BorderThicknessProperty);
             set => SetValue(BorderThicknessProperty, value);
         }
 
@@ -172,8 +234,8 @@
 
                 // Remove size of border only from child's reference size.
                 var childConstraint = new Size(
-                    Math.Max(0.0, constraint.Width - combined.Width),
-                    Math.Max(0.0, constraint.Height - combined.Height));
+                    Math.Max(Zero, constraint.Width - combined.Width),
+                    Math.Max(Zero, constraint.Height - combined.Height));
 
                 child.Measure(childConstraint);
 
@@ -191,7 +253,8 @@
 
             return mySize;
         }
-
+        
+#if !UNITY_5_5_OR_NEWER
         /// <inheritdoc />
         protected override void OnRender(DrawingContext dc)
         {
@@ -238,14 +301,19 @@
                 dc.DrawGeometry(Background, borderPen, borderGeometry);
             }
         }
+#endif
 
         #endregion
 
         #region Private Methods
 
-        private static bool AreClose(double x, double y)
+        private static bool AreClose(Float x, Float y)
         {
-            const double DoubleEpsilon = 2.2204460492503131e-016;
+#if UNITY_5_5_OR_NEWER
+            const Float DoubleEpsilon = Float.Epsilon;
+#else
+            const Float DoubleEpsilon = 2.2204460492503131e-016;
+#endif
 
             // In case they are Infinities (then epsilon check does not work)
             // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -255,7 +323,7 @@
             }
 
             // This computes (|value1-value2| / (|value1| + |value2| + 10.0)) < DoubleEpsilon
-            var epsilon = (Math.Abs(x) + Math.Abs(y) + 10.0) * DoubleEpsilon;
+            var epsilon = (Math.Abs(x) + Math.Abs(y) + Ten) * DoubleEpsilon;
             var delta = x - y;
 
             return (-epsilon < delta) && (epsilon > delta);
@@ -268,24 +336,24 @@
         private void GenerateGeometry(StreamGeometryContext context, Rect rect)
         {
             var borderThickness = BorderThickness;
-            var halfThickness = borderThickness * 0.5;
+            var halfThickness = borderThickness / Two;
 
             // Compute the coordinates of the key points.
-            var topLeftBottomLeft = new Point(2.0 * borderThickness, 4.0 * borderThickness);
-            var topLeftBottomRight = new Point(4.0 * borderThickness, 4.0 * borderThickness);
-            var topLeftTopRight = new Point(4.0 * borderThickness, 2.0 * borderThickness);
+            var topLeftBottomLeft = new Point(Two * borderThickness, Four * borderThickness);
+            var topLeftBottomRight = new Point(Four * borderThickness, Four * borderThickness);
+            var topLeftTopRight = new Point(Four * borderThickness, Two * borderThickness);
             
-            var topRightTopLeft = new Point(rect.Width - 4.0 * borderThickness, 2.0 * borderThickness);
-            var topRightBottomLeft = new Point(rect.Width - 4.0 * borderThickness, 4.0 * borderThickness);
-            var topRightBottomRight = new Point(rect.Width - 2.0 * borderThickness, 4.0 * borderThickness);
+            var topRightTopLeft = new Point(rect.Width - Four * borderThickness, Two * borderThickness);
+            var topRightBottomLeft = new Point(rect.Width - Four * borderThickness, Four * borderThickness);
+            var topRightBottomRight = new Point(rect.Width - Two * borderThickness, Four * borderThickness);
             
-            var bottomRightTopRight = new Point(rect.Width - 2.0 * borderThickness, rect.Height - 4.0 * borderThickness);
-            var bottomRightTopLeft = new Point(rect.Width - 4.0 * borderThickness, rect.Height - 4.0 * borderThickness);
-            var bottomRightBottomLeft = new Point(rect.Width - 4.0 * borderThickness, rect.Height - 2.0 * borderThickness);
+            var bottomRightTopRight = new Point(rect.Width - Two * borderThickness, rect.Height - Four * borderThickness);
+            var bottomRightTopLeft = new Point(rect.Width - Four * borderThickness, rect.Height - Four * borderThickness);
+            var bottomRightBottomLeft = new Point(rect.Width - Four * borderThickness, rect.Height - Two * borderThickness);
             
-            var bottomLeftBottomRight = new Point(4.0 * borderThickness, rect.Height - 2.0 * borderThickness);
-            var bottomLeftTopRight = new Point(4.0 * borderThickness, rect.Height - 4.0 * borderThickness);
-            var bottomLeftTopLeft = new Point(2.0 * borderThickness, rect.Height - 4.0 * borderThickness);
+            var bottomLeftBottomRight = new Point(Four * borderThickness, rect.Height - Two * borderThickness);
+            var bottomLeftTopRight = new Point(Four * borderThickness, rect.Height - Four * borderThickness);
+            var bottomLeftTopLeft = new Point(Two * borderThickness, rect.Height - Four * borderThickness);
 
             // Check key points for overlap.
             if (topLeftBottomRight.X > topRightBottomLeft.X)
@@ -343,12 +411,12 @@
             return new Size(thickness.Left + thickness.Right, thickness.Top + thickness.Bottom);
         }
 
-        private static double CollapseBorderThickness(double thickness)
+        private static Float CollapseBorderThickness(Float thickness)
         {
             // Outer line, double thickness gap and inner line.
-            var totalThickness = thickness * 5.0;
+            var totalThickness = thickness * Five;
 
-            return 2.0 * totalThickness;
+            return Two * totalThickness;
         }
 
         private static Rect DeflateRect(Rect rect, Thickness thickness)
@@ -356,20 +424,20 @@
             return new Rect(
                 rect.Left + thickness.Left,
                 rect.Top + thickness.Top,
-                Math.Max(0.0, rect.Width - thickness.Left - thickness.Right),
-                Math.Max(0.0, rect.Height - thickness.Top - thickness.Bottom));
+                Math.Max(Zero, rect.Width - thickness.Left - thickness.Right),
+                Math.Max(Zero, rect.Height - thickness.Top - thickness.Bottom));
         }
 
-        private static Rect DeflateRect(Rect rect, double thickness)
+        private static Rect DeflateRect(Rect rect, Float thickness)
         {
             // Outer line, double thickness gap and inner line.
-            var totalThickness = thickness * 5.0;
+            var totalThickness = thickness * Five;
 
             return new Rect(
                 rect.Left + totalThickness,
                 rect.Top + totalThickness,
-                Math.Max(0.0, rect.Width - (2.0 * totalThickness)),
-                Math.Max(0.0, rect.Height - (2.0 * totalThickness)));
+                Math.Max(Zero, rect.Width - (Two * totalThickness)),
+                Math.Max(Zero, rect.Height - (Two * totalThickness)));
         }
 
         private static bool IsThicknessValid(object obj)
@@ -382,10 +450,10 @@
 
         private static bool IsValid(object obj)
         {
-            var value = (double)obj;
+            var value = (Float)obj;
 
-            return (value >= 0) && !double.IsNaN(value) && !double.IsPositiveInfinity(value) &&
-                   !double.IsNegativeInfinity(value);
+            return (value >= 0) && !Float.IsNaN(value) && !Float.IsPositiveInfinity(value) &&
+                   !Float.IsNegativeInfinity(value);
         }
 
         private static void OnClearPenCache(DependencyObject d,
@@ -396,18 +464,18 @@
             border.BorderPen = null;
         }
 
-        private static double RoundLayoutValue(double value, double dpiScale)
+        private static Float RoundLayoutValue(Float value, Float dpiScale)
         {
-            double newValue;
+            Float newValue;
 
             // If DPI == 1, don't use DPI-aware rounding.
-            if (!AreClose(dpiScale, 1.0))
+            if (!AreClose(dpiScale, One))
             {
-                newValue = Math.Round(value * dpiScale) / dpiScale;
+                newValue = (Math.Round(value * dpiScale) / dpiScale);
 
                 // If rounding produces a value unacceptable to layout (NaN, Infinity or MaxValue), use the original value.
-                if (double.IsNaN(newValue) || double.IsInfinity(newValue) ||
-                    AreClose(newValue, double.MaxValue))
+                if (Float.IsNaN(newValue) || Float.IsInfinity(newValue) ||
+                    AreClose(newValue, Float.MaxValue))
                 {
                     newValue = value;
                 }
@@ -422,18 +490,22 @@
 
         private Size GetDpi()
         {
+#if UNITY_5_5_OR_NEWER
+            return new Size(One, One);
+#else
             var source = PresentationSource.FromVisual(this);
 
-            var dpiX = 1.0;
-            var dpiY = 1.0;
+            var dpiX = One;
+            var dpiY = One;
 
             if (source?.CompositionTarget != null)
             {
-                dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-                dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
+                dpiX = NinetySix * source.CompositionTarget.TransformToDevice.M11;
+                dpiY = NinetySix * source.CompositionTarget.TransformToDevice.M22;
             }
 
             return new Size(dpiX, dpiY);
+#endif
         }
 
         #endregion

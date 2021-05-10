@@ -14,11 +14,13 @@
     ///     backwards traversing its collection of items.
     /// </summary>
     /// <seealso cref="Selector" />
+#if !UNITY_5_5_OR_NEWER
     [TemplatePart(Name = TemplatePartNameBackButton, Type = typeof(Button))]
     [TemplatePart(Name = TemplatePartNameForwardButton, Type = typeof(Button))]
     [StyleTypedProperty(
         Property = nameof(ItemContainerStyle),
         StyleTargetType = typeof(FlipViewItem))]
+#endif
     public class FlipView : Selector
     {
         #region Constants and Fields
@@ -218,6 +220,7 @@
 
         #endregion
 
+#if !UNITY_5_5_OR_NEWER
         #region Public Methods
 
         /// <inheritdoc />
@@ -238,7 +241,6 @@
                 this.forwardButton.Click += OnForwardButtonClick;
             }
         }
-
         #endregion
 
         #region Protected Methods
@@ -282,6 +284,7 @@
         }
 
         #endregion
+#endif
 
         #region Event Handlers
 

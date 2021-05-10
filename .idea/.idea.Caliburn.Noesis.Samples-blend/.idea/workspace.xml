@@ -15,10 +15,16 @@
   <component name="ChangeListManager">
     <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/SolidBrushExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Platform/SolidBrushExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/ColorResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/ColorResources.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/ImageResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/ImageResources.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/TextBlockResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/TextBlockResources.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/Character.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/Character.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/CharacterDatabase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Model/Characters/CharacterDatabase.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/ViewModels/CharactersViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/ViewModels/CharactersViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/CharactersView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/CharactersView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/MainView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/MainView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +258,7 @@
       <workItem from="1620434347920" duration="154000" />
       <workItem from="1620434614791" duration="408000" />
       <workItem from="1620618328840" duration="6369000" />
-      <workItem from="1620627903895" duration="1017000" />
+      <workItem from="1620627903895" duration="1019000" />
     </task>
     <servers />
   </component>
