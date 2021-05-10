@@ -5,6 +5,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Assets/Samples/FlipView/Scripts/Resources/AllResources.xaml" />
                 <ResourceDictionary>
                     <sample:FlipViewBootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
