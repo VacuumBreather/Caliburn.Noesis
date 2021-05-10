@@ -84,11 +84,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\CharacterDatabase.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\Character.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\CharactersViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryViewModel.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\DescriptionParagraph.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\ISubScreen.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\MainViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\QuestsViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\MeditationViewModel.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\CharactersView.xaml.cs">
+      <DependentUpon>CharactersView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\QuestsView.xaml.cs">
       <DependentUpon>QuestsView.xaml</DependentUpon>
     </Compile>
@@ -145,6 +152,10 @@
     <Page Include="Assets\Samples\Conductors\Resources\TextBlockResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Conductors\Scripts\Views\CharactersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Assets\Samples\Conductors\Scripts\Views\QuestsView.xaml">
       <Generator>MSBuild:Compile</Generator>
