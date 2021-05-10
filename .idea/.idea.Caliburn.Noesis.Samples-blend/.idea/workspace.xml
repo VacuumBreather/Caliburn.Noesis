@@ -9,9 +9,14 @@
     <projectFile>Caliburn.Noesis.Samples.HelloWorld-blend.csproj</projectFile>
     <projectFile>HelloWorld-blend/HelloWorld-blend.csproj</projectFile>
     <projectFile>Caliburn.Noesis.Samples.FileExplorer-blend.csproj</projectFile>
+    <projectFile>Caliburn.Noesis.Samples.FlipView-blend.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="" />
+    <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewResources.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Blend/FlipView/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/FlipView/Properties/AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,6 +116,15 @@
       <option value="$PROJECT_DIR$/Blend/FileExplorer/App.xaml" />
       <option value="$PROJECT_DIR$/Blend/FileExplorer/App.xaml.cs" />
       <option value="$PROJECT_DIR$/Blend/FileExplorer/Properties/AssemblyInfo.cs" />
+      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewItem.cs" />
+      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipView.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/FlipView/Scripts/ViewModels/ChildViewModel.cs" />
+      <option value="$PROJECT_DIR$/Blend/FlipView/App.xaml.cs" />
+      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Extensions/DependencyObjectExtensions.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/FlipView/Scripts/Views/MainView.xaml.cs" />
+      <option value="$PROJECT_DIR$/Assets/Samples/FlipView/Scripts/Views/ChildView.xaml.cs" />
+      <option value="$PROJECT_DIR$/Blend/FlipView/Properties/AssemblyInfo.cs" />
+      <option value="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewResources.xaml" />
       <option value="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" />
     </changedPaths>
   </component>
@@ -131,10 +145,28 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="settings.editor.selected.configurable" value="CodeCleanupOptionsPage" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.XML" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected=".NET Project.HelloWorld">
+    <configuration name="Caliburn.Noesis.Samples.FlipView-blend" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Caliburn.Noesis.Samples.FlipView-blend.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="Console" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <configuration name="FileExplorer" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="$PROJECT_DIR$/Blend/FileExplorer/bin/Debug/Caliburn.Noesis.Samples.FileExplorer.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -174,6 +206,7 @@
     <list>
       <item itemvalue=".NET Project.FileExplorer" />
       <item itemvalue=".NET Project.HelloWorld" />
+      <item itemvalue=".NET Project.Caliburn.Noesis.Samples.FlipView-blend" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -203,6 +236,7 @@
       <workItem from="1620433714793" duration="580000" />
       <workItem from="1620434347920" duration="154000" />
       <workItem from="1620434614791" duration="408000" />
+      <workItem from="1620604231915" duration="2655000" />
     </task>
     <servers />
   </component>

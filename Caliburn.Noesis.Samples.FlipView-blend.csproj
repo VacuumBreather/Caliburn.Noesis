@@ -86,6 +86,9 @@
     <Compile Include="Assets\Samples\FlipView\Scripts\FlipViewBootstrapper.cs" />
     <Compile Include="Assets\Samples\FlipView\Scripts\ViewModels\ChildViewModel.cs" />
     <Compile Include="Assets\Samples\FlipView\Scripts\ViewModels\MainViewModel.cs" />
+    <Compile Include="Assets\Samples\FlipView\Scripts\Views\ChildView.xaml.cs">
+      <DependentUpon>ChildView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Assets\Samples\FlipView\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -106,6 +109,10 @@
     <Page Include="Assets\Samples\FlipView\Scripts\Resources\AllResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Assets\Samples\FlipView\Scripts\Views\ChildView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Assets\Samples\FlipView\Scripts\Views\MainView.xaml">
       <Generator>MSBuild:Compile</Generator>
