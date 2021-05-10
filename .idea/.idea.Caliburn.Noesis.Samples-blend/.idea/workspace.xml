@@ -10,12 +10,22 @@
     <projectFile>HelloWorld-blend/HelloWorld-blend.csproj</projectFile>
     <projectFile>Caliburn.Noesis.Samples.FileExplorer-blend.csproj</projectFile>
     <projectFile>Caliburn.Noesis.Samples.FlipView-blend.csproj</projectFile>
+    <projectFile>Caliburn.Noesis.Samples.Conductors-blend.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9155c8cd-065e-4683-927d-adaec52285b0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Caliburn.Noesis/Controls/FlipViewResources.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/FlipView/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/FlipView/Properties/AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Blend/HelloWorld/Properties/AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Caliburn.Noesis.Samples-blend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/FlipViewResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/FlipViewResources.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/TextBlockResources.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Resources/TextBlockResources.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipView.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipView.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipViewItem.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/FlipViewResources.xaml.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/NavigationControlResources.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Controls/NavigationControlResources.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/MarkupExtensions/SolidBrushExtension.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/MainView.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Samples/Conductors/Scripts/Views/MainView.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -149,6 +159,24 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RunManager" selected=".NET Project.HelloWorld">
+    <configuration name="Caliburn.Noesis.Samples.Conductors-blend" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Caliburn.Noesis.Samples.Conductors-blend.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="Console" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <configuration name="Caliburn.Noesis.Samples.FlipView-blend" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -207,6 +235,7 @@
       <item itemvalue=".NET Project.FileExplorer" />
       <item itemvalue=".NET Project.HelloWorld" />
       <item itemvalue=".NET Project.Caliburn.Noesis.Samples.FlipView-blend" />
+      <item itemvalue=".NET Project.Caliburn.Noesis.Samples.Conductors-blend" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -236,7 +265,7 @@
       <workItem from="1620433714793" duration="580000" />
       <workItem from="1620434347920" duration="154000" />
       <workItem from="1620434614791" duration="408000" />
-      <workItem from="1620604231915" duration="2655000" />
+      <workItem from="1620604231915" duration="3869000" />
     </task>
     <servers />
   </component>

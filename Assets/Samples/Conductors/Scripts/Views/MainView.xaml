@@ -1,124 +1,34 @@
 <UserControl x:Class="Caliburn.Noesis.Samples.Conductors.Views.MainView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:controls="clr-namespace:Caliburn.Noesis.Samples.Conductors.Controls"
+             xmlns:controls="clr-namespace:Caliburn.Noesis.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ex="clr-namespace:Caliburn.Noesis.Samples.Conductors.MarkupExtensions"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.Conductors.ViewModels"
              d:DataContext="{d:DesignInstance viewModels:MainViewModel,
                                               IsDesignTimeCreatable=False}"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             Background="{StaticResource Background}"
              mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <Color x:Key="Color.ContextItem.Default">#222322</Color>
-        <Color x:Key="Color.ContextItem.Selected">#A5803D</Color>
-
-        <Color x:Key="Color.Button.FlipView.Stroke">#463D2E</Color>
-        <Color x:Key="Color.Button.FlipView.Stroke.MouseOver">#50402D</Color>
-        <Color x:Key="Color.Button.FlipView.Fill">#685942</Color>
-        <Color x:Key="Color.Button.FlipView.Fill.MouseOver">#9A7F58</Color>
-
-        <Style x:Key="Style.Button.FlipView.MainView"
-               BasedOn="{StaticResource Style.Button.FlipView}"
-               TargetType="Button">
-            <Setter Property="Foreground" Value="{ex:SolidBrush {StaticResource Color.Button.FlipView.Fill}}" />
-            <Setter Property="BorderBrush" Value="{ex:SolidBrush {StaticResource Color.Button.FlipView.Stroke}}" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Height" Value="24" />
-            <Setter Property="Width" Value="24" />
-            <Setter Property="ContentTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <Viewbox>
-                            <Grid Background="Transparent">
-                                <Path HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Data="M 26 2 L 2 11.5 L 26 22 Z"
-                                      Stroke="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=Button}}"
-                                      StrokeThickness="2" />
-                                <Path HorizontalAlignment="Center"
-                                      VerticalAlignment="Center"
-                                      Data="M 20 0 L 4 6.5 L 20 13 Z"
-                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" />
-                            </Grid>
-                        </Viewbox>
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <ContentPresenter Name="ContentPresenter"
-                                          Margin="{TemplateBinding Padding}"
-                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" Value="{ex:SolidBrush {StaticResource Color.Button.FlipView.Stroke.MouseOver}}" />
-                                <Setter Property="Foreground" Value="{ex:SolidBrush {StaticResource Color.Button.FlipView.Fill.MouseOver}}" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="Style.ListViewItem.FlipView"
-               TargetType="ListViewItem">
-            <Setter Property="Margin" Value="2" />
-            <Setter Property="Focusable" Value="False" />
-            <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="IsHitTestVisible" Value="False" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListViewItem">
-                        <Rectangle Name="Rectangle"
-                                   Width="5"
-                                   Height="5"
-                                   Fill="{ex:SolidBrush {StaticResource Color.ContextItem.Default}}">
-                            <Rectangle.LayoutTransform>
-                                <RotateTransform Angle="45" />
-                            </Rectangle.LayoutTransform>
-                        </Rectangle>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Rectangle" Property="Fill" Value="{ex:SolidBrush {StaticResource Color.ContextItem.Selected}}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <DataTemplate x:Key="DataTemplate.PreviewItemTemplate.FlipView"
-                      DataType="{x:Type viewModels:ISubScreen}">
-            <TextBlock HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       Style="{StaticResource Style.TextBlock.HeaderSmall}"
-                       Text="{Binding DisplayName, Mode=OneWay}" />
-        </DataTemplate>
-    </UserControl.Resources>
-
-    <controls:FlipView ButtonStyle="{StaticResource Style.Button.FlipView.MainView}"
-                       ContextItemContainerStyle="{StaticResource Style.ListViewItem.FlipView}"
+    <controls:FlipView Background="{StaticResource Background}"
+                       ButtonStyle="{StaticResource Style.Button.FlipView}"
                        IsCycling="True"
+                       ItemsListItemContainerStyle="{StaticResource Style.ListViewItem.FlipView}"
                        ItemsSource="{Binding Items, Mode=OneWay}"
-                       PreviewItemTemplate="{StaticResource DataTemplate.PreviewItemTemplate.FlipView}"
                        SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
         <controls:FlipView.Header>
             <TextBlock MinWidth="250"
                        Style="{StaticResource Style.TextBlock.HeaderLarge}"
                        Text="{Binding ActiveItem.DisplayName, Mode=OneWay}" />
         </controls:FlipView.Header>
+        <controls:FlipView.PreviewItemTemplate>
+            <DataTemplate DataType="{x:Type viewModels:ISubScreen}">
+                <TextBlock HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource Style.TextBlock.HeaderSmall}"
+                           Text="{Binding DisplayName, Mode=OneWay}" />
+            </DataTemplate>
+        </controls:FlipView.PreviewItemTemplate>
     </controls:FlipView>
 </UserControl>

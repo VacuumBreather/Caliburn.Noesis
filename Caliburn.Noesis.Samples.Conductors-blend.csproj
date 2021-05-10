@@ -84,8 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\Controls\FlipView.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\MarkupExtensions\SolidBrushExtension.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\ISubScreen.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\MainViewModel.cs" />
@@ -133,8 +131,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Assets\Samples\Conductors\Resources\FlipViewResources.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Assets\Samples\Conductors\Resources\FontResources.xaml">
       <SubType>Designer</SubType>
