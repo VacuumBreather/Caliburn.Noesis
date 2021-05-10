@@ -15,6 +15,8 @@
 
     <Style TargetType="controls:FlipView">
         <Setter Property="ButtonStyle" Value="{StaticResource Style.Button.FlipView}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Header" Value="{Binding SelectedItem, RelativeSource={RelativeSource Self}, Mode=OneWay}" />
         <Setter Property="PreviewItemTemplate">
@@ -120,10 +122,14 @@
 
                             <Button x:Name="PART_BackButton"
                                     DockPanel.Dock="Left"
+                                    Focusable="False"
+                                    IsTabStop="False"
                                     Style="{TemplateBinding ButtonStyle}" />
 
                             <Button x:Name="PART_ForwardButton"
                                     DockPanel.Dock="Right"
+                                    Focusable="False"
+                                    IsTabStop="False"
                                     Style="{TemplateBinding ButtonStyle}">
                                 <Button.LayoutTransform>
                                     <RotateTransform Angle="180" />
@@ -166,6 +172,9 @@
                                           VerticalAlignment="Bottom"
                                           Background="Transparent"
                                           BorderThickness="0"
+                                          Focusable="False"
+                                          IsHitTestVisible="False"
+                                          IsTabStop="False"
                                           ItemContainerStyle="{TemplateBinding ItemsListItemContainerStyle}"
                                           ItemTemplate="{TemplateBinding ItemsListItemTemplate}"
                                           ItemsPanel="{TemplateBinding ItemsListItemsPanel}"
