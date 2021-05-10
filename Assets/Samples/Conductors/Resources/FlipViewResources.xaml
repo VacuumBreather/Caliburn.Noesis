@@ -4,7 +4,7 @@
                     xmlns:controls="clr-namespace:Caliburn.Noesis.Controls">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="TextBlockResources.xaml" />
+        <ResourceDictionary Source="ListBoxResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Color x:Key="Color.ItemsListItem.Default">#222322</Color>

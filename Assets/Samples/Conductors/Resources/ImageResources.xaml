@@ -4,7 +4,9 @@
         <ResourceDictionary Source="FontResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <ImageBrush x:Key="Background"
-                ImageSource="../Images/Background.png" />
+    <ImageSource x:Key="Background">../Images/Background.png</ImageSource>
+    <ImageSource x:Key="CharacterEskel">../Images/characters_eskel.png</ImageSource>
+    <ImageSource x:Key="CharacterLambert">../Images/characters_lambert.png</ImageSource>
+    <ImageSource x:Key="CharacterVesemir">../Images/characters_vesemir.png</ImageSource>
 
 </ResourceDictionary>

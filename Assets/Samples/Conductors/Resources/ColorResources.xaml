@@ -1,8 +1,18 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <Color x:Key="Color.Foreground.Default">#A4A39C</Color>
-    <Color x:Key="Color.Foreground.Header">#FFFFFF</Color>
-    <Color x:Key="Color.Foreground.HeaderSmall">#614A39</Color>
+    <Color x:Key="Color.Foreground.Normal">#A4A39C</Color>
+    <Color x:Key="Color.Foreground.Darker">#614A39</Color>
+    <Color x:Key="Color.Foreground.Darker.Transparent">#00614A39</Color>
+
+    <Color x:Key="Color.Foreground.Highlight.Normal">#EEEEEE</Color>
+    <Color x:Key="Color.Foreground.Highlight.Darker">#A5803D</Color>
+
+    <Color x:Key="Color.Background.Normal">#4C3E35</Color>
+    <Color x:Key="Color.Background.Normal.Transparent">#004C3E35</Color>
+    <Color x:Key="Color.Background.Medium">#281E0A</Color>
+    <Color x:Key="Color.Background.Medium.Transparent">#00281E0A</Color>
+    <Color x:Key="Color.Background.Darker">#191205</Color>
+    <Color x:Key="Color.Background.Darker.Transparent">#00191205</Color>
 
 </ResourceDictionary>

@@ -80,12 +80,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Caliburn.Noesis\**\*.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\SolidColorBrushAnimation.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\DictionaryLookupConverter.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\DecorativeBorder.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\KeyValuePairWrapper.cs" />
     <Page Include="Assets\Caliburn.Noesis\**\*.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\CharacterDatabase.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\Character.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\CharacterImageDictionary.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\CharactersViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\DescriptionParagraph.cs" />
@@ -108,6 +113,7 @@
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\ScrollToTopBehavior.cs" />
     <Compile Include="Blend\Conductors\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -149,6 +155,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\ListBoxResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Assets\Samples\Conductors\Resources\TextBlockResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,7 +187,11 @@
   <ItemGroup>
     <Resource Include="Assets\Samples\Conductors\Images\Background.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Assets\Samples\Conductors\Images\characters_eskel.png" />
+    <Resource Include="Assets\Samples\Conductors\Images\characters_lambert.png" />
+    <Resource Include="Assets\Samples\Conductors\Images\characters_vesemir.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
