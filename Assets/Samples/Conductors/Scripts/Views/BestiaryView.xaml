@@ -13,8 +13,6 @@
         <TextBlock HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    Text="{Binding DisplayName, Mode=OneWay}" />
-
-
     </Grid>
 
 </UserControl>

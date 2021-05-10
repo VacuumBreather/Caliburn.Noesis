@@ -140,8 +140,7 @@
                     <Storyboard>
                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="button"
                                                       Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
-                            <EasingColorKeyFrame KeyTime="0"
-                                                 Value="#FFD82D2D" />
+                            <EasingColorKeyFrame KeyTime="0" Value="#FFD82D2D" />
                         </ColorAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
