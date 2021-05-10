@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis.Samples.Hel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis.Samples.FileExplorer-blend", "Caliburn.Noesis.Samples.FileExplorer-blend.csproj", "{E3439EAF-47A8-4C09-8378-95964584B8C9}"
 EndProject
+Project("{98716813-D056-4D1C-AD73-87E4AABFBF01}") = "Caliburn.Noesis.Samples.Converters-blend", "Caliburn.Noesis.Samples.Converters-blend.csproj", "{8890AB55-D170-43CE-A795-AB597FC55533}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{E3439EAF-47A8-4C09-8378-95964584B8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3439EAF-47A8-4C09-8378-95964584B8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3439EAF-47A8-4C09-8378-95964584B8C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8890AB55-D170-43CE-A795-AB597FC55533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8890AB55-D170-43CE-A795-AB597FC55533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8890AB55-D170-43CE-A795-AB597FC55533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8890AB55-D170-43CE-A795-AB597FC55533}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

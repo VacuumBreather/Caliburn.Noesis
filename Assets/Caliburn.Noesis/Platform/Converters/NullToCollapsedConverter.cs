@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis.Converters
 {
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
