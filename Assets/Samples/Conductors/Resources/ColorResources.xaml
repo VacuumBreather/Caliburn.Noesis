@@ -5,7 +5,8 @@
     <Color x:Key="Color.Foreground.Darker">#614A39</Color>
     <Color x:Key="Color.Foreground.Darker.Transparent">#00614A39</Color>
 
-    <Color x:Key="Color.Foreground.Highlight.Normal">#EEEEEE</Color>
+    <Color x:Key="Color.Foreground.Highlight.Light">#EEEEEE</Color>
+    <Color x:Key="Color.Foreground.Highlight.Normal">#CCCCCC</Color>
     <Color x:Key="Color.Foreground.Highlight.Darker">#A5803D</Color>
 
     <Color x:Key="Color.Background.Normal">#4C3E35</Color>
@@ -14,5 +15,24 @@
     <Color x:Key="Color.Background.Medium.Transparent">#00281E0A</Color>
     <Color x:Key="Color.Background.Darker">#191205</Color>
     <Color x:Key="Color.Background.Darker.Transparent">#00191205</Color>
+
+    <Color x:Key="BackgroundLightColor">#4C3E35</Color>
+    <Color x:Key="BackgroundMediumColor">SaddleBrown</Color>
+    <Color x:Key="BackgroundDarkColor">#111416</Color>
+
+    <Color x:Key="BorderLightColor">SandyBrown</Color>
+    <Color x:Key="BorderMediumColor">#352C25</Color>
+    <Color x:Key="BorderMediumColor.Transparent">#00352C25</Color>
+    <Color x:Key="BorderDarkColor">Brown</Color>
+
+    <Color x:Key="ControlLightColor">LightSlateGray</Color>
+    <Color x:Key="ControlMediumColor">DimGray</Color>
+    <Color x:Key="ControlDarkColor">DarkSlateGray</Color>
+
+    <Color x:Key="ControlPressedColor">Wheat</Color>
+    <Color x:Key="DisabledForegroundColor">DarkGray</Color>
+
+    <Color x:Key="DisabledControlLightColor">DarkGray</Color>
+    <Color x:Key="DisabledBorderLightColor">DarkGray</Color>
 
 </ResourceDictionary>

@@ -13,23 +13,30 @@
              d:DesignWidth="800"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <views:CharacterImageDictionary x:Key="CharacterImageDictionary">
-            <ImageBrush x:Key="Eskel"
-                        ImageSource="{StaticResource CharacterEskel}"
-                        Stretch="Uniform" />
-            <ImageBrush x:Key="Lambert"
-                        ImageSource="{StaticResource CharacterLambert}"
-                        Stretch="Uniform" />
-            <ImageBrush x:Key="Vesemir"
-                        ImageSource="{StaticResource CharacterVesemir}"
-                        Stretch="Uniform" />
-        </views:CharacterImageDictionary>
+        <views:ImageSourceDictionary x:Key="CharacterImageDictionary">
+            <ImageSource x:Key="Eskel">../../Images/characters_eskel.png</ImageSource>
+            <ImageSource x:Key="Lambert">../../Images/characters_lambert.png</ImageSource>
+            <ImageSource x:Key="Vesemir">../../Images/characters_vesemir.png</ImageSource>
+        </views:ImageSourceDictionary>
+
+        <views:ImageSourceDictionary x:Key="CharacterFaceDictionary">
+            <ImageSource x:Key="Eskel">../../Images/face_eskel.png</ImageSource>
+            <ImageSource x:Key="Lambert">../../Images/face_lambert.png</ImageSource>
+            <ImageSource x:Key="Vesemir">../../Images/face_vesemir.png</ImageSource>
+        </views:ImageSourceDictionary>
 
         <views:DictionaryLookupConverter x:Key="DictionaryLookupConverter" />
 
         <DataTemplate DataType="{x:Type characters:Character}">
-            <TextBlock Style="{StaticResource Style.TextBlock.Large}"
-                       Text="{Binding DisplayName, Mode=OneWay}" />
+            <DockPanel Height="75">
+                <Image DockPanel.Dock="Left"
+                       Source="{Binding DisplayName, Mode=OneWay, Converter={StaticResource DictionaryLookupConverter}, ConverterParameter={StaticResource CharacterFaceDictionary}}"
+                       Stretch="Uniform" />
+                <TextBlock Margin="30,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource Style.TextBlock.Large}"
+                           Text="{Binding DisplayName, Mode=OneWay}" />
+            </DockPanel>
         </DataTemplate>
 
         <DataTemplate DataType="{x:Type characters:DescriptionParagraph}">
@@ -61,24 +68,32 @@
     <UniformGrid Margin="0,20"
                  Columns="3">
         <ListBox Background="Transparent"
-                 BorderThickness="0"
                  ItemsSource="{Binding Characters, Mode=OneWay}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
                  SelectedItem="{Binding SelectedCharacter, Mode=TwoWay}" />
 
-        <Border Margin="10,0"
-                Background="{Binding SelectedCharacter.DisplayName, Mode=OneWay, Converter={StaticResource DictionaryLookupConverter}, ConverterParameter={StaticResource CharacterImageDictionary}}" />
+        <Image Margin="10,0"
+               Source="{Binding SelectedCharacter.DisplayName, Mode=OneWay, Converter={StaticResource DictionaryLookupConverter}, ConverterParameter={StaticResource CharacterImageDictionary}}"
+               Stretch="Uniform" />
 
-        <ListBox views:ScrollToTopBehavior.ScrollToTop="True"
+        <ListBox views:ListBoxExtensions.Header="{Binding SelectedCharacter, Mode=OneWay}"
+                 views:ScrollToTopBehavior.ScrollToTop="True"
                  Background="Transparent"
                  Focusable="False"
                  ItemContainerStyle="{StaticResource DescriptionContainerStyle}"
                  ItemsSource="{Binding SelectedCharacter.DescriptionParagraphs}"
                  ScrollViewer.CanContentScroll="False"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 ScrollViewer.VerticalScrollBarVisibility="Visible"
-                 SelectionMode="Single" />
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                 SelectionMode="Single">
+            <views:ListBoxExtensions.HeaderTemplate>
+                <DataTemplate DataType="characters:Character">
+                    <TextBlock Style="{StaticResource Style.TextBlock.Header}"
+                               Text="{Binding DisplayName, Mode=OneWay}" />
+                </DataTemplate>
+            </views:ListBoxExtensions.HeaderTemplate>
+        </ListBox>
     </UniformGrid>
 
 </UserControl>

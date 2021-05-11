@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Caliburn.Noesis\**\*.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\ListBoxExtensions.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\SolidColorBrushAnimation.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\DictionaryLookupConverter.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\DecorativeBorder.cs" />
@@ -89,7 +90,7 @@
     <Compile Include="Assets\Samples\Conductors\Scripts\ConductorsBootstrapper.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\CharacterDatabase.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\Character.cs" />
-    <Compile Include="Assets\Samples\Conductors\Scripts\Views\CharacterImageDictionary.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\ImageSourceDictionary.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\CharactersViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\ViewModels\BestiaryViewModel.cs" />
     <Compile Include="Assets\Samples\Conductors\Scripts\Model\Characters\DescriptionParagraph.cs" />
@@ -113,6 +114,7 @@
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assets\Samples\Conductors\Scripts\Views\ScrollToTopBehavior.cs" />
+    <Compile Include="Assets\Samples\Conductors\Scripts\Views\SynchronizeWithScrollBarBehavior.cs" />
     <Compile Include="Blend\Conductors\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -158,6 +160,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Assets\Samples\Conductors\Resources\ScrollViewerResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Assets\Samples\Conductors\Resources\TextBlockResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,6 +196,11 @@
     <Resource Include="Assets\Samples\Conductors\Images\characters_eskel.png" />
     <Resource Include="Assets\Samples\Conductors\Images\characters_lambert.png" />
     <Resource Include="Assets\Samples\Conductors\Images\characters_vesemir.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Samples\Conductors\Images\face_eskel.png" />
+    <Resource Include="Assets\Samples\Conductors\Images\face_lambert.png" />
+    <Resource Include="Assets\Samples\Conductors\Images\face_vesemir.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
