@@ -21,6 +21,7 @@ tab_width=2
 [*]
 
 # Microsoft .NET properties
+csharp_new_line_before_members_in_object_initializers=false
 csharp_new_line_before_open_brace=all
 csharp_preferred_modifier_order=public, protected, internal, private, static, new, abstract, virtual, override, sealed, readonly, extern, unsafe, volatile, async:suggestion
 csharp_prefer_braces=true:suggestion
@@ -129,7 +130,7 @@ resharper_toplevel_function_declaration_return_type_style=on_single_line
 resharper_toplevel_function_definition_return_type_style=on_single_line
 resharper_use_indent_from_vs=false
 resharper_wrap_after_declaration_lpar=false
-resharper_wrap_array_initializer_style=chop_always
+resharper_wrap_array_initializer_style=chop_if_long
 resharper_wrap_braced_init_list_style=chop_if_long
 
 # ReSharper inspection severities
