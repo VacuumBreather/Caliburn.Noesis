@@ -42,6 +42,7 @@
     <Style x:Key="Style.TextBlock.HeaderLarge"
            BasedOn="{StaticResource Style.TextBlock.Header}"
            TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Highlight.Light}}" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.ExtraLarge}" />
     </Style>
 
