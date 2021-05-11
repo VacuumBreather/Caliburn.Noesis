@@ -15,6 +15,7 @@
     /// <summary>Converts a mathematical expression into its result.</summary>
     /// <seealso cref="IValueConverter" />
     /// <seealso cref="IMultiValueConverter" />
+    /// <remarks>See https://github.com/pieterderycke/Jace/wiki/Getting-Started for supported expressions.</remarks>
     public class MathExpressionConverter : IValueConverter, IMultiValueConverter
     {
         #region Constants and Fields
