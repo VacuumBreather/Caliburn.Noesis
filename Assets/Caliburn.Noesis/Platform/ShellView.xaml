@@ -54,14 +54,14 @@
 
     <Grid>
         <Grid.Resources>
-            <cal:NullCheckToVisibilityConverter x:Key="NullToHidden" />
+            <cal:NullToCollapsedConverter x:Key="NullToCollapsed" />
         </Grid.Resources>
-        <ContentControl Content="{Binding MainContent.ActiveItem, Mode=OneWay}" />
+        <ContentControl Content="{Binding MainContentConductor.ActiveItem, Mode=OneWay}" />
         <controls:WindowHost Background="{x:Null}"
-                             ItemsSource="{Binding WindowContent.Items, Mode=OneWay}" />
+                             ItemsSource="{Binding WindowConductor.Items, Mode=OneWay}" />
         <Grid Background="Transparent"
-              Visibility="{Binding DialogContent.ActiveItem, Mode=OneWay, Converter={StaticResource NullToHidden}}">
-            <ContentControl Content="{Binding DialogContent.ActiveItem, Mode=OneWay}" />
+              Visibility="{Binding DialogConductor.ActiveItem, Mode=OneWay, Converter={StaticResource NullToCollapsed}}">
+            <ContentControl Content="{Binding DialogConductor.ActiveItem, Mode=OneWay}" />
         </Grid>
     </Grid>
 </Page>

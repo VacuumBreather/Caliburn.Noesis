@@ -1,10 +1,5 @@
 ﻿namespace Caliburn.Noesis
 {
-#if UNITY_5_5_OR_NEWER
-    using global::Noesis;
-#else
-    using System.Windows;
-#endif
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -12,6 +7,12 @@
     using System.Linq;
     using System.Reflection;
     using Extensions;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
+    using System.Windows;
+#endif
 
     /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
     public class AssemblySource
@@ -45,6 +46,13 @@
         #endregion
 
         #region Public Methods
+
+        /// <summary>Adds an assembly to the <see cref="AssemblySource" />.</summary>
+        /// <param name="assembly">The assembly to add.</param>
+        public void Add(Assembly assembly)
+        {
+            this.typeAssemblies.Add(assembly);
+        }
 
         /// <summary>Adds a range of assemblies to the <see cref="AssemblySource" />.</summary>
         /// <param name="assemblies">The range of assemblies to add.</param>

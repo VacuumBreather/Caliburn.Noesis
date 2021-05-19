@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>Defines a command which executes asynchronously.</summary>
     public interface IAsyncCommand : IRaisingCommand

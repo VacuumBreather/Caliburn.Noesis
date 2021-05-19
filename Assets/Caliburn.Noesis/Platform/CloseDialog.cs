@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
+    using System;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 #else
@@ -8,7 +9,6 @@
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
 #endif
-    using System;
 
     /// <summary>Contains attached dependency properties used when closing a dialog.</summary>
     public static class CloseDialog

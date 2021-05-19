@@ -1,13 +1,9 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System;
     using System.ComponentModel;
     using System.Threading;
     using Cysharp.Threading.Tasks;
-
-    #endregion
 
     /// <summary>
     ///     Denotes an instance which conducts other objects by managing an ActiveItem and maintaining

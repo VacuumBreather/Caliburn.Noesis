@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Threading;
-
-    #endregion
 
     /// <summary>A <see cref="CancellationTokenSource" /> which can be checked for its disposed state.</summary>
     public class SafeCancellationTokenSource : CancellationTokenSource

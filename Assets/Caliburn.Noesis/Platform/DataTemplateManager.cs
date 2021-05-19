@@ -1,14 +1,14 @@
 ﻿namespace Caliburn.Noesis
 {
+    using System;
+    using System.Linq;
+    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 #else
     using System.Windows;
     using System.Windows.Markup;
 #endif
-    using System;
-    using System.Linq;
-    using Extensions;
 
     /// <summary>Creates data templates for view-models.</summary>
     public static class DataTemplateManager

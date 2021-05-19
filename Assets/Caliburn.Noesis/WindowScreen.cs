@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using JetBrains.Annotations;
-
-    #endregion
 
     /// <summary>A base class for a screen that is displayed as a draggable window.</summary>
     /// <seealso cref="Caliburn.Noesis.Screen" />

@@ -1,14 +1,10 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Linq;
-
-    #endregion
 
     /// <summary>A base collection class that supports automatic UI thread marshalling.</summary>
     /// <typeparam name="T">The type of elements contained in the collection.</typeparam>

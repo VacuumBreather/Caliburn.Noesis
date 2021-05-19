@@ -1,12 +1,8 @@
 ﻿namespace Caliburn.Noesis
 {
-    #region Using Directives
-
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
-
-    #endregion
 
     /// <summary>
     ///     A base class for various implementations of <see cref="IConductor" /> that maintain an
