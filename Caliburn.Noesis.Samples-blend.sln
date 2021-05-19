@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Noesis.Samples.Fil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Noesis.Samples.MarkupExtensions-blend", "Blend\MarkupExtensions\Caliburn.Noesis.Samples.MarkupExtensions-blend.csproj", "{8BB4926B-E270-491E-B29F-1AC9AFC9EB81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis.Samples.Transitions-blend", "Caliburn.Noesis.Samples.Transitions-blend.csproj", "{804BBD00-5ADA-465A-B2D2-344FBF78559D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +25,6 @@ Global
 		{E3439EAF-47A8-4C09-8378-95964584B8C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3439EAF-47A8-4C09-8378-95964584B8C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3439EAF-47A8-4C09-8378-95964584B8C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8BB4926B-E270-491E-B29F-1AC9AFC9EB81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BB4926B-E270-491E-B29F-1AC9AFC9EB81}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BB4926B-E270-491E-B29F-1AC9AFC9EB81}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BB4926B-E270-491E-B29F-1AC9AFC9EB81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
