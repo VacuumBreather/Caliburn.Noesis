@@ -55,10 +55,15 @@
         protected BootstrapperBase()
         {
             Execute.Dispatcher = Dispatcher.CurrentDispatcher;
-            Application.Current.Startup += (_, __) => Execute.OnUIThreadAsync(Start).Forget();
-            Application.Current.Activated += (_, __) => Execute.OnUIThreadAsync(OnEnable).Forget();
+            Application.Current.Startup += async (_, __) =>
+                {
+                    await Execute.OnUIThreadAsync(OnEnable);
+                    await Execute.OnUIThreadAsync(Start);
+                };
+            Application.Current.Activated +=
+                async (_, __) => await Execute.OnUIThreadAsync(OnEnable);
             Application.Current.Deactivated +=
-                (_, __) => Execute.OnUIThreadAsync(OnDisable).Forget();
+                async (_, __) => await Execute.OnUIThreadAsync(OnDisable);
         }
 
         #endregion
@@ -149,7 +154,6 @@
             var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
             window.Show();
             window.Closing += OnWindowClosing;
-            await OnEnable();
 #endif
 
             await OnStartup();
@@ -172,21 +176,26 @@
         }
 
 #if !UNITY_5_5_OR_NEWER
-        private void OnWindowClosing(object _, CancelEventArgs args)
+        private async void OnWindowClosing(object _, CancelEventArgs args)
         {
+            if (args.Cancel)
+            {
+                return;
+            }
+
             var canClose = true;
 
             if (this.windowManager is IGuardClose guardClose)
             {
-                canClose = guardClose.CanCloseAsync().AsTask().Result;
-            }
-
-            if (canClose)
-            {
-                Execute.OnUIThreadAsync(OnDestroy).Forget();
+                canClose = await guardClose.CanCloseAsync();
             }
 
             args.Cancel = !canClose;
+
+            if (canClose)
+            {
+                await Execute.OnUIThreadAsync(OnDestroy);
+            }
         }
 #endif
 
