@@ -25,19 +25,19 @@
 
         #region ITransitionWipe Implementation
 
-        public void Wipe(TransitionerSlide fromSlide,
-                         TransitionerSlide toSlide,
+        public void Wipe(TransitionerItem fromItem,
+                         TransitionerItem toItem,
                          Point origin,
                          IZIndexController zIndexController)
         {
-            if (fromSlide == null)
+            if (fromItem == null)
             {
-                throw new ArgumentNullException(nameof(fromSlide));
+                throw new ArgumentNullException(nameof(fromItem));
             }
 
-            if (toSlide == null)
+            if (toItem == null)
             {
-                throw new ArgumentNullException(nameof(toSlide));
+                throw new ArgumentNullException(nameof(toItem));
             }
 
             if (zIndexController == null)
@@ -55,28 +55,28 @@
 
             if (Direction == SlideDirection.Left)
             {
-                fromEndX = -fromSlide.ActualWidth;
-                toStartX = toSlide.ActualWidth;
+                fromEndX = -fromItem.ActualWidth;
+                toStartX = toItem.ActualWidth;
             }
             else if (Direction == SlideDirection.Right)
             {
-                fromEndX = fromSlide.ActualWidth;
-                toStartX = -toSlide.ActualWidth;
+                fromEndX = fromItem.ActualWidth;
+                toStartX = -toItem.ActualWidth;
             }
             else if (Direction == SlideDirection.Up)
             {
-                fromEndY = -fromSlide.ActualHeight;
-                toStartY = toSlide.ActualHeight;
+                fromEndY = -fromItem.ActualHeight;
+                toStartY = toItem.ActualHeight;
             }
             else if (Direction == SlideDirection.Down)
             {
-                fromEndY = fromSlide.ActualHeight;
-                toStartY = -toSlide.ActualHeight;
+                fromEndY = fromItem.ActualHeight;
+                toStartY = -toItem.ActualHeight;
             }
 
             // From
             var fromTransform = new TranslateTransform(fromStartX, fromStartY);
-            fromSlide.RenderTransform = fromTransform;
+            fromItem.RenderTransform = fromTransform;
             var fromXAnimation = new DoubleAnimationUsingKeyFrames();
             fromXAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(fromStartX, zeroKeyTime));
             fromXAnimation.KeyFrames.Add(
@@ -88,7 +88,7 @@
 
             // To
             var toTransform = new TranslateTransform(toStartX, toStartY);
-            toSlide.RenderTransform = toTransform;
+            toItem.RenderTransform = toTransform;
             var toXAnimation = new DoubleAnimationUsingKeyFrames();
             toXAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(toStartX, zeroKeyTime));
             toXAnimation.KeyFrames.Add(
@@ -103,25 +103,25 @@
                 {
                     fromTransform.BeginAnimation(TranslateTransform.XProperty, null);
                     fromTransform.X = fromEndX;
-                    fromSlide.RenderTransform = null;
+                    fromItem.RenderTransform = null;
                 };
             fromYAnimation.Completed += (sender, args) =>
                 {
                     fromTransform.BeginAnimation(TranslateTransform.YProperty, null);
                     fromTransform.Y = fromEndY;
-                    fromSlide.RenderTransform = null;
+                    fromItem.RenderTransform = null;
                 };
             toXAnimation.Completed += (sender, args) =>
                 {
                     toTransform.BeginAnimation(TranslateTransform.XProperty, null);
                     toTransform.X = toEndX;
-                    toSlide.RenderTransform = null;
+                    toItem.RenderTransform = null;
                 };
             toYAnimation.Completed += (sender, args) =>
                 {
                     toTransform.BeginAnimation(TranslateTransform.YProperty, null);
                     toTransform.Y = toEndY;
-                    toSlide.RenderTransform = null;
+                    toItem.RenderTransform = null;
                 };
 
             // Animate
@@ -129,7 +129,7 @@
             fromTransform.BeginAnimation(TranslateTransform.YProperty, fromYAnimation);
             toTransform.BeginAnimation(TranslateTransform.XProperty, toXAnimation);
             toTransform.BeginAnimation(TranslateTransform.YProperty, toYAnimation);
-            zIndexController.Stack(toSlide, fromSlide);
+            zIndexController.Stack(toItem, fromItem);
         }
 
         #endregion

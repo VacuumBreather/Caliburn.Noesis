@@ -1,6 +1,6 @@
 namespace Caliburn.Noesis.Transitions
 {
-    public enum TransitionerSlideState
+    public enum TransitionerItemState
     {
         None,
         Current,

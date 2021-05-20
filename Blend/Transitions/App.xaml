@@ -1,13 +1,15 @@
-﻿<Application x:Class="Caliburn.Noesis.Transitions.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:sample="clr-namespace:Caliburn.Noesis.Samples.Transitions">
+﻿<Application
+    x:Class="Caliburn.Noesis.Transitions.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sample="clr-namespace:Caliburn.Noesis.Samples.Transitions">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <sample:TransitionsBootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
+                <ResourceDictionary Source="../../Assets/Samples/Transitions/Scripts/Resources/AllResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

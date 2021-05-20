@@ -4,8 +4,8 @@ namespace Caliburn.Noesis.Transitions
 
     public interface ITransitionWipe
     {
-        void Wipe(TransitionerSlide fromSlide,
-                  TransitionerSlide toSlide,
+        void Wipe(TransitionerItem fromItem,
+                  TransitionerItem toItem,
                   Point origin,
                   IZIndexController zIndexController);
     }

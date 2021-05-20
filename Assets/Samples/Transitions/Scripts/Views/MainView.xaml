@@ -4,20 +4,37 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:transitions="clr-namespace:Caliburn.Noesis.Transitions"
     xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.Transitions.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:MainViewModel,
                                      IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
-    <DockPanel>
-        <Button
-            Width="100"
-            Height="50"
-            Margin="10"
+
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="CommandTarget" Value="{Binding ElementName=Transitioner}" />
+            <Setter Property="Content" Value="{Binding RelativeSource={RelativeSource Self}, Path=Command.Text}" />
+        </Style>
+    </UserControl.Resources>
+
+    <DockPanel Background="Black">
+        <StackPanel
             HorizontalAlignment="Center"
-            VerticalAlignment="Top"
-            Command="{Binding GoToNextScreenCommand, Mode=OneWay}"
-            Content="Next Screen"
-            DockPanel.Dock="Top" />
-        <ContentControl Content="{Binding ActiveItem, Mode=OneWay}" />
+            DockPanel.Dock="Top"
+            Orientation="Horizontal">
+            <Button Command="{x:Static transitions:Transitioner.MoveFirstCommand}" />
+            <Button Command="{x:Static transitions:Transitioner.MovePreviousCommand}" />
+            <Button Command="{x:Static transitions:Transitioner.MoveNextCommand}" />
+            <Button Command="{x:Static transitions:Transitioner.MoveLastCommand}" />
+        </StackPanel>
+        <transitions:Transitioner
+            x:Name="Transitioner"
+            ItemsSource="{Binding Items, Mode=OneWay}"
+            SelectedItem="{Binding ActiveItem, Mode=TwoWay}" />
     </DockPanel>
 </UserControl>
