@@ -34,7 +34,25 @@
         </StackPanel>
         <transitions:Transitioner
             x:Name="Transitioner"
+            DockPanel.Dock="Top"
             ItemsSource="{Binding Items, Mode=OneWay}"
-            SelectedItem="{Binding ActiveItem, Mode=TwoWay}" />
+            SelectedItem="{Binding ActiveItem, Mode=TwoWay}"
+            Visibility="Visible">
+            <transitions:Transitioner.ItemContainerStyle>
+                <Style BasedOn="{StaticResource {x:Type transitions:TransitionerItem}}" TargetType="transitions:TransitionerItem">
+                    <Setter Property="ForwardWipe">
+                        <Setter.Value>
+                            <transitions:SlideWipe Direction="Left" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="BackwardWipe">
+                        <Setter.Value>
+                            <transitions:SlideWipe Direction="Right" />
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="OpeningEffect" Value="{transitions:TransitionEffect FadeIn}" />
+                </Style>
+            </transitions:Transitioner.ItemContainerStyle>
+        </transitions:Transitioner>
     </DockPanel>
 </UserControl>

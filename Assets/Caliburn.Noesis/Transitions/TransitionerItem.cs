@@ -10,34 +10,49 @@
     {
         #region Constants and Fields
 
-        public static readonly RoutedEvent InTransitionFinished = EventManager.RegisterRoutedEvent(
-            "InTransitionFinished",
+        /// <summary>
+        /// The IsTransitionFinished event.
+        /// </summary>
+        public static readonly RoutedEvent IsTransitionFinished = EventManager.RegisterRoutedEvent(
+            nameof(IsTransitionFinished),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
             typeof(TransitionerItem));
 
+        /// <summary>
+        /// The TransitionOrigin property.
+        /// </summary>
         public static readonly DependencyProperty TransitionOriginProperty =
             DependencyProperty.Register(
-                "TransitionOrigin",
+                nameof(TransitionOrigin),
                 typeof(Point),
                 typeof(Transitioner),
                 new PropertyMetadata(new Point(0.5, 0.5)));
 
+        /// <summary>
+        /// The State property.
+        /// </summary>
         public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
-            "State",
+            nameof(State),
             typeof(TransitionerItemState),
             typeof(TransitionerItem),
             new PropertyMetadata(default(TransitionerItemState), StatePropertyChangedCallback));
 
+        /// <summary>
+        /// The BackwardWipe property.
+        /// </summary>
         public static readonly DependencyProperty BackwardWipeProperty =
             DependencyProperty.Register(
-                "BackwardWipe",
+                nameof(BackwardWipe),
                 typeof(ITransitionWipe),
                 typeof(TransitionerItem),
                 new PropertyMetadata(new SlideOutWipe()));
 
+        /// <summary>
+        /// The ForwardWipe property.
+        /// </summary>
         public static readonly DependencyProperty ForwardWipeProperty = DependencyProperty.Register(
-            "ForwardWipe",
+            nameof(ForwardWipe),
             typeof(ITransitionWipe),
             typeof(TransitionerItem),
             new PropertyMetadata(new CircleWipe()));
@@ -46,6 +61,9 @@
 
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes the <see cref="TransitionerItem"/> class.
+        /// </summary>
         static TransitionerItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
@@ -85,7 +103,7 @@
 
         #region Protected Methods
 
-        protected void OnInTransitionFinished(RoutedEventArgs e)
+        protected virtual void OnInTransitionFinished(RoutedEventArgs e)
         {
             RaiseEvent(e);
         }
