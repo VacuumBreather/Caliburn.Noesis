@@ -67,7 +67,7 @@ namespace Caliburn.Noesis.Transitions
             CommandBindings.Add(new CommandBinding(MoveFirstCommand, MoveFirstHandler));
             CommandBindings.Add(new CommandBinding(MoveLastCommand, MoveLastHandler));
             AddHandler(
-                TransitionerItem.InTransitionFinished,
+                TransitionerItem.IsTransitionFinished,
                 new RoutedEventHandler(IsTransitionFinishedHandler));
             Loaded += (sender, args) =>
                 {

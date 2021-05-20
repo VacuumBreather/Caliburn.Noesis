@@ -8,7 +8,8 @@
     {
         Loaded = 1,
         IsVisibleChanged = 2,
-        All = Loaded | IsVisibleChanged
+        ContentChanged = 3,
+        All = Loaded | IsVisibleChanged | ContentChanged
     }
 
     /// <summary>Content control to enable easier transitions.</summary>
@@ -35,11 +36,19 @@
 
         public TransitioningContent()
         {
-            Loaded += (sender, args) => Run(TransitioningContentRunHint.Loaded);
-            IsVisibleChanged += (sender, args) => Run(TransitioningContentRunHint.IsVisibleChanged);
+            Loaded += (_, __) => Run(TransitioningContentRunHint.Loaded);
+            IsVisibleChanged += (_, __) => Run(TransitioningContentRunHint.IsVisibleChanged);
         }
 
         #endregion
+
+        /// <inheritdoc />
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            base.OnContentChanged(oldContent, newContent);
+
+            Run(TransitioningContentRunHint.ContentChanged);
+        }
 
         #region Public Properties
 
@@ -55,7 +64,7 @@
 
         private void Run(TransitioningContentRunHint requiredHint)
         {
-            if ((RunHint & requiredHint) == requiredHint)
+            if ((RunHint & requiredHint) != 0)
             {
                 RunOpeningEffects();
             }
