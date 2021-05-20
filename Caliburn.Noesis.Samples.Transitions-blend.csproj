@@ -81,24 +81,40 @@
   <ItemGroup>
     <Compile Include="Assets\Caliburn.Noesis\**\*.cs" />
     <Page Include="Assets\Caliburn.Noesis\**\*.xaml" />
+    <Page Include="Assets\Samples\Transitions\Scripts\Views\ForthView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Assets\Samples\Transitions\Scripts\Views\SecondView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Assets\Samples\Transitions\Scripts\Views\ThirdView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Samples\Transitions\Scripts\TransitionsBootstrapper.cs" />
     <Compile Include="Assets\Samples\Transitions\Scripts\ViewModels\FirstViewModel.cs" />
+    <Compile Include="Assets\Samples\Transitions\Scripts\ViewModels\ForthViewModel.cs" />
     <Compile Include="Assets\Samples\Transitions\Scripts\ViewModels\MainViewModel.cs" />
     <Compile Include="Assets\Samples\Transitions\Scripts\ViewModels\SecondViewModel.cs" />
+    <Compile Include="Assets\Samples\Transitions\Scripts\ViewModels\ThirdViewModel.cs" />
     <Compile Include="Assets\Samples\Transitions\Scripts\Views\FirstView.xaml.cs">
       <DependentUpon>FirstView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\Samples\Transitions\Scripts\Views\ForthView.xaml.cs">
+      <DependentUpon>ForthView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assets\Samples\Transitions\Scripts\Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assets\Samples\Transitions\Scripts\Views\SecondView.xaml.cs">
       <DependentUpon>SecondView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Assets\Samples\Transitions\Scripts\Views\ThirdView.xaml.cs">
+      <DependentUpon>ThirdView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Blend\Transitions\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>

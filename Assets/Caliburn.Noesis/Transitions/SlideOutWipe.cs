@@ -15,19 +15,19 @@ namespace Caliburn.Noesis.Transitions
 
         #region ITransitionWipe Implementation
 
-        public void Wipe(TransitionerSlide fromSlide,
-                         TransitionerSlide toSlide,
+        public void Wipe(TransitionerItem fromItem,
+                         TransitionerItem toItem,
                          Point origin,
                          IZIndexController zIndexController)
         {
-            if (fromSlide == null)
+            if (fromItem == null)
             {
-                throw new ArgumentNullException(nameof(fromSlide));
+                throw new ArgumentNullException(nameof(fromItem));
             }
 
-            if (toSlide == null)
+            if (toItem == null)
             {
-                throw new ArgumentNullException(nameof(toSlide));
+                throw new ArgumentNullException(nameof(toItem));
             }
 
             if (zIndexController == null)
@@ -41,28 +41,28 @@ namespace Caliburn.Noesis.Transitions
 
             //back out old slide setup
             var scaleTransform = new ScaleTransform(1, 1);
-            fromSlide.RenderTransform = scaleTransform;
+            fromItem.RenderTransform = scaleTransform;
             var scaleAnimation = new DoubleAnimationUsingKeyFrames();
             scaleAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, zeroKeyTime));
             scaleAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(.8, endKeyTime));
-            scaleAnimation.Completed += (sender, args) => { fromSlide.RenderTransform = null; };
+            scaleAnimation.Completed += (sender, args) => { fromItem.RenderTransform = null; };
             var opacityAnimation = new DoubleAnimationUsingKeyFrames();
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, zeroKeyTime));
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, endKeyTime));
             opacityAnimation.Completed += (sender, args) =>
                 {
-                    fromSlide.BeginAnimation(UIElement.OpacityProperty, null);
-                    fromSlide.Opacity = 0;
+                    fromItem.BeginAnimation(UIElement.OpacityProperty, null);
+                    fromItem.Opacity = 0;
                 };
 
             //slide in new slide setup
-            var translateTransform = new TranslateTransform(0, toSlide.ActualHeight);
-            toSlide.RenderTransform = translateTransform;
+            var translateTransform = new TranslateTransform(0, toItem.ActualHeight);
+            toItem.RenderTransform = translateTransform;
             var slideAnimation = new DoubleAnimationUsingKeyFrames();
             slideAnimation.KeyFrames.Add(
-                new LinearDoubleKeyFrame(toSlide.ActualHeight, zeroKeyTime));
+                new LinearDoubleKeyFrame(toItem.ActualHeight, zeroKeyTime));
             slideAnimation.KeyFrames.Add(
-                new EasingDoubleKeyFrame(toSlide.ActualHeight, midishKeyTime)
+                new EasingDoubleKeyFrame(toItem.ActualHeight, midishKeyTime)
                     {
                         EasingFunction = this._sineEase
                     });
@@ -73,9 +73,9 @@ namespace Caliburn.Noesis.Transitions
             translateTransform.BeginAnimation(TranslateTransform.YProperty, slideAnimation);
             scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
             scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
-            fromSlide.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
+            fromItem.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
 
-            zIndexController.Stack(toSlide, fromSlide);
+            zIndexController.Stack(toItem, fromItem);
         }
 
         #endregion

@@ -6,7 +6,7 @@
     ///     Content control to host the content of an individual page within a
     ///     <see cref="Transitioner" />.
     /// </summary>
-    public class TransitionerSlide : TransitioningContentBase
+    public class TransitionerItem : TransitioningContentBase
     {
         #region Constants and Fields
 
@@ -14,7 +14,7 @@
             "InTransitionFinished",
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
-            typeof(TransitionerSlide));
+            typeof(TransitionerItem));
 
         public static readonly DependencyProperty TransitionOriginProperty =
             DependencyProperty.Register(
@@ -25,32 +25,32 @@
 
         public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
             "State",
-            typeof(TransitionerSlideState),
-            typeof(TransitionerSlide),
-            new PropertyMetadata(default(TransitionerSlideState), StatePropertyChangedCallback));
+            typeof(TransitionerItemState),
+            typeof(TransitionerItem),
+            new PropertyMetadata(default(TransitionerItemState), StatePropertyChangedCallback));
 
         public static readonly DependencyProperty BackwardWipeProperty =
             DependencyProperty.Register(
                 "BackwardWipe",
                 typeof(ITransitionWipe),
-                typeof(TransitionerSlide),
+                typeof(TransitionerItem),
                 new PropertyMetadata(new SlideOutWipe()));
 
         public static readonly DependencyProperty ForwardWipeProperty = DependencyProperty.Register(
             "ForwardWipe",
             typeof(ITransitionWipe),
-            typeof(TransitionerSlide),
+            typeof(TransitionerItem),
             new PropertyMetadata(new CircleWipe()));
 
         #endregion
 
         #region Constructors and Destructors
 
-        static TransitionerSlide()
+        static TransitionerItem()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
-                typeof(TransitionerSlide),
-                new FrameworkPropertyMetadata(typeof(TransitionerSlide)));
+                typeof(TransitionerItem),
+                new FrameworkPropertyMetadata(typeof(TransitionerItem)));
         }
 
         #endregion
@@ -69,9 +69,9 @@
             set => SetValue(ForwardWipeProperty, value);
         }
 
-        public TransitionerSlideState State
+        public TransitionerItemState State
         {
-            get => (TransitionerSlideState)GetValue(StateProperty);
+            get => (TransitionerItemState)GetValue(StateProperty);
             set => SetValue(StateProperty, value);
         }
 
@@ -97,12 +97,12 @@
         private static void StatePropertyChangedCallback(DependencyObject d,
                                                          DependencyPropertyChangedEventArgs e)
         {
-            ((TransitionerSlide)d).AnimateToState();
+            ((TransitionerItem)d).AnimateToState();
         }
 
         private void AnimateToState()
         {
-            if (State != TransitionerSlideState.Current)
+            if (State != TransitionerItemState.Current)
             {
                 return;
             }

@@ -30,22 +30,22 @@ namespace Caliburn.Noesis.Transitions
                 new PropertyMetadata(new Point(0.5, 0.5)));
 
         /// <summary>Moves to the first slide.</summary>
-        public static readonly RoutedCommand MoveFirstCommand = new RoutedCommand();
+        public static readonly RoutedUICommand MoveFirstCommand = new RoutedUICommand("First", nameof(MoveFirstCommand), typeof(Transitioner));
 
         /// <summary>Moves to the last slide.</summary>
-        public static readonly RoutedCommand MoveLastCommand = new RoutedCommand();
+        public static readonly RoutedUICommand MoveLastCommand = new RoutedUICommand("Last", nameof(MoveLastCommand), typeof(Transitioner));
 
         /// <summary>
         ///     Causes the the next slide to be displayed (affectively increments
         ///     <see cref="Selector.SelectedIndex" />).
         /// </summary>
-        public static readonly RoutedCommand MoveNextCommand = new RoutedCommand();
+        public static readonly RoutedUICommand MoveNextCommand = new RoutedUICommand("Next", nameof(MoveNextCommand), typeof(Transitioner));
 
         /// <summary>
         ///     Causes the the previous slide to be displayed (affectively decrements
         ///     <see cref="Selector.SelectedIndex" />).
         /// </summary>
-        public static readonly RoutedCommand MovePreviousCommand = new RoutedCommand();
+        public static readonly RoutedUICommand MovePreviousCommand = new RoutedUICommand("Previous", nameof(MovePreviousCommand), typeof(Transitioner));
 
         private Point? _nextTransitionOrigin;
 
@@ -67,7 +67,7 @@ namespace Caliburn.Noesis.Transitions
             CommandBindings.Add(new CommandBinding(MoveFirstCommand, MoveFirstHandler));
             CommandBindings.Add(new CommandBinding(MoveLastCommand, MoveLastHandler));
             AddHandler(
-                TransitionerSlide.InTransitionFinished,
+                TransitionerItem.InTransitionFinished,
                 new RoutedEventHandler(IsTransitionFinishedHandler));
             Loaded += (sender, args) =>
                 {
@@ -102,7 +102,7 @@ namespace Caliburn.Noesis.Transitions
 
         #region IZIndexController Implementation
 
-        void IZIndexController.Stack(params TransitionerSlide?[] highestToLowest)
+        void IZIndexController.Stack(params TransitionerItem?[] highestToLowest)
         {
             DoStack(highestToLowest);
         }
@@ -113,12 +113,12 @@ namespace Caliburn.Noesis.Transitions
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new TransitionerSlide();
+            return new TransitionerItem();
         }
 
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
-            return item is TransitionerSlide;
+            return item is TransitionerItem;
         }
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -160,9 +160,9 @@ namespace Caliburn.Noesis.Transitions
         {
             foreach (var slide in Items.OfType<object>()
                                        .Select(GetSlide)
-                                       .Where(s => s.State == TransitionerSlideState.Previous))
+                                       .Where(s => s.State == TransitionerItemState.Previous))
             {
-                slide.SetCurrentValue(TransitionerSlide.StateProperty, TransitionerSlideState.None);
+                slide.SetCurrentValue(TransitionerItem.StateProperty, TransitionerItemState.None);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Caliburn.Noesis.Transitions
 
         #region Private Methods
 
-        private static void DoStack(params TransitionerSlide?[] highestToLowest)
+        private static void DoStack(params TransitionerItem?[] highestToLowest)
         {
             var pos = highestToLowest.Length;
 
@@ -252,7 +252,7 @@ namespace Caliburn.Noesis.Transitions
                 return;
             }
 
-            TransitionerSlide? oldSlide = null, newSlide = null;
+            TransitionerItem? oldSlide = null, newSlide = null;
 
             for (var index = 0; index < Items.Count; index++)
             {
@@ -267,21 +267,21 @@ namespace Caliburn.Noesis.Transitions
                 {
                     newSlide = slide;
                     slide.SetCurrentValue(
-                        TransitionerSlide.StateProperty,
-                        TransitionerSlideState.Current);
+                        TransitionerItem.StateProperty,
+                        TransitionerItemState.Current);
                 }
                 else if (index == unselectedIndex)
                 {
                     oldSlide = slide;
                     slide.SetCurrentValue(
-                        TransitionerSlide.StateProperty,
-                        TransitionerSlideState.Previous);
+                        TransitionerItem.StateProperty,
+                        TransitionerItemState.Previous);
                 }
                 else
                 {
                     slide.SetCurrentValue(
-                        TransitionerSlide.StateProperty,
-                        TransitionerSlideState.None);
+                        TransitionerItem.StateProperty,
+                        TransitionerItemState.None);
                 }
 
                 Panel.SetZIndex(slide, 0);
@@ -344,27 +344,27 @@ namespace Caliburn.Noesis.Transitions
             return transitionOrigin;
         }
 
-        private TransitionerSlide GetSlide(object item)
+        private TransitionerItem GetSlide(object item)
         {
             if (IsItemItsOwnContainer(item))
             {
-                return (TransitionerSlide)item;
+                return (TransitionerItem)item;
             }
 
-            return (TransitionerSlide)ItemContainerGenerator.ContainerFromItem(item);
+            return (TransitionerItem)ItemContainerGenerator.ContainerFromItem(item);
         }
 
-        private Point GetTransitionOrigin(TransitionerSlide slide)
+        private Point GetTransitionOrigin(TransitionerItem item)
         {
             if (this._nextTransitionOrigin != null)
             {
                 return this._nextTransitionOrigin.Value;
             }
 
-            if (slide.ReadLocalValue(TransitionerSlide.TransitionOriginProperty) !=
+            if (item.ReadLocalValue(TransitionerItem.TransitionOriginProperty) !=
                 DependencyProperty.UnsetValue)
             {
-                return slide.TransitionOrigin;
+                return item.TransitionOrigin;
             }
 
             return DefaultTransitionOrigin;

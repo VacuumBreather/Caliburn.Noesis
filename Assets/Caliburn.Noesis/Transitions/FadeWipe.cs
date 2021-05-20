@@ -21,19 +21,19 @@
 
         #region ITransitionWipe Implementation
 
-        public void Wipe(TransitionerSlide fromSlide,
-                         TransitionerSlide toSlide,
+        public void Wipe(TransitionerItem fromItem,
+                         TransitionerItem toItem,
                          Point origin,
                          IZIndexController zIndexController)
         {
-            if (fromSlide == null)
+            if (fromItem == null)
             {
-                throw new ArgumentNullException(nameof(fromSlide));
+                throw new ArgumentNullException(nameof(fromItem));
             }
 
-            if (toSlide == null)
+            if (toItem == null)
             {
-                throw new ArgumentNullException(nameof(toSlide));
+                throw new ArgumentNullException(nameof(toItem));
             }
 
             if (zIndexController == null)
@@ -56,26 +56,26 @@
             toAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, endKeyTime, this._sineEase));
 
             // Preset
-            fromSlide.Opacity = 1;
-            toSlide.Opacity = 0;
+            fromItem.Opacity = 1;
+            toItem.Opacity = 0;
 
             // Set up events
             toAnimation.Completed += (sender, args) =>
                 {
-                    toSlide.BeginAnimation(UIElement.OpacityProperty, null);
-                    fromSlide.Opacity = 0;
-                    toSlide.Opacity = 1;
+                    toItem.BeginAnimation(UIElement.OpacityProperty, null);
+                    fromItem.Opacity = 0;
+                    toItem.Opacity = 1;
                 };
             fromAnimation.Completed += (sender, args) =>
                 {
-                    fromSlide.BeginAnimation(UIElement.OpacityProperty, null);
-                    fromSlide.Opacity = 0;
-                    toSlide.BeginAnimation(UIElement.OpacityProperty, toAnimation);
+                    fromItem.BeginAnimation(UIElement.OpacityProperty, null);
+                    fromItem.Opacity = 0;
+                    toItem.BeginAnimation(UIElement.OpacityProperty, toAnimation);
                 };
 
             // Animate
-            fromSlide.BeginAnimation(UIElement.OpacityProperty, fromAnimation);
-            zIndexController.Stack(toSlide, fromSlide);
+            fromItem.BeginAnimation(UIElement.OpacityProperty, fromAnimation);
+            zIndexController.Stack(toItem, fromItem);
         }
 
         #endregion
