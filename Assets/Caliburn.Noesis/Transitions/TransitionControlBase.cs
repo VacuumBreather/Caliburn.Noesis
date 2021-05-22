@@ -1,8 +1,6 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Linq;
     using System.Windows;
     using System.Windows.Controls;
@@ -18,7 +16,7 @@ namespace Caliburn.Noesis.Transitions
     [TemplatePart(Name = ScaleTransformPartName, Type = typeof(ScaleTransform))]
     [TemplatePart(Name = SkewTransformPartName, Type = typeof(SkewTransform))]
     [TemplatePart(Name = TranslateTransformPartName, Type = typeof(TranslateTransform))]
-    public class TransitioningContentControlBase : ContentControl, ITransitionEffectSubject
+    public class TransitionControlBase : ContentControl, ITransitionEffectSubject
     {
         #region Constants and Fields
 
@@ -42,19 +40,12 @@ namespace Caliburn.Noesis.Transitions
         [UsedImplicitly]
         public const string TranslateTransformPartName = "PART_TranslateTransform";
 
-        /// <summary>The IsTransitionFinished event.</summary>
-        public static readonly RoutedEvent IsTransitionFinished = EventManager.RegisterRoutedEvent(
-            nameof(IsTransitionFinished),
-            RoutingStrategy.Bubble,
-            typeof(RoutedEventHandler),
-            typeof(TransitioningContentControlBase));
-
         /// <summary>The OpeningEffectsOffset property.</summary>
-        public static readonly DependencyProperty TransitionEffectsOffsetProperty =
+        public static readonly DependencyProperty TransitionDelayProperty =
             DependencyProperty.Register(
-                nameof(TransitionEffectsOffset),
+                nameof(TransitionDelay),
                 typeof(TimeSpan),
-                typeof(TransitioningContentControlBase),
+                typeof(TransitionControlBase),
                 new PropertyMetadata(default(TimeSpan)));
 
         /// <summary>The OpeningEffect property.</summary>
@@ -62,70 +53,53 @@ namespace Caliburn.Noesis.Transitions
             DependencyProperty.Register(
                 nameof(TransitionEffect),
                 typeof(ITransitionEffect),
-                typeof(TransitioningContentControlBase),
+                typeof(TransitionControlBase),
                 new PropertyMetadata(default(ITransitionEffect)));
 
-        private readonly RoutedEventArgs isTransitionFinishedArgs;
+        /// <summary>The IsTransitionFinished event.</summary>
+        public static readonly RoutedEvent TransitionFinished = EventManager.RegisterRoutedEvent(
+            nameof(TransitionFinished),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(TransitionControlBase));
+
+        private readonly RoutedEventArgs transitionFinishedEventArgs;
 
         private MatrixTransform matrixTransform;
         private RotateTransform rotateTransform;
         private ScaleTransform scaleTransform;
         private SkewTransform skewTransform;
+        private Storyboard storyboard;
         private TranslateTransform translateTransform;
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>Initializes the <see cref="TransitioningContentControlBase" /> class.</summary>
-        static TransitioningContentControlBase()
+        /// <summary>Initializes the <see cref="TransitionControlBase" /> class.</summary>
+        static TransitionControlBase()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
-                typeof(TransitioningContentControlBase),
-                new FrameworkPropertyMetadata(typeof(TransitioningContentControlBase)));
+                typeof(TransitionControlBase),
+                new FrameworkPropertyMetadata(typeof(TransitionControlBase)));
         }
 
-        /// <summary>Initializes a new instance of the <see cref="TransitioningContentControlBase" /> class.</summary>
-        protected TransitioningContentControlBase()
+        /// <summary>Initializes a new instance of the <see cref="TransitionControlBase" /> class.</summary>
+        protected TransitionControlBase()
         {
-            this.isTransitionFinishedArgs = new RoutedEventArgs(IsTransitionFinished, this);
+            this.transitionFinishedEventArgs = new RoutedEventArgs(TransitionFinished, this);
         }
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>Delay offset to be applied to all opening effect transitions.</summary>
-        public TimeSpan TransitionEffectsOffset
-        {
-            get => (TimeSpan)GetValue(TransitionEffectsOffsetProperty);
-            set => SetValue(TransitionEffectsOffsetProperty, value);
-        }
-
-        /// <summary>Gets or sets the transition to run when the content is loaded and made visible.</summary>
-        public ITransitionEffect TransitionEffect
-        {
-            get => (ITransitionEffect)GetValue(TransitionEffectProperty);
-            set => SetValue(TransitionEffectProperty, value);
-        }
-
-        /// <summary>
-        ///     Allows multiple transition effects to be combined and run upon the content loading or
-        ///     being made visible.
-        /// </summary>
-        [UsedImplicitly]
-        public ObservableCollection<ITransitionEffect> TransitionEffects { get; } =
-            new ObservableCollection<ITransitionEffect>();
 
         #endregion
 
         #region ITransitionEffectSubject Implementation
 
         /// <inheritdoc />
-        string ITransitionEffectSubject.MatrixTransformName => MatrixTransformPartName;
+        public IBindableCollection<ITransitionEffect> AdditionalTransitionEffects { get; } =
+            new BindableCollection<ITransitionEffect>();
 
         /// <inheritdoc />
-        TimeSpan ITransitionEffectSubject.Offset => TransitionEffectsOffset;
+        string ITransitionEffectSubject.MatrixTransformName => MatrixTransformPartName;
 
         /// <inheritdoc />
         string ITransitionEffectSubject.RotateTransformName => RotateTransformPartName;
@@ -137,7 +111,55 @@ namespace Caliburn.Noesis.Transitions
         string ITransitionEffectSubject.SkewTransformName => SkewTransformPartName;
 
         /// <inheritdoc />
+        public TimeSpan TransitionDelay
+        {
+            get => (TimeSpan)GetValue(TransitionDelayProperty);
+            set => SetValue(TransitionDelayProperty, value);
+        }
+
+        /// <inheritdoc />
+        public ITransitionEffect TransitionEffect
+        {
+            get => (ITransitionEffect)GetValue(TransitionEffectProperty);
+            set => SetValue(TransitionEffectProperty, value);
+        }
+
+        /// <inheritdoc />
         string ITransitionEffectSubject.TranslateTransformName => TranslateTransformPartName;
+
+        /// <inheritdoc />
+        public void CancelTransition()
+        {
+            this.storyboard?.Stop(GetNameScopeRoot());
+        }
+
+        /// <inheritdoc />
+        public void PerformTransition()
+        {
+            if (!IsLoaded || this.matrixTransform is null)
+            {
+                return;
+            }
+
+            CancelTransition();
+            this.storyboard = new Storyboard();
+            var transitionEffect = TransitionEffect?.Build(this);
+
+            if (transitionEffect != null)
+            {
+                this.storyboard.Children.Add(transitionEffect);
+            }
+
+            foreach (var effect in AdditionalTransitionEffects.Select(effect => effect.Build(this))
+                                                              .Where(
+                                                                  timeline => !(timeline is null)))
+            {
+                this.storyboard.Children.Add(effect);
+            }
+
+            this.storyboard.Completed += (_, __) => OnTransitionFinished();
+            this.storyboard.Begin(GetNameScopeRoot(), true);
+        }
 
         #endregion
 
@@ -189,7 +211,7 @@ namespace Caliburn.Noesis.Transitions
 
             base.OnApplyTemplate();
 
-            RunTransitionEffects();
+            PerformTransition();
 
             void UnregisterNames(params string[] names)
             {
@@ -204,37 +226,11 @@ namespace Caliburn.Noesis.Transitions
 
         #region Protected Methods
 
-        /// <summary>Raises the <see cref="IsTransitionFinished" /> event.</summary>
+        /// <summary>Raises the <see cref="TransitionFinished" /> event.</summary>
         [PublicAPI]
-        protected virtual void OnIsTransitionFinished()
+        protected virtual void OnTransitionFinished()
         {
-            RaiseEvent(this.isTransitionFinishedArgs);
-        }
-
-        /// <summary>Runs the transition effects.</summary>
-        protected void RunTransitionEffects()
-        {
-            if (!IsLoaded || this.matrixTransform is null)
-            {
-                return;
-            }
-
-            var storyboard = new Storyboard();
-            var transitionEffect = TransitionEffect?.Build(this);
-
-            if (transitionEffect != null)
-            {
-                storyboard.Children.Add(transitionEffect);
-            }
-
-            foreach (var effect in TransitionEffects.Select(effect => effect.Build(this))
-                                                    .Where(timeline => !(timeline is null)))
-            {
-                storyboard.Children.Add(effect);
-            }
-
-            storyboard.Completed += (_, __) => OnIsTransitionFinished();
-            storyboard.Begin(GetNameScopeRoot());
+            RaiseEvent(this.transitionFinishedEventArgs);
         }
 
         #endregion

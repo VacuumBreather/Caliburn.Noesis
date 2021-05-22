@@ -12,16 +12,17 @@ namespace Caliburn.Noesis.Transitions
         #region ITransitionEffect Implementation
 
         /// <inheritdoc />
+        public TimeSpan Delay { get; set; } = TimeSpan.Zero;
+
+        /// <inheritdoc />
+        public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(500);
+
+        /// <inheritdoc />
+        public IEasingFunction EasingFunction { get; set; } = new SineEase();
+
+        /// <inheritdoc />
         public abstract Timeline Build<TSubject>(TSubject effectSubject)
             where TSubject : FrameworkElement, ITransitionEffectSubject;
-
-        #endregion
-
-        #region Public Properties
-
-        public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(400);
-
-        public TimeSpan OffsetTime { get; set; } = TimeSpan.Zero;
 
         #endregion
 

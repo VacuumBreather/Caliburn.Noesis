@@ -13,7 +13,7 @@
     }
 
     /// <summary>A content control which enables transition animations.</summary>
-    public class TransitioningContentControl : TransitioningContentControlBase
+    public class TransitioningContentControl : TransitionControlBase
     {
         #region Constants and Fields
 
@@ -73,7 +73,7 @@
         {
             if ((RunHint & requiredHint) != 0)
             {
-                RunTransitionEffects();
+                PerformTransition();
             }
         }
 

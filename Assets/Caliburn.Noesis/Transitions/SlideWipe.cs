@@ -6,10 +6,10 @@
     using System.Windows.Media.Animation;
     using JetBrains.Annotations;
 
-    /// <seealso cref="TransitionWipeBase{TWipe}" />
+    /// <seealso cref="TransitionWipeBase" />
     /// <seealso cref="ITransitionWipe" />
     [PublicAPI]
-    public class SlideWipe : TransitionWipeBase<SlideWipe>, ITransitionWipe
+    public class SlideWipe : TransitionWipeBase, ITransitionWipe
     {
         #region Public Properties
 
