@@ -38,17 +38,17 @@ namespace Caliburn.Noesis.Transitions
 
         #region Public Methods
 
-        public override Timeline? Build<TSubject>(TSubject effectSubject)
+        public override Timeline Build<TSubject>(TSubject effectSubject)
         {
             if (effectSubject == null)
             {
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
-            Timeline? timeline = null;
-            DependencyProperty? property = null;
-            DependencyObject? target = null;
-            string? targetName = null;
+            Timeline timeline = null;
+            DependencyProperty property = null;
+            DependencyObject target = null;
+            string targetName = null;
 
             switch (Kind)
             {

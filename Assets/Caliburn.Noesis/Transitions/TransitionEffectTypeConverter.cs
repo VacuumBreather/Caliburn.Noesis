@@ -9,17 +9,19 @@ namespace Caliburn.Noesis.Transitions
     {
         #region Public Methods
 
+        /// <inheritdoc />
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
             return (sourceType == typeof(string)) ||
                    typeof(TransitionEffectKind).IsAssignableFrom(sourceType);
         }
 
+        /// <inheritdoc />
         public override object ConvertFrom(ITypeDescriptorContext context,
                                            CultureInfo culture,
                                            object value)
         {
-            TransitionEffectBase? transitionEffect;
+            TransitionEffectBase transitionEffect;
 
             if (value is string stringValue && Enum.TryParse(
                     stringValue,

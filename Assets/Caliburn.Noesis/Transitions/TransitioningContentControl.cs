@@ -12,43 +12,38 @@
         All = Loaded | IsVisibleChanged | ContentChanged
     }
 
-    /// <summary>Content control to enable easier transitions.</summary>
-    public class TransitioningContent : TransitioningContentBase
+    /// <summary>A content control which enables transition animations.</summary>
+    public class TransitioningContentControl : TransitioningContentControlBase
     {
         #region Constants and Fields
 
+        /// <summary>The RunHint property.</summary>
         public static readonly DependencyProperty RunHintProperty = DependencyProperty.Register(
             nameof(RunHint),
             typeof(TransitioningContentRunHint),
-            typeof(TransitioningContent),
+            typeof(TransitioningContentControl),
             new PropertyMetadata(TransitioningContentRunHint.All));
 
         #endregion
 
         #region Constructors and Destructors
 
-        static TransitioningContent()
+        /// <summary>Initializes the <see cref="TransitioningContentControl" /> class.</summary>
+        static TransitioningContentControl()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
-                typeof(TransitioningContent),
-                new FrameworkPropertyMetadata(typeof(TransitioningContent)));
+                typeof(TransitioningContentControl),
+                new FrameworkPropertyMetadata(typeof(TransitioningContentControl)));
         }
 
-        public TransitioningContent()
+        /// <summary>Initializes a new instance of the <see cref="TransitioningContentControl" /> class.</summary>
+        public TransitioningContentControl()
         {
             Loaded += (_, __) => Run(TransitioningContentRunHint.Loaded);
             IsVisibleChanged += (_, __) => Run(TransitioningContentRunHint.IsVisibleChanged);
         }
 
         #endregion
-
-        /// <inheritdoc />
-        protected override void OnContentChanged(object oldContent, object newContent)
-        {
-            base.OnContentChanged(oldContent, newContent);
-
-            Run(TransitioningContentRunHint.ContentChanged);
-        }
 
         #region Public Properties
 
@@ -60,13 +55,25 @@
 
         #endregion
 
+        #region Protected Methods
+
+        /// <inheritdoc />
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            base.OnContentChanged(oldContent, newContent);
+
+            Run(TransitioningContentRunHint.ContentChanged);
+        }
+
+        #endregion
+
         #region Private Methods
 
         private void Run(TransitioningContentRunHint requiredHint)
         {
             if ((RunHint & requiredHint) != 0)
             {
-                RunOpeningEffects();
+                RunTransitionEffects();
             }
         }
 

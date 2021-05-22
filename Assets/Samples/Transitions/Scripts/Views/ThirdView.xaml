@@ -5,9 +5,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+    xmlns:transitions="clr-namespace:Caliburn.Noesis.Transitions"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Background="Gold" />
+    <Grid Background="Gold">
+        <Button
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Command="{x:Static transitions:Transitioner.MoveNextCommand}"
+            CommandTarget="{Binding RelativeSource={RelativeSource Self}}" />
+    </Grid>
 
 </UserControl>

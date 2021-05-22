@@ -8,51 +8,88 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Input;
 
     /// <summary>
-    ///     The transitioner provides an easy way to move between content with a default in-place
-    ///     circular transition.
+    ///     The transitioner provides an easy way to transition from one content to another using wipe
+    ///     transitions.
     /// </summary>
     public class Transitioner : Selector, IZIndexController
     {
         #region Constants and Fields
 
+        /// <summary>The AutoApplyTransitionOrigins property.</summary>
         public static readonly DependencyProperty AutoApplyTransitionOriginsProperty =
             DependencyProperty.Register(
-                "AutoApplyTransitionOrigins",
+                nameof(AutoApplyTransitionOrigins),
                 typeof(bool),
                 typeof(Transitioner),
                 new PropertyMetadata(default(bool)));
 
+        /// <summary>The BackwardWipe property.</summary>
+        public static readonly DependencyProperty BackwardWipeProperty =
+            DependencyProperty.Register(
+                nameof(BackwardWipe),
+                typeof(ITransitionWipe),
+                typeof(Transitioner),
+                new PropertyMetadata(new SlideWipe { Direction = SlideDirection.Right }));
+
+        /// <summary>The DefaultTransitionOrigin property.</summary>
         public static readonly DependencyProperty DefaultTransitionOriginProperty =
             DependencyProperty.Register(
-                "DefaultTransitionOrigin",
+                nameof(DefaultTransitionOrigin),
                 typeof(Point),
                 typeof(Transitioner),
                 new PropertyMetadata(new Point(0.5, 0.5)));
 
-        /// <summary>Moves to the first slide.</summary>
-        public static readonly RoutedUICommand MoveFirstCommand = new RoutedUICommand("First", nameof(MoveFirstCommand), typeof(Transitioner));
+        /// <summary>The ForwardWipe property.</summary>
+        public static readonly DependencyProperty ForwardWipeProperty = DependencyProperty.Register(
+            nameof(ForwardWipe),
+            typeof(ITransitionWipe),
+            typeof(Transitioner),
+            new PropertyMetadata(new SlideWipe { Direction = SlideDirection.Left }));
 
-        /// <summary>Moves to the last slide.</summary>
-        public static readonly RoutedUICommand MoveLastCommand = new RoutedUICommand("Last", nameof(MoveLastCommand), typeof(Transitioner));
+        /// <summary>The IsLooping property</summary>
+        public static readonly DependencyProperty IsLoopingProperty = DependencyProperty.Register(
+            nameof(IsLooping),
+            typeof(bool),
+            typeof(Transitioner),
+            new PropertyMetadata(default(bool)));
+
+        /// <summary>Moves to the first item.</summary>
+        public static readonly RoutedUICommand MoveFirstCommand = new RoutedUICommand(
+            "First",
+            nameof(MoveFirstCommand),
+            typeof(Transitioner));
+
+        /// <summary>Moves to the last item.</summary>
+        public static readonly RoutedUICommand MoveLastCommand = new RoutedUICommand(
+            "Last",
+            nameof(MoveLastCommand),
+            typeof(Transitioner));
 
         /// <summary>
-        ///     Causes the the next slide to be displayed (affectively increments
+        ///     Causes the the next item to be displayed (effectively increments
         ///     <see cref="Selector.SelectedIndex" />).
         /// </summary>
-        public static readonly RoutedUICommand MoveNextCommand = new RoutedUICommand("Next", nameof(MoveNextCommand), typeof(Transitioner));
+        public static readonly RoutedUICommand MoveNextCommand = new RoutedUICommand(
+            "Next",
+            nameof(MoveNextCommand),
+            typeof(Transitioner));
 
         /// <summary>
-        ///     Causes the the previous slide to be displayed (affectively decrements
+        ///     Causes the the previous item to be displayed (effectively decrements
         ///     <see cref="Selector.SelectedIndex" />).
         /// </summary>
-        public static readonly RoutedUICommand MovePreviousCommand = new RoutedUICommand("Previous", nameof(MovePreviousCommand), typeof(Transitioner));
+        public static readonly RoutedUICommand MovePreviousCommand = new RoutedUICommand(
+            "Previous",
+            nameof(MovePreviousCommand),
+            typeof(Transitioner));
 
-        private Point? _nextTransitionOrigin;
+        private Point? nextTransitionOrigin;
 
         #endregion
 
         #region Constructors and Destructors
 
+        /// <summary>Initializes the <see cref="Transitioner" /> class.</summary>
         static Transitioner()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
@@ -60,20 +97,24 @@ namespace Caliburn.Noesis.Transitions
                 new FrameworkPropertyMetadata(typeof(Transitioner)));
         }
 
+        /// <summary>Initializes a new instance of the <see cref="Transitioner" /> class.</summary>
         public Transitioner()
         {
-            CommandBindings.Add(new CommandBinding(MoveNextCommand, MoveNextHandler));
-            CommandBindings.Add(new CommandBinding(MovePreviousCommand, MovePreviousHandler));
-            CommandBindings.Add(new CommandBinding(MoveFirstCommand, MoveFirstHandler));
-            CommandBindings.Add(new CommandBinding(MoveLastCommand, MoveLastHandler));
+            CommandBindings.Add(new CommandBinding(MoveNextCommand, OnMoveNext, OnCanMoveNext));
+            CommandBindings.Add(
+                new CommandBinding(MovePreviousCommand, OnMovePrevious, OnCanMovePrevious));
+            CommandBindings.Add(new CommandBinding(MoveFirstCommand, OnMoveFirst, OnCanMoveFirst));
+            CommandBindings.Add(new CommandBinding(MoveLastCommand, OnMoveLast, OnCanMoveLast));
+
             AddHandler(
                 TransitionerItem.IsTransitionFinished,
-                new RoutedEventHandler(IsTransitionFinishedHandler));
+                new RoutedEventHandler(OnIsTransitionFinished));
+
             Loaded += (sender, args) =>
                 {
                     if (SelectedIndex != -1)
                     {
-                        ActivateFrame(SelectedIndex, -1);
+                        TransitionToItemIndex(SelectedIndex, -1);
                     }
                 };
         }
@@ -83,8 +124,8 @@ namespace Caliburn.Noesis.Transitions
         #region Public Properties
 
         /// <summary>
-        ///     If enabled, transition origins will be applied to wipes, according to where a transition
-        ///     was triggered from.  For example, the mouse point where a user clicks a button.
+        ///     If set to <c>true</c>, transition origins will be applied to wipes, according to where a
+        ///     transition was triggered from.  For example, the mouse point where a user clicks a button.
         /// </summary>
         public bool AutoApplyTransitionOrigins
         {
@@ -92,45 +133,82 @@ namespace Caliburn.Noesis.Transitions
             set => SetValue(AutoApplyTransitionOriginsProperty, value);
         }
 
+        /// <summary>Gets or sets the wipe used when transitioning backwards.</summary>
+        /// <value>The wipe used when transitioning backwards.</value>
+        public ITransitionWipe BackwardWipe
+        {
+            get => (ITransitionWipe)GetValue(BackwardWipeProperty);
+            set => SetValue(BackwardWipeProperty, value);
+        }
+
+        /// <summary>Gets or sets the default origin of the transition wipe.</summary>
+        /// <value>The default origin of the transition wipe.</value>
         public Point DefaultTransitionOrigin
         {
             get => (Point)GetValue(DefaultTransitionOriginProperty);
             set => SetValue(DefaultTransitionOriginProperty, value);
         }
 
+        /// <summary>Gets or sets the wipe used when transitioning forwards.</summary>
+        /// <value>The wipe used when transitioning forwards.</value>
+        public ITransitionWipe ForwardWipe
+        {
+            get => (ITransitionWipe)GetValue(ForwardWipeProperty);
+            set => SetValue(ForwardWipeProperty, value);
+        }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether the last item is followed by the first in a loop
+        ///     and vice versa.
+        /// </summary>
+        /// <value>
+        ///     <c>true</c> if the last item is followed by the first in a loop and vice versa; otherwise,
+        ///     <c>false</c>.
+        /// </value>
+        public bool IsLooping
+        {
+            get => (bool)GetValue(IsLoopingProperty);
+            set => SetValue(IsLoopingProperty, value);
+        }
+
         #endregion
 
         #region IZIndexController Implementation
 
-        void IZIndexController.Stack(params TransitionerItem?[] highestToLowest)
+        /// <inheritdoc />
+        void IZIndexController.Stack(params TransitionerItem[] highestToLowest)
         {
-            DoStack(highestToLowest);
+            StackZIndices(highestToLowest);
         }
 
         #endregion
 
         #region Protected Methods
 
+        /// <inheritdoc />
         protected override DependencyObject GetContainerForItemOverride()
         {
             return new TransitionerItem();
         }
 
+        /// <inheritdoc />
         protected override bool IsItemItsOwnContainerOverride(object item)
         {
             return item is TransitionerItem;
         }
 
+        /// <inheritdoc />
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (AutoApplyTransitionOrigins)
             {
-                this._nextTransitionOrigin = GetNavigationSourcePoint(e);
+                this.nextTransitionOrigin = GetNavigationSourcePoint(e);
             }
 
             base.OnPreviewMouseLeftButtonDown(e);
         }
 
+        /// <inheritdoc />
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
             var unselectedIndex = -1;
@@ -147,7 +225,7 @@ namespace Caliburn.Noesis.Transitions
                 selectedIndex = Items.IndexOf(e.AddedItems[0]);
             }
 
-            ActivateFrame(selectedIndex, unselectedIndex);
+            TransitionToItemIndex(selectedIndex, unselectedIndex);
 
             base.OnSelectionChanged(e);
         }
@@ -156,88 +234,94 @@ namespace Caliburn.Noesis.Transitions
 
         #region Event Handlers
 
-        private void IsTransitionFinishedHandler(object sender, RoutedEventArgs routedEventArgs)
+        private void OnCanMoveFirst(object sender, CanExecuteRoutedEventArgs e)
         {
-            foreach (var slide in Items.OfType<object>()
-                                       .Select(GetSlide)
-                                       .Where(s => s.State == TransitionerItemState.Previous))
+            e.CanExecute = (Items.Count > 0) && (SelectedIndex > 0);
+        }
+
+        private void OnCanMoveLast(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (Items.Count > 0) && (SelectedIndex < Items.Count - 1);
+        }
+
+        private void OnCanMoveNext(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (Items.Count > 0) && (IsLooping || (SelectedIndex < Items.Count - 1));
+        }
+
+        private void OnCanMovePrevious(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (Items.Count > 0) && (IsLooping || (SelectedIndex > 0));
+        }
+
+        private void OnIsTransitionFinished(object sender, RoutedEventArgs e)
+        {
+            foreach (var item in Items.OfType<object>()
+                                      .Select(GetItem)
+                                      .Where(item => item.State == TransitionerItemState.Previous))
             {
-                slide.SetCurrentValue(TransitionerItem.StateProperty, TransitionerItemState.None);
+                item.SetCurrentValue(TransitionerItem.StateProperty, TransitionerItemState.None);
             }
         }
 
-        private void MoveFirstHandler(object sender,
-                                      ExecutedRoutedEventArgs executedRoutedEventArgs)
+        private void OnMoveFirst(object sender, ExecutedRoutedEventArgs e)
         {
             if (AutoApplyTransitionOrigins)
             {
-                this._nextTransitionOrigin = GetNavigationSourcePoint(executedRoutedEventArgs);
+                this.nextTransitionOrigin = GetNavigationSourcePoint(e);
             }
 
             SetCurrentValue(SelectedIndexProperty, 0);
         }
 
-        private void MoveLastHandler(object sender, ExecutedRoutedEventArgs executedRoutedEventArgs)
+        private void OnMoveLast(object sender, ExecutedRoutedEventArgs e)
         {
             if (AutoApplyTransitionOrigins)
             {
-                this._nextTransitionOrigin = GetNavigationSourcePoint(executedRoutedEventArgs);
+                this.nextTransitionOrigin = GetNavigationSourcePoint(e);
             }
 
             SetCurrentValue(SelectedIndexProperty, Items.Count - 1);
         }
 
-        private void MoveNextHandler(object sender, ExecutedRoutedEventArgs executedRoutedEventArgs)
+        private void OnMoveNext(object sender, ExecutedRoutedEventArgs e)
         {
             if (AutoApplyTransitionOrigins)
             {
-                this._nextTransitionOrigin = GetNavigationSourcePoint(executedRoutedEventArgs);
+                this.nextTransitionOrigin = GetNavigationSourcePoint(e);
             }
 
-            var slides = 1;
+            var stepSize = GetStepSize(e);
 
-            if (executedRoutedEventArgs.Parameter is int &&
-                ((int)executedRoutedEventArgs.Parameter > 0))
-            {
-                slides = (int)executedRoutedEventArgs.Parameter;
-            }
-
-            SetCurrentValue(
-                SelectedIndexProperty,
-                Math.Min(Items.Count - 1, SelectedIndex + slides));
+            IncrementSelectedIndex(stepSize);
         }
 
-        private void MovePreviousHandler(object sender,
-                                         ExecutedRoutedEventArgs executedRoutedEventArgs)
+        private void OnMovePrevious(object sender, ExecutedRoutedEventArgs e)
         {
             if (AutoApplyTransitionOrigins)
             {
-                this._nextTransitionOrigin = GetNavigationSourcePoint(executedRoutedEventArgs);
+                this.nextTransitionOrigin = GetNavigationSourcePoint(e);
             }
 
-            var slides = 1;
+            var stepSize = GetStepSize(e);
 
-            if (executedRoutedEventArgs.Parameter is int &&
-                ((int)executedRoutedEventArgs.Parameter > 0))
-            {
-                slides = (int)executedRoutedEventArgs.Parameter;
-            }
-
-            SetCurrentValue(SelectedIndexProperty, Math.Max(0, SelectedIndex - slides));
+            DecrementSelectedIndex(stepSize);
         }
 
         #endregion
 
         #region Private Methods
 
-        private static void DoStack(params TransitionerItem?[] highestToLowest)
+        private static int GetStepSize(ExecutedRoutedEventArgs args)
         {
-            var pos = highestToLowest.Length;
+            var stepSize = args.Parameter switch
+                {
+                    int i when i > 0 => i,
+                    string s when int.TryParse(s, out var i) && (i > 0) => i,
+                    _ => 1
+                };
 
-            foreach (var slide in highestToLowest.Where(s => s != null))
-            {
-                Panel.SetZIndex(slide, pos--);
-            }
+            return stepSize;
         }
 
         private static bool IsSafePositive(double @double)
@@ -245,106 +329,27 @@ namespace Caliburn.Noesis.Transitions
             return !double.IsNaN(@double) && !double.IsInfinity(@double) && (@double > 0.0);
         }
 
-        private void ActivateFrame(int selectedIndex, int unselectedIndex)
+        private static void StackZIndices(params TransitionerItem[] highestToLowest)
         {
-            if (!IsLoaded)
+            var zIndex = highestToLowest.Length;
+
+            foreach (var item in highestToLowest.Where(item => item != null))
             {
-                return;
+                Panel.SetZIndex(item, zIndex--);
             }
-
-            TransitionerItem? oldSlide = null, newSlide = null;
-
-            for (var index = 0; index < Items.Count; index++)
-            {
-                var slide = GetSlide(Items[index]);
-
-                if (slide == null)
-                {
-                    continue;
-                }
-
-                if (index == selectedIndex)
-                {
-                    newSlide = slide;
-                    slide.SetCurrentValue(
-                        TransitionerItem.StateProperty,
-                        TransitionerItemState.Current);
-                }
-                else if (index == unselectedIndex)
-                {
-                    oldSlide = slide;
-                    slide.SetCurrentValue(
-                        TransitionerItem.StateProperty,
-                        TransitionerItemState.Previous);
-                }
-                else
-                {
-                    slide.SetCurrentValue(
-                        TransitionerItem.StateProperty,
-                        TransitionerItemState.None);
-                }
-
-                Panel.SetZIndex(slide, 0);
-            }
-
-            if (newSlide != null)
-            {
-                newSlide.Opacity = 1;
-            }
-
-            if ((oldSlide != null) && (newSlide != null))
-            {
-                var wipe = selectedIndex > unselectedIndex
-                               ? oldSlide.ForwardWipe
-                               : oldSlide.BackwardWipe;
-
-                if (wipe != null)
-                {
-                    wipe.Wipe(oldSlide, newSlide, GetTransitionOrigin(newSlide), this);
-                }
-                else
-                {
-                    DoStack(newSlide, oldSlide);
-                }
-
-                oldSlide.Opacity = 0;
-            }
-            else if ((oldSlide != null) || (newSlide != null))
-            {
-                DoStack(oldSlide ?? newSlide);
-
-                if (oldSlide != null)
-                {
-                    oldSlide.Opacity = 0;
-                }
-            }
-
-            this._nextTransitionOrigin = null;
         }
 
-        private Point? GetNavigationSourcePoint(RoutedEventArgs executedRoutedEventArgs)
+        private void DecrementSelectedIndex(int stepSize)
         {
-            var sourceElement = executedRoutedEventArgs.OriginalSource as FrameworkElement;
+            var newIndex = IsLooping
+                               ? (((SelectedIndex - stepSize) % Items.Count) + Items.Count) %
+                                 Items.Count
+                               : Math.Max(0, SelectedIndex - stepSize);
 
-            if ((sourceElement == null) || !IsAncestorOf(sourceElement) ||
-                !IsSafePositive(ActualWidth) || !IsSafePositive(ActualHeight) ||
-                !IsSafePositive(sourceElement.ActualWidth) ||
-                !IsSafePositive(sourceElement.ActualHeight))
-            {
-                return null;
-            }
-
-            var transitionOrigin = sourceElement.TranslatePoint(
-                new Point(sourceElement.ActualWidth / 2, sourceElement.ActualHeight),
-                this);
-            transitionOrigin = new Point(
-                transitionOrigin.X / ActualWidth,
-                transitionOrigin.Y / ActualHeight);
-
-            return transitionOrigin;
+            SetCurrentValue(SelectedIndexProperty, newIndex);
         }
 
-        private TransitionerItem GetSlide(object item)
+        private TransitionerItem GetItem(object item)
         {
             if (IsItemItsOwnContainer(item))
             {
@@ -354,20 +359,124 @@ namespace Caliburn.Noesis.Transitions
             return (TransitionerItem)ItemContainerGenerator.ContainerFromItem(item);
         }
 
+        private Point? GetNavigationSourcePoint(RoutedEventArgs executedRoutedEventArgs)
+        {
+            if (!(executedRoutedEventArgs.OriginalSource is FrameworkElement sourceElement) ||
+                !IsAncestorOf(sourceElement) || !IsSafePositive(ActualWidth) ||
+                !IsSafePositive(ActualHeight) || !IsSafePositive(sourceElement.ActualWidth) ||
+                !IsSafePositive(sourceElement.ActualHeight))
+            {
+                return null;
+            }
+
+            var transitionOrigin = sourceElement.TranslatePoint(
+                new Point(sourceElement.ActualWidth / 2, sourceElement.ActualHeight / 2),
+                this);
+
+            transitionOrigin = new Point(
+                transitionOrigin.X / ActualWidth,
+                transitionOrigin.Y / ActualHeight);
+
+            return transitionOrigin;
+        }
+
         private Point GetTransitionOrigin(TransitionerItem item)
         {
-            if (this._nextTransitionOrigin != null)
+            if (this.nextTransitionOrigin != null)
             {
-                return this._nextTransitionOrigin.Value;
+                return this.nextTransitionOrigin.Value;
             }
 
-            if (item.ReadLocalValue(TransitionerItem.TransitionOriginProperty) !=
-                DependencyProperty.UnsetValue)
+            return item.ReadLocalValue(TransitionerItem.TransitionOriginProperty) !=
+                   DependencyProperty.UnsetValue
+                       ? item.TransitionOrigin
+                       : DefaultTransitionOrigin;
+        }
+
+        private void IncrementSelectedIndex(int stepSize)
+        {
+            var newIndex = IsLooping
+                               ? (SelectedIndex + stepSize) % Items.Count
+                               : Math.Min(Items.Count - 1, SelectedIndex + stepSize);
+
+            SetCurrentValue(SelectedIndexProperty, newIndex);
+        }
+
+        private void TransitionToItemIndex(int currentIndex, int previousIndex)
+        {
+            if (!IsLoaded)
             {
-                return item.TransitionOrigin;
+                return;
             }
 
-            return DefaultTransitionOrigin;
+            TransitionerItem oldItem = null, newItem = null;
+
+            for (var index = 0; index < Items.Count; index++)
+            {
+                var item = GetItem(Items[index]);
+
+                if (item == null)
+                {
+                    continue;
+                }
+
+                if (index == currentIndex)
+                {
+                    newItem = item;
+                    item.SetCurrentValue(
+                        TransitionerItem.StateProperty,
+                        TransitionerItemState.Current);
+                }
+                else if (index == previousIndex)
+                {
+                    oldItem = item;
+                    item.SetCurrentValue(
+                        TransitionerItem.StateProperty,
+                        TransitionerItemState.Previous);
+                }
+                else
+                {
+                    item.SetCurrentValue(
+                        TransitionerItem.StateProperty,
+                        TransitionerItemState.None);
+                }
+
+                Panel.SetZIndex(item, 0);
+            }
+
+            if (newItem != null)
+            {
+                newItem.Opacity = 1;
+            }
+
+            if ((oldItem != null) && (newItem != null))
+            {
+                var wipe = currentIndex > previousIndex
+                               ? newItem.ForwardWipe ?? ForwardWipe
+                               : newItem.BackwardWipe ?? BackwardWipe;
+
+                if (wipe != null)
+                {
+                    wipe.Wipe(oldItem, newItem, GetTransitionOrigin(newItem), this);
+                }
+                else
+                {
+                    StackZIndices(newItem, oldItem);
+                }
+
+                oldItem.Opacity = 0;
+            }
+            else if ((oldItem != null) || (newItem != null))
+            {
+                StackZIndices(oldItem ?? newItem);
+
+                if (oldItem != null)
+                {
+                    oldItem.Opacity = 0;
+                }
+            }
+
+            this.nextTransitionOrigin = null;
         }
 
         #endregion
