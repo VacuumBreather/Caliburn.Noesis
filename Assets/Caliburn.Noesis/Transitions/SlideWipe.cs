@@ -6,34 +6,26 @@
     using System.Windows.Media.Animation;
     using JetBrains.Annotations;
 
+    /// <seealso cref="TransitionWipeBase{TWipe}" />
+    /// <seealso cref="ITransitionWipe" />
     [PublicAPI]
-    public class SlideWipe : ITransitionWipe
+    public class SlideWipe : TransitionWipeBase<SlideWipe>, ITransitionWipe
     {
-        #region Constants and Fields
-
-        private readonly SineEase sineEase = new SineEase();
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>Gets or sets the direction of the slide wipe transition.</summary>
         /// <value>The direction of the slide wipe transition.</value>
         public SlideDirection Direction { get; set; }
 
-        /// <summary>Gets or sets the duration of the wipe transition.</summary>
-        /// <value>The duration of the wipe transition.</value>
-        public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.5);
-
         #endregion
 
         #region ITransitionWipe Implementation
 
         /// <inheritdoc />
-        public void Wipe(TransitionerItem fromItem,
-                         TransitionerItem toItem,
-                         Point origin,
-                         IZIndexController zIndexController)
+        public override void Wipe(TransitionerItem fromItem,
+                                  TransitionerItem toItem,
+                                  Point origin,
+                                  IZIndexController zIndexController)
         {
             if (fromItem == null)
             {
@@ -94,12 +86,12 @@
             var fromXAnimation = new DoubleAnimationUsingKeyFrames();
             fromXAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(FromStartX, zeroKeyTime));
             fromXAnimation.KeyFrames.Add(
-                new EasingDoubleKeyFrame(fromEndX, endKeyTime, this.sineEase));
+                new EasingDoubleKeyFrame(fromEndX, endKeyTime, EasingFunction));
 
             var fromYAnimation = new DoubleAnimationUsingKeyFrames();
             fromYAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(FromStartY, zeroKeyTime));
             fromYAnimation.KeyFrames.Add(
-                new EasingDoubleKeyFrame(fromEndY, endKeyTime, this.sineEase));
+                new EasingDoubleKeyFrame(fromEndY, endKeyTime, EasingFunction));
 
             // To
             var toTransform = new TranslateTransform(toStartX, toStartY);
@@ -107,11 +99,13 @@
 
             var toXAnimation = new DoubleAnimationUsingKeyFrames();
             toXAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(toStartX, zeroKeyTime));
-            toXAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(ToEndX, endKeyTime, this.sineEase));
+            toXAnimation.KeyFrames.Add(
+                new EasingDoubleKeyFrame(ToEndX, endKeyTime, EasingFunction));
 
             var toYAnimation = new DoubleAnimationUsingKeyFrames();
             toYAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(toStartY, zeroKeyTime));
-            toYAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(ToEndY, endKeyTime, this.sineEase));
+            toYAnimation.KeyFrames.Add(
+                new EasingDoubleKeyFrame(ToEndY, endKeyTime, EasingFunction));
 
             // Set up events
             fromXAnimation.Completed += (_, __) =>

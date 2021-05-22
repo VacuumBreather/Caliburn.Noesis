@@ -5,18 +5,18 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media;
     using System.Windows.Media.Animation;
 
-    /// <summary>
-    /// A wipe transition that takes the shape of a growing circle.
-    /// </summary>
+    /// <summary>A wipe transition that takes the shape of a growing circle.</summary>
+    /// <seealso cref="TransitionWipeBase{TWipe}" />
     /// <seealso cref="ITransitionWipe" />
-    public class CircleWipe : ITransitionWipe
+    public class CircleWipe : TransitionWipeBase<CircleWipe>, ITransitionWipe
     {
         #region ITransitionWipe Implementation
 
-        public void Wipe(TransitionerItem fromItem,
-                         TransitionerItem toItem,
-                         Point origin,
-                         IZIndexController zIndexController)
+        /// <inheritdoc />
+        public override void Wipe(TransitionerItem fromItem,
+                                  TransitionerItem toItem,
+                                  Point origin,
+                                  IZIndexController zIndexController)
         {
             if (fromItem == null)
             {
@@ -58,12 +58,13 @@ namespace Caliburn.Noesis.Transitions
             zIndexController.Stack(toItem, fromItem);
 
             var zeroKeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
-            var midKeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200));
-            var endKeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400));
+            var halfTimeKeyTime =
+                KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(Duration.TotalMilliseconds / 2));
+            var endKeyTime = KeyTime.FromTimeSpan(Duration);
 
             var opacityAnimation = new DoubleAnimationUsingKeyFrames();
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, zeroKeyTime));
-            opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, midKeyTime));
+            opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, halfTimeKeyTime));
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, endKeyTime));
             opacityAnimation.Completed += (_, __) =>
                 {

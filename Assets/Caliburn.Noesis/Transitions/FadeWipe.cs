@@ -4,27 +4,17 @@
     using System.Windows;
     using System.Windows.Media.Animation;
 
-    public class FadeWipe : ITransitionWipe
+    /// <seealso cref="TransitionWipeBase{TWipe}" />
+    /// <seealso cref="ITransitionWipe" />
+    public class FadeWipe : TransitionWipeBase<FadeWipe>, ITransitionWipe
     {
-        #region Constants and Fields
-
-        private readonly SineEase _sineEase = new SineEase();
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>Duration of the animation</summary>
-        public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(0.5);
-
-        #endregion
-
         #region ITransitionWipe Implementation
 
-        public void Wipe(TransitionerItem fromItem,
-                         TransitionerItem toItem,
-                         Point origin,
-                         IZIndexController zIndexController)
+        /// <inheritdoc />
+        public override void Wipe(TransitionerItem fromItem,
+                                  TransitionerItem toItem,
+                                  Point origin,
+                                  IZIndexController zIndexController)
         {
             if (fromItem == null)
             {
@@ -43,17 +33,17 @@
 
             // Set up time points
             var zeroKeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
-            var endKeyTime = KeyTime.FromTimeSpan(TimeSpan.FromSeconds(Duration.TotalSeconds / 2));
+            var endKeyTime = KeyTime.FromTimeSpan(Duration);
 
             // From
             var fromAnimation = new DoubleAnimationUsingKeyFrames();
             fromAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(1, zeroKeyTime));
-            fromAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, endKeyTime, this._sineEase));
+            fromAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, endKeyTime, EasingFunction));
 
             // To
             var toAnimation = new DoubleAnimationUsingKeyFrames();
             toAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(0, zeroKeyTime));
-            toAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, endKeyTime, this._sineEase));
+            toAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, endKeyTime, EasingFunction));
 
             // Preset
             fromItem.Opacity = 1;

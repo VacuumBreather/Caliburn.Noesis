@@ -50,9 +50,9 @@ namespace Caliburn.Noesis.Transitions
             typeof(TransitioningContentControlBase));
 
         /// <summary>The OpeningEffectsOffset property.</summary>
-        public static readonly DependencyProperty OpeningEffectsOffsetProperty =
+        public static readonly DependencyProperty TransitionEffectsOffsetProperty =
             DependencyProperty.Register(
-                nameof(OpeningEffectsOffset),
+                nameof(TransitionEffectsOffset),
                 typeof(TimeSpan),
                 typeof(TransitioningContentControlBase),
                 new PropertyMetadata(default(TimeSpan)));
@@ -61,9 +61,9 @@ namespace Caliburn.Noesis.Transitions
         public static readonly DependencyProperty TransitionEffectProperty =
             DependencyProperty.Register(
                 nameof(TransitionEffect),
-                typeof(TransitionEffectBase),
+                typeof(ITransitionEffect),
                 typeof(TransitioningContentControlBase),
-                new PropertyMetadata(default(TransitionEffectBase)));
+                new PropertyMetadata(default(ITransitionEffect)));
 
         private readonly RoutedEventArgs isTransitionFinishedArgs;
 
@@ -96,17 +96,16 @@ namespace Caliburn.Noesis.Transitions
         #region Public Properties
 
         /// <summary>Delay offset to be applied to all opening effect transitions.</summary>
-        public TimeSpan OpeningEffectsOffset
+        public TimeSpan TransitionEffectsOffset
         {
-            get => (TimeSpan)GetValue(OpeningEffectsOffsetProperty);
-            set => SetValue(OpeningEffectsOffsetProperty, value);
+            get => (TimeSpan)GetValue(TransitionEffectsOffsetProperty);
+            set => SetValue(TransitionEffectsOffsetProperty, value);
         }
 
         /// <summary>Gets or sets the transition to run when the content is loaded and made visible.</summary>
-        [TypeConverter(typeof(TransitionEffectTypeConverter))]
-        public TransitionEffectBase TransitionEffect
+        public ITransitionEffect TransitionEffect
         {
-            get => (TransitionEffectBase)GetValue(TransitionEffectProperty);
+            get => (ITransitionEffect)GetValue(TransitionEffectProperty);
             set => SetValue(TransitionEffectProperty, value);
         }
 
@@ -115,8 +114,8 @@ namespace Caliburn.Noesis.Transitions
         ///     being made visible.
         /// </summary>
         [UsedImplicitly]
-        public ObservableCollection<TransitionEffectBase> TransitionEffects { get; } =
-            new ObservableCollection<TransitionEffectBase>();
+        public ObservableCollection<ITransitionEffect> TransitionEffects { get; } =
+            new ObservableCollection<ITransitionEffect>();
 
         #endregion
 
@@ -126,7 +125,7 @@ namespace Caliburn.Noesis.Transitions
         string ITransitionEffectSubject.MatrixTransformName => MatrixTransformPartName;
 
         /// <inheritdoc />
-        TimeSpan ITransitionEffectSubject.Offset => OpeningEffectsOffset;
+        TimeSpan ITransitionEffectSubject.Offset => TransitionEffectsOffset;
 
         /// <inheritdoc />
         string ITransitionEffectSubject.RotateTransformName => RotateTransformPartName;

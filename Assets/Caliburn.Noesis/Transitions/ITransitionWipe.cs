@@ -1,5 +1,6 @@
 namespace Caliburn.Noesis.Transitions
 {
+    using System;
     using System.Windows;
 
     /// <summary>
@@ -8,6 +9,10 @@ namespace Caliburn.Noesis.Transitions
     /// </summary>
     public interface ITransitionWipe
     {
+        /// <summary>Gets or sets the duration of the wipe transition.</summary>
+        /// <value>The duration of the wipe transition.</value>
+        TimeSpan Duration { get; set; }
+
         /// <summary>Performs a wipe transition from one content item to another.</summary>
         /// <param name="fromItem">The content to transition from.</param>
         /// <param name="toItem">To content to transition to.</param>
