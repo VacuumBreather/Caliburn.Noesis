@@ -5,6 +5,10 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media;
     using System.Windows.Media.Animation;
 
+    /// <summary>
+    /// A wipe transition that takes the shape of a growing circle.
+    /// </summary>
+    /// <seealso cref="ITransitionWipe" />
     public class CircleWipe : ITransitionWipe
     {
         #region ITransitionWipe Implementation
@@ -29,8 +33,8 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(zIndexController));
             }
 
-            var horizontalProportion = Math.Max(1.0 - origin.X, 1.0 * origin.X);
-            var verticalProportion = Math.Max(1.0 - origin.Y, 1.0 * origin.Y);
+            var horizontalProportion = Math.Max(1.0 - origin.X, origin.X);
+            var verticalProportion = Math.Max(1.0 - origin.Y, origin.Y);
             var radius = Math.Sqrt(
                 Math.Pow(toItem.ActualWidth * horizontalProportion, 2) + Math.Pow(
                     toItem.ActualHeight * verticalProportion,
@@ -43,14 +47,14 @@ namespace Caliburn.Noesis.Transitions
             var transformGroup = new TransformGroup();
             transformGroup.Children.Add(scaleTransform);
             transformGroup.Children.Add(translateTransform);
-            var ellipseGeomotry = new EllipseGeometry
+            var ellipseGeometry = new EllipseGeometry
                                       {
                                           RadiusX = radius,
                                           RadiusY = radius,
                                           Transform = transformGroup
                                       };
 
-            toItem.SetCurrentValue(UIElement.ClipProperty, ellipseGeomotry);
+            toItem.SetCurrentValue(UIElement.ClipProperty, ellipseGeometry);
             zIndexController.Stack(toItem, fromItem);
 
             var zeroKeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
@@ -61,7 +65,7 @@ namespace Caliburn.Noesis.Transitions
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, zeroKeyTime));
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, midKeyTime));
             opacityAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, endKeyTime));
-            opacityAnimation.Completed += (sender, args) =>
+            opacityAnimation.Completed += (_, __) =>
                 {
                     fromItem.BeginAnimation(UIElement.OpacityProperty, null);
                     fromItem.Opacity = 0;
@@ -69,14 +73,14 @@ namespace Caliburn.Noesis.Transitions
             fromItem.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
 
             var scaleAnimation = new DoubleAnimationUsingKeyFrames();
-            scaleAnimation.Completed += (sender, args) =>
+            scaleAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, zeroKeyTime));
+            scaleAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, endKeyTime));
+            scaleAnimation.Completed += (_, __) =>
                 {
                     toItem.SetCurrentValue(UIElement.ClipProperty, null);
                     fromItem.BeginAnimation(UIElement.OpacityProperty, null);
                     fromItem.Opacity = 0;
                 };
-            scaleAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(0, zeroKeyTime));
-            scaleAnimation.KeyFrames.Add(new EasingDoubleKeyFrame(1, endKeyTime));
             scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimation);
             scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimation);
         }

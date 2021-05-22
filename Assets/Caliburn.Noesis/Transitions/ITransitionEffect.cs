@@ -9,9 +9,9 @@ namespace Caliburn.Noesis.Transitions
     /// </summary>
     public interface ITransitionEffect
     {
-        /// <summary>Builds the effect of the specified subject.</summary>
+        /// <summary>Builds the effect to be applied to the specified subject.</summary>
         /// <typeparam name="TSubject">The type of the subject.</typeparam>
-        /// <param name="effectSubject">The effect subject.</param>
+        /// <param name="effectSubject">The subject of the effect.</param>
         /// <returns>The built effect timeline.</returns>
         Timeline Build<TSubject>(TSubject effectSubject)
             where TSubject : FrameworkElement, ITransitionEffectSubject;

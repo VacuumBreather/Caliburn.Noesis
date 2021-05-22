@@ -8,7 +8,7 @@
 
     /// <summary>Multiplies a time span unit by the index of an item in a list.</summary>
     /// <remarks>
-    ///     Example usage is for a <see cref="TransitioningContent" /> to have a
+    ///     Example usage is for a <see cref="TransitioningContentControl" /> to have a
     ///     <see cref="TransitionEffect.OffsetTime" /> time delayed according to position in a list, so
     ///     cascading animations can occur.
     /// </remarks>
