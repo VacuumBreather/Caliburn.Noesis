@@ -37,7 +37,8 @@
             AutoApplyTransitionOrigins="True"
             DockPanel.Dock="Top"
             IsLooping="True"
-            ForwardWipe="{transitions:SlideOutWipe}"
+            ForwardWipe="{transitions:FadeWipe Duration=0:0:1}"
+            BackwardWipe="{transitions:FadeWipe Duration=0:0:1}"
             ItemsSource="{Binding Items, Mode=OneWay}"
             SelectedItem="{Binding ActiveItem, Mode=TwoWay}"
             Visibility="Visible">

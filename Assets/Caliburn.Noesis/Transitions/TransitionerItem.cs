@@ -8,24 +8,9 @@
     ///     <see cref="Transitioner" />.
     /// </summary>
     [PublicAPI]
-    public class TransitionerItem : TransitioningContentControlBase
+    public class TransitionerItem : TransitionControlBase
     {
         #region Constants and Fields
-
-        /// <summary>The TransitionOrigin property.</summary>
-        public static readonly DependencyProperty TransitionOriginProperty =
-            DependencyProperty.Register(
-                nameof(TransitionOrigin),
-                typeof(Point),
-                typeof(Transitioner),
-                new PropertyMetadata(new Point(0.5, 0.5)));
-
-        /// <summary>The State property.</summary>
-        public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
-            nameof(State),
-            typeof(TransitionerItemState),
-            typeof(TransitionerItem),
-            new PropertyMetadata(default(TransitionerItemState), StatePropertyChangedCallback));
 
         /// <summary>The BackwardWipe property.</summary>
         public static readonly DependencyProperty BackwardWipeProperty =
@@ -41,6 +26,21 @@
             typeof(ITransitionWipe),
             typeof(TransitionerItem),
             new PropertyMetadata(default));
+
+        /// <summary>The State property.</summary>
+        public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
+            nameof(State),
+            typeof(TransitionerItemState),
+            typeof(TransitionerItem),
+            new PropertyMetadata(default(TransitionerItemState)));
+
+        /// <summary>The TransitionOrigin property.</summary>
+        public static readonly DependencyProperty TransitionOriginProperty =
+            DependencyProperty.Register(
+                nameof(TransitionOrigin),
+                typeof(Point),
+                typeof(Transitioner),
+                new PropertyMetadata(new Point(0.5, 0.5)));
 
         #endregion
 
@@ -84,24 +84,6 @@
         {
             get => (Point)GetValue(TransitionOriginProperty);
             set => SetValue(TransitionOriginProperty, value);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private static void StatePropertyChangedCallback(DependencyObject d,
-                                                         DependencyPropertyChangedEventArgs e)
-        {
-            ((TransitionerItem)d).RunOpeningEffectsIfCurrent();
-        }
-
-        private void RunOpeningEffectsIfCurrent()
-        {
-            if (State == TransitionerItemState.Current)
-            {
-                RunTransitionEffects();
-            }
         }
 
         #endregion

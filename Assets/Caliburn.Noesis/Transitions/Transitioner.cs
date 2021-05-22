@@ -107,7 +107,7 @@ namespace Caliburn.Noesis.Transitions
             CommandBindings.Add(new CommandBinding(MoveLastCommand, OnMoveLast, OnCanMoveLast));
 
             AddHandler(
-                TransitionerItem.IsTransitionFinished,
+                TransitionControlBase.TransitionFinished,
                 new RoutedEventHandler(OnIsTransitionFinished));
 
             Loaded += (sender, args) =>
@@ -440,6 +440,8 @@ namespace Caliburn.Noesis.Transitions
                         TransitionerItem.StateProperty,
                         TransitionerItemState.None);
                 }
+
+                item.CancelTransition();
 
                 Panel.SetZIndex(item, 0);
             }

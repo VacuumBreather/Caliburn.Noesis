@@ -5,9 +5,9 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media;
     using System.Windows.Media.Animation;
 
-    /// <seealso cref="TransitionWipeBase{TWipe}" />
+    /// <seealso cref="TransitionWipeBase" />
     /// <seealso cref="ITransitionWipe" />
-    public class SlideOutWipe : TransitionWipeBase<SlideOutWipe>, ITransitionWipe
+    public class SlideOutWipe : TransitionWipeBase, ITransitionWipe
     {
         #region ITransitionWipe Implementation
 

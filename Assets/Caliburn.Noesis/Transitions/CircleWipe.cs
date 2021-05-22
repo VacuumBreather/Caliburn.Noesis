@@ -6,9 +6,9 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media.Animation;
 
     /// <summary>A wipe transition that takes the shape of a growing circle.</summary>
-    /// <seealso cref="TransitionWipeBase{TWipe}" />
+    /// <seealso cref="TransitionWipeBase" />
     /// <seealso cref="ITransitionWipe" />
-    public class CircleWipe : TransitionWipeBase<CircleWipe>, ITransitionWipe
+    public class CircleWipe : TransitionWipeBase, ITransitionWipe
     {
         #region ITransitionWipe Implementation
 
