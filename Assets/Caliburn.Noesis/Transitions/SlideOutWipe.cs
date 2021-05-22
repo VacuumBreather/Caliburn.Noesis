@@ -5,20 +5,17 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media;
     using System.Windows.Media.Animation;
 
-    public class SlideOutWipe : ITransitionWipe
+    /// <seealso cref="TransitionWipeBase{TWipe}" />
+    /// <seealso cref="ITransitionWipe" />
+    public class SlideOutWipe : TransitionWipeBase<SlideOutWipe>, ITransitionWipe
     {
-        #region Constants and Fields
-
-        private readonly SineEase _sineEase = new SineEase();
-
-        #endregion
-
         #region ITransitionWipe Implementation
 
-        public void Wipe(TransitionerItem fromItem,
-                         TransitionerItem toItem,
-                         Point origin,
-                         IZIndexController zIndexController)
+        /// <inheritdoc />
+        public override void Wipe(TransitionerItem fromItem,
+                                  TransitionerItem toItem,
+                                  Point origin,
+                                  IZIndexController zIndexController)
         {
             if (fromItem == null)
             {
@@ -36,8 +33,9 @@ namespace Caliburn.Noesis.Transitions
             }
 
             var zeroKeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
-            var midishKeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200));
-            var endKeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(400));
+            var halfTimeKeyTime = KeyTime.FromTimeSpan(
+                TimeSpan.FromMilliseconds(Duration.TotalMilliseconds / 2.0));
+            var endKeyTime = KeyTime.FromTimeSpan(Duration);
 
             //back out old slide setup
             var scaleTransform = new ScaleTransform(1, 1);
@@ -62,12 +60,12 @@ namespace Caliburn.Noesis.Transitions
             slideAnimation.KeyFrames.Add(
                 new LinearDoubleKeyFrame(toItem.ActualHeight, zeroKeyTime));
             slideAnimation.KeyFrames.Add(
-                new EasingDoubleKeyFrame(toItem.ActualHeight, midishKeyTime)
+                new EasingDoubleKeyFrame(toItem.ActualHeight, halfTimeKeyTime)
                     {
-                        EasingFunction = this._sineEase
+                        EasingFunction = EasingFunction
                     });
             slideAnimation.KeyFrames.Add(
-                new EasingDoubleKeyFrame(0, endKeyTime) { EasingFunction = this._sineEase });
+                new EasingDoubleKeyFrame(0, endKeyTime) { EasingFunction = EasingFunction });
 
             //kick off!
             translateTransform.BeginAnimation(TranslateTransform.YProperty, slideAnimation);
