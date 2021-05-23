@@ -6,10 +6,9 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media.Animation;
 
     /// <summary>Base class for transition effects.</summary>
-    public abstract class TransitionEffectBase<TEffect> : MarkupExtension, ITransitionEffect
-        where TEffect : ITransitionEffect, new()
+    public abstract class TransitionBase : MarkupExtension, ITransition
     {
-        #region ITransitionEffect Implementation
+        #region ITransition Implementation
 
         /// <inheritdoc />
         public TimeSpan Delay { get; set; } = TimeSpan.Zero;
@@ -21,8 +20,15 @@ namespace Caliburn.Noesis.Transitions
         public IEasingFunction EasingFunction { get; set; } = new SineEase();
 
         /// <inheritdoc />
+        public Point Origin { get; set; } = new Point(0.5, 0.5);
+
+        /// <inheritdoc />
         public abstract Timeline Build<TSubject>(TSubject effectSubject)
-            where TSubject : FrameworkElement, ITransitionEffectSubject;
+            where TSubject : FrameworkElement, ITransitionSubject;
+
+        /// <inheritdoc />
+        public abstract void Cancel<TSubject>(TSubject effectSubject)
+            where TSubject : FrameworkElement, ITransitionSubject;
 
         #endregion
 
@@ -31,7 +37,7 @@ namespace Caliburn.Noesis.Transitions
         /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return new TEffect();
+            return this;
         }
 
         #endregion

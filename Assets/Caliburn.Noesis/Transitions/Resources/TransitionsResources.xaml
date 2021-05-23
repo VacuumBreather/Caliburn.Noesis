@@ -25,11 +25,11 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type transitions:TransitionControlBase}">
+    <Style TargetType="{x:Type transitions:TransitionSubjectBase}">
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type transitions:TransitionControlBase}">
+                <ControlTemplate TargetType="{x:Type transitions:TransitionSubjectBase}">
                     <Border
                         x:Name="Border"
                         Padding="{TemplateBinding Padding}"
@@ -59,9 +59,9 @@
         </Setter>
     </Style>
 
-    <Style BasedOn="{StaticResource {x:Type transitions:TransitionControlBase}}" TargetType="{x:Type transitions:TransitioningContentControl}" />
+    <Style BasedOn="{StaticResource {x:Type transitions:TransitionSubjectBase}}" TargetType="{x:Type transitions:TransitioningContentControl}" />
 
-    <Style BasedOn="{StaticResource {x:Type transitions:TransitionControlBase}}" TargetType="{x:Type transitions:TransitionerItem}">
+    <Style BasedOn="{StaticResource {x:Type transitions:TransitionSubjectBase}}" TargetType="{x:Type transitions:TransitionerItem}">
         <Style.Resources>
             <converters:NotZeroConverter x:Key="NotZeroConverter" />
         </Style.Resources>

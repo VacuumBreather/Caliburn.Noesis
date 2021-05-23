@@ -12,10 +12,10 @@ namespace Caliburn.Noesis.Transitions
         #region ITransitionWipe Implementation
 
         /// <inheritdoc />
-        public override void Wipe(TransitionerItem fromItem,
-                                  TransitionerItem toItem,
-                                  Point origin,
-                                  IZIndexController zIndexController)
+        public void Wipe(TransitionerItem fromItem,
+                         TransitionerItem toItem,
+                         Point origin,
+                         IZIndexController zIndexController)
         {
             if (fromItem == null)
             {
