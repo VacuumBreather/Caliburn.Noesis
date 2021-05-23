@@ -2,10 +2,13 @@ namespace Caliburn.Noesis.Transitions
 {
     using System;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Markup;
+    using System.Windows.Media;
     using System.Windows.Media.Animation;
 
     /// <summary>Base class for transition effects.</summary>
+    [MarkupExtensionReturnType(typeof(ITransition))]
     public abstract class TransitionBase : MarkupExtension, ITransition
     {
         #region ITransition Implementation
@@ -38,6 +41,92 @@ namespace Caliburn.Noesis.Transitions
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>Gets the total delay defined by the <see cref="ITransitionSubject" />.</summary>
+        /// <remarks>
+        ///     This can include a potential cascading delay if the subject is hosted inside an
+        ///     <see cref="ItemsControl" />.
+        /// </remarks>
+        /// <typeparam name="TSubject">The type of the subject.</typeparam>
+        /// <param name="effectSubject">The effect subject.</param>
+        /// <returns>The total delay defined by the <see cref="ITransitionSubject" />.</returns>
+        protected static TimeSpan GetTotalSubjectDelay<TSubject>(TSubject effectSubject)
+            where TSubject : FrameworkElement, ITransitionSubject
+        {
+            if (effectSubject is null)
+            {
+                throw new ArgumentNullException(nameof(effectSubject));
+            }
+
+            var totalDelay = effectSubject.TransitionDelay;
+
+            var interval = (TimeSpan)effectSubject.GetValue(
+                TransitionSubjectBase.CascadingDelayProperty);
+
+            if (TimeSpan.Zero.Equals(interval))
+            {
+                return totalDelay;
+            }
+
+            var itemsControl = ItemsControl.ItemsControlFromItemContainer(effectSubject);
+
+            if (itemsControl is null)
+            {
+                DependencyObject ancestor = effectSubject;
+
+                while (ancestor is { } && itemsControl is null)
+                {
+                    ancestor = VisualTreeHelper.GetParent(ancestor);
+                    itemsControl = ItemsControl.ItemsControlFromItemContainer(ancestor);
+                }
+            }
+
+            if (itemsControl is null)
+            {
+                return totalDelay;
+            }
+
+            var container = itemsControl.IsItemItsOwnContainer(effectSubject)
+                                ? effectSubject
+                                : itemsControl.ItemContainerGenerator.ContainerFromItem(
+                                    effectSubject);
+
+            if (container is null && effectSubject.DataContext is { } dataContext)
+            {
+                container = itemsControl.ItemContainerGenerator.ContainerFromItem(dataContext);
+            }
+
+            if (container is null)
+            {
+                return totalDelay;
+            }
+
+            var index = itemsControl.ItemContainerGenerator.IndexFromContainer(container);
+
+            if (index == -1)
+            {
+                // Container generation may not have completed.
+                index = itemsControl.Items.IndexOf(effectSubject);
+            }
+
+            if ((index == -1) && effectSubject is FrameworkElement frameworkElement)
+            {
+                // Still not found, repeat now using DataContext.
+                index = itemsControl.Items.IndexOf(frameworkElement.DataContext);
+            }
+
+            var cascadingDelay = index >= 0
+                                     ? TimeSpan.FromTicks(interval.Ticks * index)
+                                     : TimeSpan.Zero;
+
+            totalDelay += cascadingDelay;
+
+            return totalDelay;
         }
 
         #endregion

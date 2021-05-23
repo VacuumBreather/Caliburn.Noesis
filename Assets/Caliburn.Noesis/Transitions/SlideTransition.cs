@@ -23,6 +23,17 @@
 
         #region Public Properties
 
+        /// <summary>
+        ///     Gets or sets the name of the container element which defines the edges from which the
+        ///     slide transition should start.
+        /// </summary>
+        /// <remarks>If this is not specified, the edges of the <see cref="ITransitionSubject" /> are used.</remarks>
+        /// <value>
+        ///     The name of the container element which defines the edges from which the slide transition
+        ///     should start.
+        /// </value>
+        public string ContainerElementName { get; set; }
+
         /// <summary>Gets or sets the direction of the transition.</summary>
         /// <value>The direction of the transition.</value>
         public SlideDirection Direction { get; set; }
@@ -55,22 +66,27 @@
             this.startX = 0;
             this.startY = 0;
 
+            var container = string.IsNullOrEmpty(ContainerElementName)
+                                ? effectSubject
+                                : effectSubject.FindName(ContainerElementName) as
+                                      FrameworkElement ?? effectSubject;
+
             switch (Direction)
             {
                 case SlideDirection.Left:
-                    this.startX = effectSubject.ActualWidth;
+                    this.startX = container.ActualWidth;
 
                     break;
                 case SlideDirection.Right:
-                    this.startX = -effectSubject.ActualWidth;
+                    this.startX = -container.ActualWidth;
 
                     break;
                 case SlideDirection.Up:
-                    this.startY = effectSubject.ActualHeight;
+                    this.startY = container.ActualHeight;
 
                     break;
                 case SlideDirection.Down:
-                    this.startY = -effectSubject.ActualHeight;
+                    this.startY = -container.ActualHeight;
 
                     break;
             }
@@ -86,9 +102,11 @@
                 this.startY = tempEndY;
             }
 
+            var subjectDelay = GetTotalSubjectDelay(effectSubject);
+
             var zeroKeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
-            var startKeyTime = KeyTime.FromTimeSpan(effectSubject.TransitionDelay + Delay);
-            var endKeyTime = KeyTime.FromTimeSpan(effectSubject.TransitionDelay + Delay + Duration);
+            var startKeyTime = KeyTime.FromTimeSpan(subjectDelay + Delay);
+            var endKeyTime = KeyTime.FromTimeSpan(subjectDelay + Delay + Duration);
 
             var xAnimation = new DoubleAnimationUsingKeyFrames();
             xAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(this.startX, zeroKeyTime));

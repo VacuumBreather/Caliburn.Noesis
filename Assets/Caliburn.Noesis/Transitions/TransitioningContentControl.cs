@@ -4,12 +4,15 @@
     using System.Windows;
 
     [Flags]
-    public enum TransitioningContentRunHint
+    public enum TransitionTriggers
     {
-        Loaded = 1,
-        IsVisibleChanged = 2,
-        ContentChanged = 3,
-        All = Loaded | IsVisibleChanged | ContentChanged
+        None = 0b0000,
+        Loaded = 0b0001,
+        IsVisible = 0b0010,
+        IsEnabled = 0b0100,
+        ContentChanged = 0b1000,
+        Default = Loaded | ContentChanged,
+        All = Loaded | IsVisible | IsEnabled | ContentChanged
     }
 
     /// <summary>A content control which enables transition animations.</summary>
@@ -17,12 +20,13 @@
     {
         #region Constants and Fields
 
-        /// <summary>The RunHint property.</summary>
-        public static readonly DependencyProperty RunHintProperty = DependencyProperty.Register(
-            nameof(RunHint),
-            typeof(TransitioningContentRunHint),
-            typeof(TransitioningContentControl),
-            new PropertyMetadata(TransitioningContentRunHint.All));
+        /// <summary>The TransitionTriggers property.</summary>
+        public static readonly DependencyProperty TransitionTriggersProperty =
+            DependencyProperty.Register(
+                nameof(TransitionTriggers),
+                typeof(TransitionTriggers),
+                typeof(TransitioningContentControl),
+                new PropertyMetadata(TransitionTriggers.Default));
 
         #endregion
 
@@ -39,18 +43,21 @@
         /// <summary>Initializes a new instance of the <see cref="TransitioningContentControl" /> class.</summary>
         public TransitioningContentControl()
         {
-            Loaded += (_, __) => Run(TransitioningContentRunHint.Loaded);
-            IsVisibleChanged += (_, __) => Run(TransitioningContentRunHint.IsVisibleChanged);
+            Loaded += (_, __) => Run(TransitionTriggers.Loaded);
+            IsVisibleChanged += OnIsVisibleChanged;
+            IsEnabledChanged += OnIsEnabledChanged;
         }
 
         #endregion
 
         #region Public Properties
 
-        public TransitioningContentRunHint RunHint
+        /// <summary>Gets or sets the triggers that start the transition.</summary>
+        /// <value>The triggers that start the transition.</value>
+        public TransitionTriggers TransitionTriggers
         {
-            get => (TransitioningContentRunHint)GetValue(RunHintProperty);
-            set => SetValue(RunHintProperty, value);
+            get => (TransitionTriggers)GetValue(TransitionTriggersProperty);
+            set => SetValue(TransitionTriggersProperty, value);
         }
 
         #endregion
@@ -62,16 +69,36 @@
         {
             base.OnContentChanged(oldContent, newContent);
 
-            Run(TransitioningContentRunHint.ContentChanged);
+            Run(TransitionTriggers.ContentChanged);
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is true)
+            {
+                Run(TransitionTriggers.IsEnabled);
+            }
+        }
+
+        private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (e.NewValue is true)
+            {
+                Run(TransitionTriggers.IsVisible);
+            }
         }
 
         #endregion
 
         #region Private Methods
 
-        private void Run(TransitioningContentRunHint requiredHint)
+        private void Run(TransitionTriggers requiredHint)
         {
-            if ((RunHint & requiredHint) != 0)
+            if ((TransitionTriggers & requiredHint) != 0)
             {
                 PerformTransition();
             }

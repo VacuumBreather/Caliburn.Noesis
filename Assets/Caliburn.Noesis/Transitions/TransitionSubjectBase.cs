@@ -41,6 +41,16 @@ namespace Caliburn.Noesis.Transitions
         [UsedImplicitly]
         public const string TranslateTransformPartName = "PART_TranslateTransform";
 
+        /// <summary>The CascadingDelay property.</summary>
+        public static readonly DependencyProperty CascadingDelayProperty =
+            DependencyProperty.RegisterAttached(
+                PropertyNameHelper.GetName(nameof(CascadingDelayProperty)),
+                typeof(TimeSpan),
+                typeof(TransitioningContentControl),
+                new FrameworkPropertyMetadata(
+                    TimeSpan.Zero,
+                    FrameworkPropertyMetadataOptions.Inherits));
+
         /// <summary>The OpeningEffectsOffset property.</summary>
         public static readonly DependencyProperty TransitionDelayProperty =
             DependencyProperty.Register(
@@ -169,6 +179,22 @@ namespace Caliburn.Noesis.Transitions
         #endregion
 
         #region Public Methods
+
+        /// <summary>Gets the cascading delay.</summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static TimeSpan GetCascadingDelay(DependencyObject element)
+        {
+            return (TimeSpan)element.GetValue(CascadingDelayProperty);
+        }
+
+        /// <summary>Sets the cascading delay.</summary>
+        /// <param name="element">The element.</param>
+        /// <param name="value">The value.</param>
+        public static void SetCascadingDelay(DependencyObject element, TimeSpan value)
+        {
+            element.SetValue(CascadingDelayProperty, value);
+        }
 
         /// <inheritdoc />
         public override void OnApplyTemplate()

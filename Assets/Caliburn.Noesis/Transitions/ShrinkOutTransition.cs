@@ -37,9 +37,11 @@ namespace Caliburn.Noesis.Transitions
 
             this.scaleTransform = transform;
 
+            var subjectDelay = GetTotalSubjectDelay(effectSubject);
+
             var zeroKeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero);
-            var startKeyTime = KeyTime.FromTimeSpan(effectSubject.TransitionDelay + Delay);
-            var endKeyTime = KeyTime.FromTimeSpan(effectSubject.TransitionDelay + Delay + Duration);
+            var startKeyTime = KeyTime.FromTimeSpan(subjectDelay + Delay);
+            var endKeyTime = KeyTime.FromTimeSpan(subjectDelay + Delay + Duration);
 
             var scaleXAnimation = new DoubleAnimationUsingKeyFrames();
             scaleXAnimation.KeyFrames.Add(new LinearDoubleKeyFrame(StartScale, zeroKeyTime));

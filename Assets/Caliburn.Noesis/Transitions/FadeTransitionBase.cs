@@ -52,12 +52,12 @@ namespace Caliburn.Noesis.Transitions
             var from = FadeType == FadeTransitionType.FadeIn ? 0.0 : 1.0;
             var to = FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0;
 
-            var zeroFrame = new DiscreteDoubleKeyFrame(from);
-            var startFrame = new DiscreteDoubleKeyFrame(
-                from,
-                effectSubject.TransitionDelay + Delay);
+            var subjectDelay = GetTotalSubjectDelay(effectSubject);
+
+            var zeroFrame = new DiscreteDoubleKeyFrame(from, TimeSpan.Zero);
+            var startFrame = new DiscreteDoubleKeyFrame(from, subjectDelay + Delay);
             var endFrame =
-                new EasingDoubleKeyFrame(to, effectSubject.TransitionDelay + Delay + Duration)
+                new EasingDoubleKeyFrame(to, subjectDelay + Delay + Duration)
                     {
                         EasingFunction = EasingFunction
                     };
@@ -69,7 +69,7 @@ namespace Caliburn.Noesis.Transitions
             timeline.Duration = effectSubject.TransitionDelay + Delay + Duration;
             timeline.Completed += (_, __) => Cancel(effectSubject);
 
-            effectSubject.SetValue(UIElement.OpacityProperty, from);
+            effectSubject.Opacity = from;
 
             Storyboard.SetTarget(timeline, effectSubject);
             Storyboard.SetTargetProperty(timeline, new PropertyPath(UIElement.OpacityProperty));

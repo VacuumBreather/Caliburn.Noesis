@@ -4,10 +4,61 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+    xmlns:transitions="clr-namespace:Caliburn.Noesis.Transitions"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid Background="Crimson" />
+
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="36" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style BasedOn="{StaticResource {x:Type transitions:TransitioningContentControl}}" TargetType="transitions:TransitioningContentControl">
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TransitionTriggers" Value="IsEnabled" />
+            <Setter Property="TransitionDelay" Value="0:0:0.5" />
+            <Setter Property="TransitionEffect">
+                <Setter.Value>
+                    <transitions:SlideTransition
+                        ContainerElementName="RootGrid"
+                        Direction="Left"
+                        Duration="0:0:1">
+                        <transitions:SlideTransition.EasingFunction>
+                            <ElasticEase
+                                EasingMode="EaseOut"
+                                Oscillations="3"
+                                Springiness="8" />
+                        </transitions:SlideTransition.EasingFunction>
+                    </transitions:SlideTransition>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="RootGrid" Background="OrangeRed">
+        <ItemsControl
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            transitions:TransitionSubjectBase.CascadingDelay="0:0:0.5">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <transitions:TransitioningContentControl>
+                <TextBlock Text="Here" />
+            </transitions:TransitioningContentControl>
+            <transitions:TransitioningContentControl>
+                <TextBlock Text="we" />
+            </transitions:TransitioningContentControl>
+            <transitions:TransitioningContentControl>
+                <TextBlock Text="go!" />
+            </transitions:TransitioningContentControl>
+        </ItemsControl>
+    </Grid>
 
 </UserControl>

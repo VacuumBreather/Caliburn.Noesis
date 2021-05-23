@@ -8,6 +8,7 @@ namespace Caliburn.Noesis.Transitions
     /// <summary>Base class for a wipe transition.</summary>
     /// <seealso cref="MarkupExtension" />
     /// <seealso cref="ITransitionWipe" />
+    [MarkupExtensionReturnType(typeof(ITransitionWipe))]
     public abstract class TransitionWipeBase : MarkupExtension, ITransitionWipe
     {
         #region ITransitionWipe Implementation
