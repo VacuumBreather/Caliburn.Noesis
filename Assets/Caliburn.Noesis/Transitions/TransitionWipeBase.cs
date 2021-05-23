@@ -64,7 +64,10 @@ namespace Caliburn.Noesis.Transitions
 
         #region Protected Methods
 
-        /// <summary>Configures the items.</summary>
+        /// <summary>
+        ///     Called every time the wipe is performed. Override this to configure the items and their
+        ///     effects.
+        /// </summary>
         /// <param name="fromItem">The item to transition from.</param>
         /// <param name="toItem">To item to transition to.</param>
         /// <param name="origin">The origin point for the wipe transition.</param>
