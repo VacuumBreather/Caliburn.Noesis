@@ -17,22 +17,30 @@
     {
         #region Constructors and Destructors
 
-        public IndexedItemOffsetMultiplierExtension(TimeSpan unit)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="IndexedItemOffsetMultiplierExtension" />
+        ///     class.
+        /// </summary>
+        /// <param name="interval">The unit.</param>
+        public IndexedItemOffsetMultiplierExtension(TimeSpan interval)
         {
-            Unit = unit;
+            Interval = interval;
         }
 
         #endregion
 
         #region Public Properties
 
+        /// <summary>Gets or sets the unit.</summary>
+        /// <value>The unit.</value>
         [ConstructorArgument("unit")]
-        public TimeSpan Unit { get; set; }
+        public TimeSpan Interval { get; set; }
 
         #endregion
 
         #region Public Methods
 
+        /// <inheritdoc />
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             var provideValueTarget =
@@ -46,7 +54,7 @@
             if ((provideValueTarget.TargetObject != null) &&
                 (provideValueTarget.TargetObject.GetType().FullName == "System.Windows.SharedDp"))
 
-                //we are inside a template, return this, so we can re-evaluate later...
+                // We are inside a template, return this, so we can re-evaluate later...
             {
                 return this;
             }
@@ -98,22 +106,22 @@
 
             var multiplier = itemsControl.ItemContainerGenerator.IndexFromContainer(container);
 
-            if (multiplier == -1) //container generation may not have completed
+            // Container generation may not have completed.
+            if (multiplier == -1)
             {
                 multiplier = itemsControl.Items.IndexOf(element);
             }
 
-            if (multiplier == -1) //still not found, repeat now using datacontext
+            // Still not found, repeat now using DataContext.
+            if (multiplier == -1)
             {
-                var frameworkElement = element as FrameworkElement;
-
-                if (frameworkElement != null)
+                if (element is FrameworkElement frameworkElement)
                 {
                     multiplier = itemsControl.Items.IndexOf(frameworkElement.DataContext);
                 }
             }
 
-            return multiplier > -1 ? new TimeSpan(Unit.Ticks * multiplier) : TimeSpan.Zero;
+            return multiplier > -1 ? new TimeSpan(Interval.Ticks * multiplier) : TimeSpan.Zero;
         }
 
         #endregion

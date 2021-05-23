@@ -42,6 +42,6 @@ namespace Caliburn.Noesis.Transitions
         void CancelTransition();
 
         /// <summary>Performs the transition with all specified effects.</summary>
-        void PerformTransition();
+        void PerformTransition(bool includeAdditionalEffects = true);
     }
 }

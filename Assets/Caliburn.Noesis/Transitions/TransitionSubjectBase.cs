@@ -136,7 +136,7 @@ namespace Caliburn.Noesis.Transitions
         }
 
         /// <inheritdoc />
-        public void PerformTransition()
+        public void PerformTransition(bool includeAdditionalEffects = true)
         {
             if (!IsLoaded || this.matrixTransform is null)
             {
@@ -152,11 +152,14 @@ namespace Caliburn.Noesis.Transitions
                 this.storyboard.Children.Add(transitionEffect);
             }
 
-            foreach (var effect in AdditionalTransitionEffects.Select(effect => effect.Build(this))
-                                                              .Where(
-                                                                  timeline => !(timeline is null)))
+            if (includeAdditionalEffects)
             {
-                this.storyboard.Children.Add(effect);
+                foreach (var effect in AdditionalTransitionEffects
+                                       .Select(effect => effect.Build(this))
+                                       .Where(timeline => !(timeline is null)))
+                {
+                    this.storyboard.Children.Add(effect);
+                }
             }
 
             this.storyboard.Completed += (_, __) => OnTransitionFinished();

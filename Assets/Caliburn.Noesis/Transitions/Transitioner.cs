@@ -457,8 +457,6 @@ namespace Caliburn.Noesis.Transitions
                                ? newItem.ForwardWipe ?? ForwardWipe
                                : newItem.BackwardWipe ?? BackwardWipe;
 
-                oldItem.Opacity = 0;
-
                 if (wipe != null)
                 {
                     wipe.Wipe(oldItem, newItem, GetTransitionOrigin(newItem), this);
@@ -470,11 +468,6 @@ namespace Caliburn.Noesis.Transitions
             }
             else if ((oldItem != null) || (newItem != null))
             {
-                if (oldItem != null)
-                {
-                    oldItem.Opacity = 0;
-                }
-
                 StackZIndices(oldItem ?? newItem);
             }
 

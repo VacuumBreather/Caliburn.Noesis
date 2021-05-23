@@ -6,7 +6,7 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media.Animation;
     using Extensions;
 
-    /// <summary>A circle transition effect.</summary>
+    /// <summary>A circular transition effect.</summary>
     /// <seealso cref="TransitionBase" />
     public class CircleTransition : TransitionBase
     {
