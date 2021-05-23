@@ -10,6 +10,12 @@ namespace Caliburn.Noesis.Transitions
     /// <seealso cref="TransitionBase" />
     public class CircleTransition : TransitionBase
     {
+        #region Constants and Fields
+
+        private const string ScaleTransformName = "__scaleTransform";
+
+        #endregion
+
         #region Public Methods
 
         /// <inheritdoc />
@@ -41,7 +47,7 @@ namespace Caliburn.Noesis.Transitions
                                           Transform = transformGroup
                                       };
 
-            effectSubject.GetNameScopeRoot().RegisterName(nameof(scaleTransform), scaleTransform);
+            effectSubject.GetNameScopeRoot().RegisterName(ScaleTransformName, scaleTransform);
 
             var zeroFrame = new DiscreteDoubleKeyFrame(0);
             var startFrame = new DiscreteDoubleKeyFrame(0, effectSubject.TransitionDelay + Delay);
@@ -68,12 +74,12 @@ namespace Caliburn.Noesis.Transitions
 
             effectSubject.SetCurrentValue(UIElement.ClipProperty, ellipseGeometry);
 
-            Storyboard.SetTargetName(scaleXAnimation, nameof(scaleTransform));
+            Storyboard.SetTargetName(scaleXAnimation, ScaleTransformName);
             Storyboard.SetTargetProperty(
                 scaleXAnimation,
                 new PropertyPath(ScaleTransform.ScaleXProperty));
 
-            Storyboard.SetTargetName(scaleYAnimation, nameof(scaleTransform));
+            Storyboard.SetTargetName(scaleYAnimation, ScaleTransformName);
             Storyboard.SetTargetProperty(
                 scaleYAnimation,
                 new PropertyPath(ScaleTransform.ScaleYProperty));
@@ -90,6 +96,7 @@ namespace Caliburn.Noesis.Transitions
             }
 
             effectSubject.SetCurrentValue(UIElement.ClipProperty, null);
+            effectSubject.GetNameScopeRoot().UnregisterName(ScaleTransformName);
         }
 
         #endregion
