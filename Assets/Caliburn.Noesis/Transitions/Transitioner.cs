@@ -107,7 +107,7 @@ namespace Caliburn.Noesis.Transitions
             CommandBindings.Add(new CommandBinding(MoveLastCommand, OnMoveLast, OnCanMoveLast));
 
             AddHandler(
-                TransitionControlBase.TransitionFinished,
+                TransitionSubjectBase.TransitionFinished,
                 new RoutedEventHandler(OnIsTransitionFinished));
 
             Loaded += (sender, args) =>
@@ -457,6 +457,8 @@ namespace Caliburn.Noesis.Transitions
                                ? newItem.ForwardWipe ?? ForwardWipe
                                : newItem.BackwardWipe ?? BackwardWipe;
 
+                oldItem.Opacity = 0;
+
                 if (wipe != null)
                 {
                     wipe.Wipe(oldItem, newItem, GetTransitionOrigin(newItem), this);
@@ -465,17 +467,15 @@ namespace Caliburn.Noesis.Transitions
                 {
                     StackZIndices(newItem, oldItem);
                 }
-
-                oldItem.Opacity = 0;
             }
             else if ((oldItem != null) || (newItem != null))
             {
-                StackZIndices(oldItem ?? newItem);
-
                 if (oldItem != null)
                 {
                     oldItem.Opacity = 0;
                 }
+
+                StackZIndices(oldItem ?? newItem);
             }
 
             this.nextTransitionOrigin = null;

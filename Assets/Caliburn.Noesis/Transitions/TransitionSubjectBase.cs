@@ -6,17 +6,18 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Controls;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+    using Extensions;
     using JetBrains.Annotations;
 
     /// <summary>Base class for a content control supporting transition animations.</summary>
     /// <seealso cref="ContentControl" />
-    /// <seealso cref="ITransitionEffectSubject" />
+    /// <seealso cref="ITransitionSubject" />
     [TemplatePart(Name = MatrixTransformPartName, Type = typeof(MatrixTransform))]
     [TemplatePart(Name = RotateTransformPartName, Type = typeof(RotateTransform))]
     [TemplatePart(Name = ScaleTransformPartName, Type = typeof(ScaleTransform))]
     [TemplatePart(Name = SkewTransformPartName, Type = typeof(SkewTransform))]
     [TemplatePart(Name = TranslateTransformPartName, Type = typeof(TranslateTransform))]
-    public class TransitionControlBase : ContentControl, ITransitionEffectSubject
+    public abstract class TransitionSubjectBase : ContentControl, ITransitionSubject
     {
         #region Constants and Fields
 
@@ -45,23 +46,23 @@ namespace Caliburn.Noesis.Transitions
             DependencyProperty.Register(
                 nameof(TransitionDelay),
                 typeof(TimeSpan),
-                typeof(TransitionControlBase),
+                typeof(TransitionSubjectBase),
                 new PropertyMetadata(default(TimeSpan)));
 
         /// <summary>The OpeningEffect property.</summary>
         public static readonly DependencyProperty TransitionEffectProperty =
             DependencyProperty.Register(
                 nameof(TransitionEffect),
-                typeof(ITransitionEffect),
-                typeof(TransitionControlBase),
-                new PropertyMetadata(default(ITransitionEffect)));
+                typeof(ITransition),
+                typeof(TransitionSubjectBase),
+                new PropertyMetadata(default(ITransition)));
 
         /// <summary>The IsTransitionFinished event.</summary>
         public static readonly RoutedEvent TransitionFinished = EventManager.RegisterRoutedEvent(
             nameof(TransitionFinished),
             RoutingStrategy.Bubble,
             typeof(RoutedEventHandler),
-            typeof(TransitionControlBase));
+            typeof(TransitionSubjectBase));
 
         private readonly RoutedEventArgs transitionFinishedEventArgs;
 
@@ -76,39 +77,39 @@ namespace Caliburn.Noesis.Transitions
 
         #region Constructors and Destructors
 
-        /// <summary>Initializes the <see cref="TransitionControlBase" /> class.</summary>
-        static TransitionControlBase()
+        /// <summary>Initializes the <see cref="TransitionSubjectBase" /> class.</summary>
+        static TransitionSubjectBase()
         {
             DefaultStyleKeyProperty.OverrideMetadata(
-                typeof(TransitionControlBase),
-                new FrameworkPropertyMetadata(typeof(TransitionControlBase)));
+                typeof(TransitionSubjectBase),
+                new FrameworkPropertyMetadata(typeof(TransitionSubjectBase)));
         }
 
-        /// <summary>Initializes a new instance of the <see cref="TransitionControlBase" /> class.</summary>
-        protected TransitionControlBase()
+        /// <summary>Initializes a new instance of the <see cref="TransitionSubjectBase" /> class.</summary>
+        protected TransitionSubjectBase()
         {
             this.transitionFinishedEventArgs = new RoutedEventArgs(TransitionFinished, this);
         }
 
         #endregion
 
-        #region ITransitionEffectSubject Implementation
+        #region ITransitionSubject Implementation
 
         /// <inheritdoc />
-        public IBindableCollection<ITransitionEffect> AdditionalTransitionEffects { get; } =
-            new BindableCollection<ITransitionEffect>();
+        public IBindableCollection<ITransition> AdditionalTransitionEffects { get; } =
+            new BindableCollection<ITransition>();
 
         /// <inheritdoc />
-        string ITransitionEffectSubject.MatrixTransformName => MatrixTransformPartName;
+        string ITransitionSubject.MatrixTransformName => MatrixTransformPartName;
 
         /// <inheritdoc />
-        string ITransitionEffectSubject.RotateTransformName => RotateTransformPartName;
+        string ITransitionSubject.RotateTransformName => RotateTransformPartName;
 
         /// <inheritdoc />
-        string ITransitionEffectSubject.ScaleTransformName => ScaleTransformPartName;
+        string ITransitionSubject.ScaleTransformName => ScaleTransformPartName;
 
         /// <inheritdoc />
-        string ITransitionEffectSubject.SkewTransformName => SkewTransformPartName;
+        string ITransitionSubject.SkewTransformName => SkewTransformPartName;
 
         /// <inheritdoc />
         public TimeSpan TransitionDelay
@@ -118,19 +119,20 @@ namespace Caliburn.Noesis.Transitions
         }
 
         /// <inheritdoc />
-        public ITransitionEffect TransitionEffect
+        public ITransition TransitionEffect
         {
-            get => (ITransitionEffect)GetValue(TransitionEffectProperty);
+            get => (ITransition)GetValue(TransitionEffectProperty);
             set => SetValue(TransitionEffectProperty, value);
         }
 
         /// <inheritdoc />
-        string ITransitionEffectSubject.TranslateTransformName => TranslateTransformPartName;
+        string ITransitionSubject.TranslateTransformName => TranslateTransformPartName;
 
         /// <inheritdoc />
         public void CancelTransition()
         {
-            this.storyboard?.Stop(GetNameScopeRoot());
+            this.storyboard?.Stop(this.GetNameScopeRoot());
+            TransitionEffect?.Cancel(this);
         }
 
         /// <inheritdoc />
@@ -158,7 +160,7 @@ namespace Caliburn.Noesis.Transitions
             }
 
             this.storyboard.Completed += (_, __) => OnTransitionFinished();
-            this.storyboard.Begin(GetNameScopeRoot(), true);
+            this.storyboard.Begin(this.GetNameScopeRoot(), true);
         }
 
         #endregion
@@ -168,7 +170,7 @@ namespace Caliburn.Noesis.Transitions
         /// <inheritdoc />
         public override void OnApplyTemplate()
         {
-            var nameScopeRoot = GetNameScopeRoot();
+            var nameScopeRoot = this.GetNameScopeRoot();
 
             this.matrixTransform = GetTemplateChild(MatrixTransformPartName) as MatrixTransform;
             this.rotateTransform = GetTemplateChild(RotateTransformPartName) as RotateTransform;
@@ -231,28 +233,6 @@ namespace Caliburn.Noesis.Transitions
         protected virtual void OnTransitionFinished()
         {
             RaiseEvent(this.transitionFinishedEventArgs);
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private FrameworkElement GetNameScopeRoot()
-        {
-            // Only set the namescope if the child does not already have a template XAML namescope set.
-            if ((VisualChildrenCount > 0) &&
-                GetVisualChild(0) is FrameworkElement frameworkElement &&
-                (NameScope.GetNameScope(frameworkElement) != null))
-            {
-                return frameworkElement;
-            }
-
-            if (NameScope.GetNameScope(this) is null)
-            {
-                NameScope.SetNameScope(this, new NameScope());
-            }
-
-            return this;
         }
 
         #endregion

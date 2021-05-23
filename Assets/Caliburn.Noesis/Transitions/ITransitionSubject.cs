@@ -3,13 +3,13 @@ namespace Caliburn.Noesis.Transitions
     using System;
 
     /// <summary>Defines the subject of a transition effect.</summary>
-    public interface ITransitionEffectSubject
+    public interface ITransitionSubject
     {
         /// <summary>
         ///     Additional transition effects which will be run in combination with the
         ///     <see cref="TransitionEffect" />.
         /// </summary>
-        IBindableCollection<ITransitionEffect> AdditionalTransitionEffects { get; }
+        IBindableCollection<ITransition> AdditionalTransitionEffects { get; }
 
         /// <summary>Gets the name of the matrix transform template part.</summary>
         /// <value>The name of the matrix transform template part.</value>
@@ -32,7 +32,7 @@ namespace Caliburn.Noesis.Transitions
         TimeSpan TransitionDelay { get; }
 
         /// <summary>Gets or sets the effect to run when transitioning.</summary>
-        ITransitionEffect TransitionEffect { get; set; }
+        ITransition TransitionEffect { get; set; }
 
         /// <summary>Gets the name of the translate transform template part.</summary>
         /// <value>The name of the translate transform template part.</value>

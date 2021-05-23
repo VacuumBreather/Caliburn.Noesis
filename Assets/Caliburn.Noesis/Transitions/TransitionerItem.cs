@@ -8,7 +8,7 @@
     ///     <see cref="Transitioner" />.
     /// </summary>
     [PublicAPI]
-    public class TransitionerItem : TransitionControlBase
+    public class TransitionerItem : TransitionSubjectBase
     {
         #region Constants and Fields
 

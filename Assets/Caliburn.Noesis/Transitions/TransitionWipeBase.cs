@@ -10,148 +10,22 @@ namespace Caliburn.Noesis.Transitions
     /// <seealso cref="ITransitionWipe" />
     public abstract class TransitionWipeBase : MarkupExtension, ITransitionWipe
     {
-        #region Constants and Fields
-
-        private TimeSpan delay = TimeSpan.Zero;
-        private TimeSpan duration = TimeSpan.FromMilliseconds(500);
-        private IEasingFunction easingFunction = new SineEase();
-        private ITransitionEffect fromEffect;
-        private ITransitionEffect toEffect;
-
-        #endregion
-
-        #region Protected Properties
-
-        /// <summary>Gets the effect to apply to the item the wipe is transitioning from.</summary>
-        /// <value>The effect to apply to the item the wipe is transitioning from.</value>
-        protected ITransitionEffect FromEffect
-        {
-            get => this.fromEffect;
-            set
-            {
-                if (Equals(this.fromEffect, value))
-                {
-                    return;
-                }
-
-                this.fromEffect = value;
-
-                if (this.fromEffect != null)
-                {
-                    this.fromEffect.Delay = Delay;
-                    this.fromEffect.Duration = Duration;
-                    this.fromEffect.EasingFunction = EasingFunction;
-                }
-            }
-        }
-
-        /// <summary>Gets the effect to apply to the item the wipe is transitioning to.</summary>
-        /// <value>The effect to apply to the item the wipe is transitioning to.</value>
-        protected ITransitionEffect ToEffect
-        {
-            get => this.toEffect;
-            set
-            {
-                if (Equals(this.toEffect, value))
-                {
-                    return;
-                }
-
-                this.toEffect = value;
-
-                if (this.toEffect != null)
-                {
-                    this.toEffect.Delay = Delay;
-                    this.toEffect.Duration = Duration;
-                    this.toEffect.EasingFunction = EasingFunction;
-                }
-            }
-        }
-
-        #endregion
-
         #region ITransitionWipe Implementation
 
         /// <inheritdoc />
-        public TimeSpan Delay
-        {
-            get => this.delay;
-            set
-            {
-                if (Equals(this.delay, value))
-                {
-                    return;
-                }
-
-                this.delay = value;
-
-                if (FromEffect != null)
-                {
-                    FromEffect.Delay = Delay;
-                }
-
-                if (ToEffect != null)
-                {
-                    ToEffect.Delay = Delay;
-                }
-            }
-        }
+        public TimeSpan Delay { get; set; } = TimeSpan.Zero;
 
         /// <inheritdoc />
-        public TimeSpan Duration
-        {
-            get => this.duration;
-            set
-            {
-                if (Equals(this.duration, value))
-                {
-                    return;
-                }
-
-                this.duration = value;
-
-                if (FromEffect != null)
-                {
-                    FromEffect.Duration = Duration;
-                }
-
-                if (ToEffect != null)
-                {
-                    ToEffect.Duration = Duration;
-                }
-            }
-        }
+        public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(500);
 
         /// <inheritdoc />
-        public IEasingFunction EasingFunction
-        {
-            get => this.easingFunction;
-            set
-            {
-                if (Equals(this.easingFunction, value))
-                {
-                    return;
-                }
-
-                this.easingFunction = value;
-
-                if (FromEffect != null)
-                {
-                    FromEffect.EasingFunction = EasingFunction;
-                }
-
-                if (ToEffect != null)
-                {
-                    ToEffect.EasingFunction = EasingFunction;
-                }
-            }
-        }
+        public IEasingFunction EasingFunction { get; set; } = new SineEase();
 
         /// <inheritdoc />
-        public virtual void Wipe(TransitionerItem fromItem,
-                                 TransitionerItem toItem,
-                                 Point origin,
-                                 IZIndexController zIndexController)
+        public void Wipe(TransitionerItem fromItem,
+                         TransitionerItem toItem,
+                         Point origin,
+                         IZIndexController zIndexController)
         {
             if (fromItem == null)
             {
@@ -168,8 +42,7 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(zIndexController));
             }
 
-            fromItem.TransitionEffect = FromEffect;
-            toItem.TransitionEffect = ToEffect;
+            ConfigureItems(fromItem, toItem, origin);
 
             fromItem.PerformTransition();
             toItem.PerformTransition();
@@ -185,6 +58,20 @@ namespace Caliburn.Noesis.Transitions
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             return this;
+        }
+
+        #endregion
+
+        #region Protected Methods
+
+        /// <summary>Configures the items.</summary>
+        /// <param name="fromItem">The item to transition from.</param>
+        /// <param name="toItem">To item to transition to.</param>
+        /// <param name="origin">The origin point for the wipe transition.</param>
+        protected virtual void ConfigureItems(TransitionerItem fromItem,
+                                              TransitionerItem toItem,
+                                              Point origin)
+        {
         }
 
         #endregion

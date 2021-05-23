@@ -5,15 +5,14 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media.Animation;
 
     /// <summary>A fade-in transition effect.</summary>
-    /// <seealso cref="TransitionEffectBase{FadeInEffect}" />
-    public abstract class FadeEffectBase<TFadeEffect> : TransitionEffectBase<TFadeEffect>
-        where TFadeEffect : FadeEffectBase<TFadeEffect>, ITransitionEffect, new()
+    /// <seealso cref="TransitionBase" />
+    public abstract class FadeTransitionBase : TransitionBase
     {
         #region Constructors and Destructors
 
-        /// <summary>Initializes a new instance of the <see cref="FadeEffectBase{TFadeEffect}" /> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FadeTransitionBase" /> class.</summary>
         /// <param name="fadeType">Type of the fade.</param>
-        protected FadeEffectBase(FadeEffectType fadeType)
+        protected FadeTransitionBase(FadeTransitionType fadeType)
         {
             FadeType = fadeType;
         }
@@ -22,13 +21,13 @@ namespace Caliburn.Noesis.Transitions
 
         #region Enums
 
-        /// <summary>Defines the different types of fade effect.</summary>
-        protected enum FadeEffectType
+        /// <summary>Represents the possible types of fade transitions.</summary>
+        protected enum FadeTransitionType
         {
-            /// <summary>A fade-in effect.</summary>
+            /// <summary>A fade-in transition.</summary>
             FadeIn,
 
-            /// <summary>A fade-out effect.</summary>
+            /// <summary>A fade-out transition.</summary>
             FadeOut
         }
 
@@ -36,7 +35,7 @@ namespace Caliburn.Noesis.Transitions
 
         #region Private Properties
 
-        private FadeEffectType FadeType { get; }
+        private FadeTransitionType FadeType { get; }
 
         #endregion
 
@@ -50,8 +49,8 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
-            var from = FadeType == FadeEffectType.FadeIn ? 0.0 : 1.0;
-            var to = FadeType == FadeEffectType.FadeIn ? 1.0 : 0.0;
+            var from = FadeType == FadeTransitionType.FadeIn ? 0.0 : 1.0;
+            var to = FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0;
 
             var zeroFrame = new DiscreteDoubleKeyFrame(from);
             var startFrame = new DiscreteDoubleKeyFrame(
@@ -68,7 +67,7 @@ namespace Caliburn.Noesis.Transitions
             timeline.KeyFrames.Add(startFrame);
             timeline.KeyFrames.Add(endFrame);
             timeline.Duration = effectSubject.TransitionDelay + Delay + Duration;
-            timeline.Completed += (_, __) => effectSubject.SetValue(UIElement.OpacityProperty, to);
+            timeline.Completed += (_, __) => Cancel(effectSubject);
 
             effectSubject.SetValue(UIElement.OpacityProperty, from);
 
@@ -76,6 +75,14 @@ namespace Caliburn.Noesis.Transitions
             Storyboard.SetTargetProperty(timeline, new PropertyPath(UIElement.OpacityProperty));
 
             return timeline;
+        }
+
+        /// <inheritdoc />
+        public override void Cancel<TSubject>(TSubject effectSubject)
+        {
+            var finalOpacity = FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0;
+
+            effectSubject.SetValue(UIElement.OpacityProperty, finalOpacity);
         }
 
         #endregion

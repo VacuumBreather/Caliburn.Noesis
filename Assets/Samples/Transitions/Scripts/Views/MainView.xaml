@@ -35,19 +35,11 @@
         <transitions:Transitioner
             x:Name="Transitioner"
             AutoApplyTransitionOrigins="True"
+            BackwardWipe="{transitions:FadeWipe}"
             DockPanel.Dock="Top"
+            ForwardWipe="{transitions:CircleWipe}"
             IsLooping="True"
-            ForwardWipe="{transitions:FadeWipe Duration=0:0:1}"
-            BackwardWipe="{transitions:FadeWipe Duration=0:0:1}"
             ItemsSource="{Binding Items, Mode=OneWay}"
-            SelectedItem="{Binding ActiveItem, Mode=TwoWay}"
-            Visibility="Visible">
-            <!--<transitions:Transitioner.ItemContainerStyle>
-                <Style TargetType="transitions:TransitionerItem" BasedOn="{StaticResource {x:Type transitions:TransitionerItem}}">
-                    <Setter Property="TransitionEffect" Value="{transitions:FadeInEffect}" />
-                    <Setter Property="TransitionEffectsOffset" Value="0:0:1" />
-                </Style>
-            </transitions:Transitioner.ItemContainerStyle>-->
-        </transitions:Transitioner>
+            SelectedItem="{Binding ActiveItem, Mode=TwoWay}" />
     </DockPanel>
 </UserControl>

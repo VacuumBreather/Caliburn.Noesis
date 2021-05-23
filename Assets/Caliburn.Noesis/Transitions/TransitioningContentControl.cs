@@ -13,7 +13,7 @@
     }
 
     /// <summary>A content control which enables transition animations.</summary>
-    public class TransitioningContentControl : TransitionControlBase
+    public class TransitioningContentControl : TransitionSubjectBase
     {
         #region Constants and Fields
 

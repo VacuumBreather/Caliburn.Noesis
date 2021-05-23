@@ -9,8 +9,8 @@
     /// <summary>Multiplies a time span unit by the index of an item in a list.</summary>
     /// <remarks>
     ///     Example usage is for a <see cref="TransitioningContentControl" /> to have a
-    ///     <see cref="TransitionEffectBase{TEffect}.Delay" /> time delayed according to position in a
-    ///     list, so cascading animations can occur.
+    ///     <see cref="TransitionBase.Delay" /> time delayed according to position in a list, so cascading
+    ///     animations can occur.
     /// </remarks>
     [MarkupExtensionReturnType(typeof(TimeSpan))]
     public class IndexedItemOffsetMultiplierExtension : MarkupExtension
