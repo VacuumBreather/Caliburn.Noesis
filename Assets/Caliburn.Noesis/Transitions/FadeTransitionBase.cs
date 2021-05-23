@@ -80,6 +80,11 @@ namespace Caliburn.Noesis.Transitions
         /// <inheritdoc />
         public override void Cancel<TSubject>(TSubject effectSubject)
         {
+            if (effectSubject == null)
+            {
+                throw new ArgumentNullException(nameof(effectSubject));
+            }
+
             var finalOpacity = FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0;
 
             effectSubject.SetValue(UIElement.OpacityProperty, finalOpacity);
