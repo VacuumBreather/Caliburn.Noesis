@@ -49,10 +49,12 @@ namespace Caliburn.Noesis.Transitions
 
             effectSubject.GetNameScopeRoot().RegisterName(ScaleTransformName, scaleTransform);
 
-            var zeroFrame = new DiscreteDoubleKeyFrame(0);
-            var startFrame = new DiscreteDoubleKeyFrame(0, effectSubject.TransitionDelay + Delay);
+            var subjectDelay = GetTotalSubjectDelay(effectSubject);
+
+            var zeroFrame = new DiscreteDoubleKeyFrame(0, TimeSpan.Zero);
+            var startFrame = new DiscreteDoubleKeyFrame(0, subjectDelay + Delay);
             var endFrame =
-                new EasingDoubleKeyFrame(1, effectSubject.TransitionDelay + Delay + Duration)
+                new EasingDoubleKeyFrame(1, subjectDelay + Delay + Duration)
                     {
                         EasingFunction = EasingFunction
                     };
