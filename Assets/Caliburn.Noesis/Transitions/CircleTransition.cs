@@ -84,6 +84,11 @@ namespace Caliburn.Noesis.Transitions
         /// <inheritdoc />
         public override void Cancel<TSubject>(TSubject effectSubject)
         {
+            if (effectSubject == null)
+            {
+                throw new ArgumentNullException(nameof(effectSubject));
+            }
+
             effectSubject.SetCurrentValue(UIElement.ClipProperty, null);
         }
 
