@@ -1,10 +1,12 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
     using System.Windows;
+    using JetBrains.Annotations;
 
     /// <seealso cref="TransitionWipeBase" />
     /// <seealso cref="ITransitionWipe" />
-    public class FadeWipe : TransitionWipeBase, ITransitionWipe
+    [PublicAPI]
+    public class FadeWipe : TransitionWipeBase
     {
         #region Constants and Fields
 

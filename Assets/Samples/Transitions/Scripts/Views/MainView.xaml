@@ -35,9 +35,9 @@
         <transitions:Transitioner
             x:Name="Transitioner"
             AutoApplyTransitionOrigins="True"
-            BackwardWipe="{transitions:FadeWipe}"
+            BackwardWipe="{transitions:SlideOutWipe}"
             DockPanel.Dock="Top"
-            ForwardWipe="{transitions:CircleWipe}"
+            ForwardWipe="{transitions:SlideOutWipe}"
             IsLooping="True"
             ItemsSource="{Binding Items, Mode=OneWay}"
             SelectedItem="{Binding ActiveItem, Mode=TwoWay}" />

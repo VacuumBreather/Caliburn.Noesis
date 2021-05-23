@@ -21,13 +21,13 @@ namespace Caliburn.Noesis.Transitions
 
         #region Enums
 
-        /// <summary>Represents the possible types of fade transitions.</summary>
+        /// <summary>Specifies the type of a fade transition.</summary>
         protected enum FadeTransitionType
         {
-            /// <summary>A fade-in transition.</summary>
+            /// <summary>The transition is fading in.</summary>
             FadeIn,
 
-            /// <summary>A fade-out transition.</summary>
+            /// <summary>The transition is fading out.</summary>
             FadeOut
         }
 
@@ -85,9 +85,7 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
-            var finalOpacity = FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0;
-
-            effectSubject.SetValue(UIElement.OpacityProperty, finalOpacity);
+            effectSubject.Opacity = 1.0;
         }
 
         #endregion

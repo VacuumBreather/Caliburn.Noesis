@@ -44,7 +44,7 @@ namespace Caliburn.Noesis.Transitions
 
             ConfigureItems(fromItem, toItem, origin);
 
-            fromItem.PerformTransition();
+            fromItem.PerformTransition(false);
             toItem.PerformTransition();
 
             zIndexController.Stack(toItem, fromItem);
