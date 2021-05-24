@@ -7,7 +7,9 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media;
     using System.Windows.Media.Animation;
 
-    /// <summary>Base class for transition effects.</summary>
+    /// <summary>A base class for transition effects. This is an abstract class.</summary>
+    /// <seealso cref="MarkupExtension" />
+    /// <seealso cref="ITransition" />
     [MarkupExtensionReturnType(typeof(ITransition))]
     public abstract class TransitionBase : MarkupExtension, ITransition
     {
@@ -50,11 +52,24 @@ namespace Caliburn.Noesis.Transitions
         /// <summary>Gets the total delay defined by the <see cref="ITransitionSubject" />.</summary>
         /// <remarks>
         ///     This can include a potential cascading delay if the subject is hosted inside an
-        ///     <see cref="ItemsControl" />.
+        ///     <see cref="ItemsControl" />. Use this to define the key frame at which your transition
+        ///     animation starts.
         /// </remarks>
-        /// <typeparam name="TSubject">The type of the subject.</typeparam>
-        /// <param name="effectSubject">The effect subject.</param>
+        /// <example>
+        ///     <code>
+        /// var zeroFrame = new DiscreteDoubleKeyFrame(0, TimeSpan.Zero);
+        /// var startFrame = new DiscreteDoubleKeyFrame(0, GetTotalSubjectDelay(effectSubject) + Delay);
+        /// var endFrame =
+        ///     new EasingDoubleKeyFrame(1, GetTotalSubjectDelay(effectSubject) + Delay + Duration)
+        ///        {
+        ///             EasingFunction = EasingFunction
+        ///        };
+        /// </code>
+        /// </example>
+        /// <typeparam name="TSubject">The type of the <see cref="ITransitionSubject" />.</typeparam>
+        /// <param name="effectSubject">The <see cref="ITransitionSubject" /> of the effect.</param>
         /// <returns>The total delay defined by the <see cref="ITransitionSubject" />.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         protected static TimeSpan GetTotalSubjectDelay<TSubject>(TSubject effectSubject)
             where TSubject : FrameworkElement, ITransitionSubject
         {
@@ -79,7 +94,7 @@ namespace Caliburn.Noesis.Transitions
             {
                 DependencyObject ancestor = effectSubject;
 
-                while (ancestor is { } && itemsControl is null)
+                while ((ancestor != null) && itemsControl is null)
                 {
                     ancestor = VisualTreeHelper.GetParent(ancestor);
                     itemsControl = ItemsControl.ItemsControlFromItemContainer(ancestor);

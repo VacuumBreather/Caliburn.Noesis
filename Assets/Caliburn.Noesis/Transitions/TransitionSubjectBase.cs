@@ -9,9 +9,13 @@ namespace Caliburn.Noesis.Transitions
     using Extensions;
     using JetBrains.Annotations;
 
-    /// <summary>Base class for a content control supporting transition animations.</summary>
+    /// <summary>
+    ///     A base class for a <see cref="ContentControl" /> supporting <see cref="ITransition" />
+    ///     effects. This is an abstract class.
+    /// </summary>
     /// <seealso cref="ContentControl" />
     /// <seealso cref="ITransitionSubject" />
+    [PublicAPI]
     [TemplatePart(Name = MatrixTransformPartName, Type = typeof(MatrixTransform))]
     [TemplatePart(Name = RotateTransformPartName, Type = typeof(RotateTransform))]
     [TemplatePart(Name = ScaleTransformPartName, Type = typeof(ScaleTransform))]
@@ -22,23 +26,18 @@ namespace Caliburn.Noesis.Transitions
         #region Constants and Fields
 
         /// <summary>The name of the matrix transform template part.</summary>
-        [UsedImplicitly]
         public const string MatrixTransformPartName = "PART_MatrixTransform";
 
         /// <summary>The name of the rotate transform template part.</summary>
-        [UsedImplicitly]
         public const string RotateTransformPartName = "PART_RotateTransform";
 
         /// <summary>The name of the scale transform template part.</summary>
-        [UsedImplicitly]
         public const string ScaleTransformPartName = "PART_ScaleTransform";
 
         /// <summary>The name of the skew transform template part.</summary>
-        [UsedImplicitly]
         public const string SkewTransformPartName = "PART_SkewTransform";
 
         /// <summary>The name of the translate transform template part.</summary>
-        [UsedImplicitly]
         public const string TranslateTransformPartName = "PART_TranslateTransform";
 
         /// <summary>The CascadingDelay property.</summary>
@@ -142,7 +141,13 @@ namespace Caliburn.Noesis.Transitions
         public void CancelTransition()
         {
             this.storyboard?.Stop(this.GetNameScopeRoot());
+            this.storyboard = null;
             TransitionEffect?.Cancel(this);
+
+            foreach (var effect in AdditionalTransitionEffects)
+            {
+                effect?.Cancel(this);
+            }
         }
 
         /// <inheritdoc />
@@ -154,6 +159,7 @@ namespace Caliburn.Noesis.Transitions
             }
 
             CancelTransition();
+
             this.storyboard = new Storyboard();
             var transitionEffect = TransitionEffect?.Build(this);
 
@@ -257,8 +263,7 @@ namespace Caliburn.Noesis.Transitions
 
         #region Protected Methods
 
-        /// <summary>Raises the <see cref="TransitionFinished" /> event.</summary>
-        [PublicAPI]
+        /// <summary>Called when the transition has finished.</summary>
         protected virtual void OnTransitionFinished()
         {
             RaiseEvent(this.transitionFinishedEventArgs);

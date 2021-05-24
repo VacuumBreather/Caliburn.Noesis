@@ -8,8 +8,8 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Input;
 
     /// <summary>
-    ///     The transitioner provides an easy way to transition from one content to another using wipe
-    ///     transitions.
+    ///     Provides an easy way to transition from one content to another using
+    ///     <see cref="ITransitionWipe" /> effects.
     /// </summary>
     public class Transitioner : Selector, IZIndexController
     {
@@ -124,9 +124,14 @@ namespace Caliburn.Noesis.Transitions
         #region Public Properties
 
         /// <summary>
-        ///     If set to <c>true</c>, transition origins will be applied to wipes, according to where a
-        ///     transition was triggered from.  For example, the mouse point where a user clicks a button.
+        ///     Gets or sets a value indicating whether transition origins will be applied to wipes,
+        ///     according to where a transition was triggered from. For example the mouse position over a
+        ///     button which triggered the transition.
         /// </summary>
+        /// <value>
+        ///     <c>true</c> if transition origins will be applied to wipes, according to where a transition
+        ///     was triggered from; otherwise, <c>false</c>.
+        /// </value>
         public bool AutoApplyTransitionOrigins
         {
             get => (bool)GetValue(AutoApplyTransitionOriginsProperty);
@@ -158,8 +163,8 @@ namespace Caliburn.Noesis.Transitions
         }
 
         /// <summary>
-        ///     Gets or sets a value indicating whether the last item is followed by the first in a loop
-        ///     and vice versa.
+        ///     Gets or sets a value indicating whether the last item should followed by the first in a
+        ///     loop and vice versa.
         /// </summary>
         /// <value>
         ///     <c>true</c> if the last item is followed by the first in a loop and vice versa; otherwise,
@@ -351,12 +356,9 @@ namespace Caliburn.Noesis.Transitions
 
         private TransitionerItem GetItem(object item)
         {
-            if (IsItemItsOwnContainer(item))
-            {
-                return (TransitionerItem)item;
-            }
-
-            return (TransitionerItem)ItemContainerGenerator.ContainerFromItem(item);
+            return IsItemItsOwnContainer(item)
+                       ? (TransitionerItem)item
+                       : (TransitionerItem)ItemContainerGenerator.ContainerFromItem(item);
         }
 
         private Point? GetNavigationSourcePoint(RoutedEventArgs executedRoutedEventArgs)
@@ -382,15 +384,11 @@ namespace Caliburn.Noesis.Transitions
 
         private Point GetTransitionOrigin(TransitionerItem item)
         {
-            if (this.nextTransitionOrigin != null)
-            {
-                return this.nextTransitionOrigin.Value;
-            }
-
-            return item.ReadLocalValue(TransitionerItem.TransitionOriginProperty) !=
-                   DependencyProperty.UnsetValue
-                       ? item.TransitionOrigin
-                       : DefaultTransitionOrigin;
+            return this.nextTransitionOrigin ??
+                   (item.ReadLocalValue(TransitionerItem.TransitionOriginProperty) !=
+                    DependencyProperty.UnsetValue
+                        ? item.TransitionOrigin
+                        : DefaultTransitionOrigin);
         }
 
         private void IncrementSelectedIndex(int stepSize)

@@ -6,8 +6,9 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media.Animation;
     using Extensions;
 
-    /// <summary>A circular transition effect.</summary>
+    /// <summary>A circular <see cref="ITransition" /> effect.</summary>
     /// <seealso cref="TransitionBase" />
+    /// <seealso cref="ITransition" />
     public class CircleTransition : TransitionBase
     {
         #region Constants and Fields
@@ -19,6 +20,7 @@ namespace Caliburn.Noesis.Transitions
         #region Public Methods
 
         /// <inheritdoc />
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         public override Timeline Build<TSubject>(TSubject effectSubject)
         {
             if (effectSubject == null)
@@ -26,6 +28,7 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
+            // Calculate the radius of the clipping circle.
             var horizontalProportion = Math.Max(1.0 - Origin.X, Origin.X);
             var verticalProportion = Math.Max(1.0 - Origin.Y, Origin.Y);
             var radius = Math.Sqrt(
@@ -33,6 +36,7 @@ namespace Caliburn.Noesis.Transitions
                     effectSubject.ActualHeight * verticalProportion,
                     2));
 
+            // Set up the clipping circle geometry and its transforms.
             var scaleTransform = new ScaleTransform(0, 0);
             var translateTransform = new TranslateTransform(
                 effectSubject.ActualWidth * Origin.X,
@@ -40,13 +44,15 @@ namespace Caliburn.Noesis.Transitions
             var transformGroup = new TransformGroup();
             transformGroup.Children.Add(scaleTransform);
             transformGroup.Children.Add(translateTransform);
-            var ellipseGeometry = new EllipseGeometry
-                                      {
-                                          RadiusX = radius,
-                                          RadiusY = radius,
-                                          Transform = transformGroup
-                                      };
 
+            var circleGeometry = new EllipseGeometry
+                                     {
+                                         RadiusX = radius,
+                                         RadiusY = radius,
+                                         Transform = transformGroup
+                                     };
+
+            // Register the scale transformation so we can access it from the timeline.
             effectSubject.GetNameScopeRoot().RegisterName(ScaleTransformName, scaleTransform);
 
             var subjectDelay = GetTotalSubjectDelay(effectSubject);
@@ -74,7 +80,7 @@ namespace Caliburn.Noesis.Transitions
             timeline.Children.Add(scaleYAnimation);
             timeline.Completed += (_, __) => Cancel(effectSubject);
 
-            effectSubject.SetCurrentValue(UIElement.ClipProperty, ellipseGeometry);
+            effectSubject.SetCurrentValue(UIElement.ClipProperty, circleGeometry);
 
             Storyboard.SetTargetName(scaleXAnimation, ScaleTransformName);
             Storyboard.SetTargetProperty(
@@ -90,6 +96,7 @@ namespace Caliburn.Noesis.Transitions
         }
 
         /// <inheritdoc />
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         public override void Cancel<TSubject>(TSubject effectSubject)
         {
             if (effectSubject == null)

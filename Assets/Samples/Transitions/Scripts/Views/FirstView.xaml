@@ -19,6 +19,7 @@
                 <GradientStop Offset="0.849" Color="#FF3E1A97" />
             </LinearGradientBrush>
         </Grid.Background>
+
         <Border>
             <Border.Background>
                 <LinearGradientBrush StartPoint="-0.012,0.24" EndPoint="1,0">
@@ -28,6 +29,7 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
+
         <Viewbox>
             <Viewbox Width="16">
                 <Grid
@@ -135,6 +137,6 @@
                 </Grid>
             </Viewbox>
         </Viewbox>
-    </Grid>
 
+    </Grid>
 </UserControl>

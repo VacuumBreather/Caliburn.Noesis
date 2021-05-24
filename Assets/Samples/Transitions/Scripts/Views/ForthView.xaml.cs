@@ -8,7 +8,7 @@
 #endif
 
     /// <summary>
-    /// Interaction logic for ForthView.xaml
+    /// Interaction logic for ForthView.xaml.
     /// </summary>
     public partial class ForthView : UserControl
     {

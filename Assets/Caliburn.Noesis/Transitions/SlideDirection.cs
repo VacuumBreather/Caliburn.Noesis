@@ -1,18 +1,18 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
-    /// <summary>Specifies the direction of a slide transition.</summary>
+    /// <summary>Represents the direction of a <see cref="SlideTransition" />.</summary>
     public enum SlideDirection
     {
-        /// <summary>The transition is sliding to the left.</summary>
+        /// <summary>The content is sliding to the left.</summary>
         Left,
 
-        /// <summary>The transition is sliding to the right.</summary>
+        /// <summary>The content is sliding to the right.</summary>
         Right,
 
-        /// <summary>The transition is sliding up.</summary>
+        /// <summary>The content is sliding up.</summary>
         Up,
 
-        /// <summary>The transition is sliding down.</summary>
+        /// <summary>The content is sliding down.</summary>
         Down
     }
 }
