@@ -5,8 +5,8 @@ namespace Caliburn.Noesis.Samples.Transitions.ViewModels
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
 
-    /// <summary>Main view-model of the sample</summary>
-    [UsedImplicitly]
+    /// <summary>Main view-model of the transitions sample.</summary>
+    [PublicAPI]
     public class MainViewModel : Conductor<Screen>.Collection.OneActive
     {
         #region Constructors and Destructors

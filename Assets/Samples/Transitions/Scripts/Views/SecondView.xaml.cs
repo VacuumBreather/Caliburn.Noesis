@@ -8,7 +8,7 @@
 #endif
 
     /// <summary>
-    /// Interaction logic for SecondView.xaml
+    /// Interaction logic for SecondView.xaml.
     /// </summary>
     public partial class SecondView : UserControl
     {

@@ -32,12 +32,12 @@
             <Button Command="{x:Static transitions:Transitioner.MoveNextCommand}" />
             <Button Command="{x:Static transitions:Transitioner.MoveLastCommand}" />
         </StackPanel>
+
         <transitions:Transitioner
             x:Name="Transitioner"
             AutoApplyTransitionOrigins="True"
             BackwardWipe="{transitions:SlideOutWipe}"
-            DockPanel.Dock="Top"
-            ForwardWipe="{transitions:SlideOutWipe}"
+            ForwardWipe="{transitions:CircleWipe}"
             IsLooping="True"
             ItemsSource="{Binding Items, Mode=OneWay}"
             SelectedItem="{Binding ActiveItem, Mode=TwoWay}" />

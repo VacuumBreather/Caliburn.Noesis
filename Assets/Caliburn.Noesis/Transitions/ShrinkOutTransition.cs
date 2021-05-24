@@ -7,8 +7,12 @@ namespace Caliburn.Noesis.Transitions
     using Extensions;
     using JetBrains.Annotations;
 
-    /// <summary>An exit transition which shrinks the <see cref="ITransitionSubject" />.</summary>
+    /// <summary>
+    ///     A <see cref="ITransition" /> effect which shrinks the <see cref="ITransitionSubject" />
+    ///     and fades it out.
+    /// </summary>
     /// <seealso cref="TransitionBase" />
+    /// <seealso cref="ITransition" />
     [PublicAPI]
     public class ShrinkOutTransition : TransitionBase
     {
@@ -27,8 +31,14 @@ namespace Caliburn.Noesis.Transitions
         #region Public Methods
 
         /// <inheritdoc />
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         public override Timeline Build<TSubject>(TSubject effectSubject)
         {
+            if (effectSubject == null)
+            {
+                throw new ArgumentNullException(nameof(effectSubject));
+            }
+
             if (!(effectSubject.GetNameScopeRoot().FindName(effectSubject.ScaleTransformName) is
                       ScaleTransform transform))
             {
@@ -89,6 +99,7 @@ namespace Caliburn.Noesis.Transitions
         }
 
         /// <inheritdoc />
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         public override void Cancel<TSubject>(TSubject effectSubject)
         {
             if (effectSubject == null)

@@ -1,6 +1,6 @@
 namespace Caliburn.Noesis.Transitions
 {
-    /// <summary>A fade-out transition effect.</summary>
+    /// <summary>A fade-out <see cref="ITransition" /> effect.</summary>
     /// <seealso cref="TransitionBase" />
     public class FadeOutTransition : FadeTransitionBase
     {

@@ -5,8 +5,8 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Media.Animation;
 
     /// <summary>
-    ///     Defines a type of transition where one content replaces another by traveling from one side
-    ///     of the view to another or with a special shape.
+    ///     Defines a type of effect used by a <see cref="Transitioner" /> to transition from one
+    ///     content to another using <see cref="ITransition" /> effects for both the old and new content.
     /// </summary>
     public interface ITransitionWipe
     {
@@ -22,9 +22,9 @@ namespace Caliburn.Noesis.Transitions
         /// <value>The easing function which is applied to the wipe transition.</value>
         public IEasingFunction EasingFunction { get; set; }
 
-        /// <summary>Performs a wipe transition from one item to another.</summary>
-        /// <param name="fromItem">The item to transition from.</param>
-        /// <param name="toItem">To item to transition to.</param>
+        /// <summary>Performs a wipe transition from one content to another.</summary>
+        /// <param name="fromItem">The content to transition from.</param>
+        /// <param name="toItem">To content to transition to.</param>
         /// <param name="origin">The origin point for the wipe transition.</param>
         /// <param name="zIndexController">The controller in charge of the z-index of each item.</param>
         void Wipe(TransitionerItem fromItem,

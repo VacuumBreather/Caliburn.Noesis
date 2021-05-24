@@ -8,7 +8,7 @@
 #endif
 
     /// <summary>
-    /// Interaction logic for FirstView.xaml
+    /// Interaction logic for FirstView.xaml.
     /// </summary>
     public partial class FirstView : UserControl
     {

@@ -1,21 +1,8 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
-    using System;
     using System.Windows;
 
-    [Flags]
-    public enum TransitionTriggers
-    {
-        None = 0b0000,
-        Loaded = 0b0001,
-        IsVisible = 0b0010,
-        IsEnabled = 0b0100,
-        ContentChanged = 0b1000,
-        Default = Loaded | ContentChanged,
-        All = Loaded | IsVisible | IsEnabled | ContentChanged
-    }
-
-    /// <summary>A content control which enables transition animations.</summary>
+    /// <summary>Enables transition effects for content.</summary>
     public class TransitioningContentControl : TransitionSubjectBase
     {
         #region Constants and Fields
@@ -78,18 +65,12 @@
 
         private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is true)
-            {
-                Run(TransitionTriggers.IsEnabled);
-            }
+            Run(TransitionTriggers.IsEnabled);
         }
 
         private void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue is true)
-            {
-                Run(TransitionTriggers.IsVisible);
-            }
+            Run(TransitionTriggers.IsVisible);
         }
 
         #endregion
@@ -98,7 +79,8 @@
 
         private void Run(TransitionTriggers requiredHint)
         {
-            if ((TransitionTriggers & requiredHint) != 0)
+            if (((TransitionTriggers & requiredHint) != 0) && IsEnabled &&
+                (Visibility == Visibility.Visible))
             {
                 PerformTransition();
             }

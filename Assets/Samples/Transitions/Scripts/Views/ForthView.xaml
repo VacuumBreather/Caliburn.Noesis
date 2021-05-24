@@ -10,11 +10,13 @@
     mc:Ignorable="d">
 
     <UserControl.Resources>
+
         <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
             <Setter Property="FontSize" Value="36" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Foreground" Value="White" />
         </Style>
+
         <Style BasedOn="{StaticResource {x:Type transitions:TransitioningContentControl}}" TargetType="transitions:TransitioningContentControl">
             <Setter Property="Margin" Value="10" />
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -37,6 +39,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </UserControl.Resources>
 
     <Grid x:Name="RootGrid" Background="OrangeRed">
@@ -49,12 +52,15 @@
                     <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+
             <transitions:TransitioningContentControl>
                 <TextBlock Text="Here" />
             </transitions:TransitioningContentControl>
+
             <transitions:TransitioningContentControl>
                 <TextBlock Text="we" />
             </transitions:TransitioningContentControl>
+
             <transitions:TransitioningContentControl>
                 <TextBlock Text="go!" />
             </transitions:TransitioningContentControl>

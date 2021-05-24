@@ -3,10 +3,7 @@
     using System.Windows;
     using JetBrains.Annotations;
 
-    /// <summary>
-    ///     Content control to host the content of an individual page within a
-    ///     <see cref="Transitioner" />.
-    /// </summary>
+    /// <summary>Host the content of an individual item within a <see cref="Transitioner" />.</summary>
     [PublicAPI]
     public class TransitionerItem : TransitionSubjectBase
     {
@@ -74,12 +71,19 @@
             set => SetValue(ForwardWipeProperty, value);
         }
 
+        /// <summary>Gets or sets the state of the <see cref="TransitionerItem" />.</summary>
+        /// <value>The state of the <see cref="TransitionerItem" />.</value>
         public TransitionerItemState State
         {
             get => (TransitionerItemState)GetValue(StateProperty);
             set => SetValue(StateProperty, value);
         }
 
+        /// <summary>
+        ///     Gets or sets the origin point for the wipe transition applied to this
+        ///     <see cref="TransitionerItem" />.
+        /// </summary>
+        /// <value>The  origin point for the wipe transition applied to this <see cref="TransitionerItem" />.</value>
         public Point TransitionOrigin
         {
             get => (Point)GetValue(TransitionOriginProperty);

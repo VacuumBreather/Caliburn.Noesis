@@ -8,9 +8,8 @@ namespace Caliburn.Noesis.Samples.Transitions.Views
 #endif
 
     /// <summary>
-    /// The main view-model of the Transitions sample.
+    /// Interaction logic for MainView.xaml.
     /// </summary>
-    /// <seealso cref="UserControl" />
     public partial class MainView : UserControl
     {
         /// <summary>

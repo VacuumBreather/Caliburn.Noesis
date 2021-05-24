@@ -5,7 +5,7 @@ namespace Caliburn.Noesis.Transitions
     using System.Windows.Markup;
     using System.Windows.Media.Animation;
 
-    /// <summary>Base class for a wipe transition.</summary>
+    /// <summary>A base class for a <see cref="ITransitionWipe" />. This is an abstract class.</summary>
     /// <seealso cref="MarkupExtension" />
     /// <seealso cref="ITransitionWipe" />
     [MarkupExtensionReturnType(typeof(ITransitionWipe))]
@@ -66,11 +66,11 @@ namespace Caliburn.Noesis.Transitions
         #region Protected Methods
 
         /// <summary>
-        ///     Called every time the wipe is performed. Override this to configure the items and their
-        ///     effects.
+        ///     Called every time the wipe is performed. Override this to configure both items and their
+        ///     <see cref="ITransition" /> effects.
         /// </summary>
-        /// <param name="fromItem">The item to transition from.</param>
-        /// <param name="toItem">To item to transition to.</param>
+        /// <param name="fromItem">The content to transition from.</param>
+        /// <param name="toItem">To content to transition to.</param>
         /// <param name="origin">The origin point for the wipe transition.</param>
         protected virtual void ConfigureItems(TransitionerItem fromItem,
                                               TransitionerItem toItem,

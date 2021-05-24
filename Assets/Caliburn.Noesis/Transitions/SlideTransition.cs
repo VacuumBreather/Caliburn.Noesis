@@ -5,11 +5,16 @@
     using System.Windows.Media;
     using System.Windows.Media.Animation;
     using Extensions;
+    using JetBrains.Annotations;
 
-    /// <summary>A transition effect which slides the subject in a specified direction.</summary>
+    /// <summary>
+    ///     A <see cref="ITransition" /> effect which slides content from outside its containing area
+    ///     in the specified direction into its resting position.
+    /// </summary>
     /// <seealso cref="TransitionBase" />
     /// <seealso cref="ITransition" />
-    public class SlideTransition : TransitionBase, ITransition
+    [PublicAPI]
+    public class SlideTransition : TransitionBase
     {
         #region Constants and Fields
 
@@ -24,13 +29,16 @@
         #region Public Properties
 
         /// <summary>
-        ///     Gets or sets the name of the container element which defines the edges from which the
+        ///     Gets or sets the name of the container element which defines the outer edges at which the
         ///     slide transition should start.
         /// </summary>
-        /// <remarks>If this is not specified, the edges of the <see cref="ITransitionSubject" /> are used.</remarks>
+        /// <remarks>
+        ///     If this is not specified, the bounding box of the <see cref="ITransitionSubject" /> itself
+        ///     is used.
+        /// </remarks>
         /// <value>
-        ///     The name of the container element which defines the edges from which the slide transition
-        ///     should start.
+        ///     The name of the container element which defines the outer edges at which the slide
+        ///     transition should start.
         /// </value>
         public string ContainerElementName { get; set; }
 
@@ -42,16 +50,25 @@
         ///     Gets or sets a value indicating whether this <see cref="SlideTransition" /> should be
         ///     reversed.
         /// </summary>
-        /// <value><c>true</c> if this <see cref="SlideTransition" /> is reversed; otherwise, <c>false</c>.</value>
+        /// <value>
+        ///     <c>true</c> if this <see cref="SlideTransition" /> is reversed, i.e. the content is moved
+        ///     out of the frame instead; otherwise, <c>false</c>.
+        /// </value>
         public bool Reverse { get; set; }
 
         #endregion
 
-        #region ITransition Implementation
+        #region Public Methods
 
         /// <inheritdoc />
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         public override Timeline Build<TSubject>(TSubject effectSubject)
         {
+            if (effectSubject == null)
+            {
+                throw new ArgumentNullException(nameof(effectSubject));
+            }
+
             if (!(effectSubject.GetNameScopeRoot().FindName(effectSubject.TranslateTransformName) is
                       TranslateTransform transform))
             {
@@ -60,16 +77,16 @@
 
             this.translateTransform = transform;
 
+            var container = string.IsNullOrEmpty(ContainerElementName)
+                                ? effectSubject
+                                : effectSubject.FindName(ContainerElementName) as
+                                      FrameworkElement ?? effectSubject;
+
             // Set up coordinates
             this.endX = 0;
             this.endY = 0;
             this.startX = 0;
             this.startY = 0;
-
-            var container = string.IsNullOrEmpty(ContainerElementName)
-                                ? effectSubject
-                                : effectSubject.FindName(ContainerElementName) as
-                                      FrameworkElement ?? effectSubject;
 
             switch (Direction)
             {
@@ -142,6 +159,7 @@
         }
 
         /// <inheritdoc />
+        /// <exception cref="ArgumentNullException"><paramref name="effectSubject" /> is <c>null</c>.</exception>
         public override void Cancel<TSubject>(TSubject effectSubject)
         {
             if (effectSubject == null)

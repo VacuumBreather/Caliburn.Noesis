@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Noesis.Samples.Transitions.ViewModels
 {
-    /// <summary>First view-model of the sample.</summary>
-    /// <seealso cref="Caliburn.Noesis.Screen" />
+    /// <summary>The view-model of the first screen of the sample.</summary>
+    /// <seealso cref="Screen" />
     public class FirstViewModel : Screen
     {
     }
