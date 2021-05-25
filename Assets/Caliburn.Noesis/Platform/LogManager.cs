@@ -1,14 +1,14 @@
 ﻿namespace Caliburn.Noesis
 {
-
     using System;
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
+
 #if UNITY_5_5_OR_NEWER
     using UnityEngine;
     using Object = UnityEngine.Object;
 
 #endif
-
 
     /// <summary>Responsible for creating various <see cref="ILogger" /> types.</summary>
     public static class LogManager
@@ -92,6 +92,24 @@
             return staticLogger;
         }
 
+        /// <summary>
+        ///     Gets a method tracer which logs the entry and exit of a method. Use with a using
+        ///     expression at the beginning of a method.
+        /// </summary>
+        /// <example>
+        ///     <code>
+        /// using var _ = LogManager.GetMethodTracer(Logger);
+        /// </code>
+        /// </example>
+        /// <param name="logger">The logger.</param>
+        /// <param name="callingMember">The name of the calling member.</param>
+        /// <returns>A method tracer.</returns>
+        public static IDisposable GetMethodTracer(ILogger logger,
+                                                  [CallerMemberName] string callingMember = default)
+        {
+            return new MethodTracer(logger, callingMember);
+        }
+
         #endregion
 
         #region Private Methods
@@ -115,6 +133,25 @@
         #endregion
 
         #region Nested Types
+
+        private class MethodTracer : IDisposable
+        {
+            public MethodTracer(ILogger logger, string callingMember)
+            {
+                Logger = logger;
+                CallingMember = callingMember ?? "<unknown>";
+                Logger.Trace($">>>> {CallingMember}");
+            }
+
+            private string CallingMember { get; }
+
+            private ILogger Logger { get; }
+
+            void IDisposable.Dispose()
+            {
+                Logger.Trace($"<<<< {CallingMember}");
+            }
+        }
 
         private class NullLogger : ILogger
         {
