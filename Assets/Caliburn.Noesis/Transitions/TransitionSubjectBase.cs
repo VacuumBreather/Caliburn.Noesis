@@ -102,6 +102,24 @@ namespace Caliburn.Noesis.Transitions
 
         #endregion
 
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets or sets the cascading delay between <see cref="ITransitionSubject" /> elements inside
+        ///     an <see cref="ItemsControl" />.
+        /// </summary>
+        /// <value>
+        ///     The cascading delay between <see cref="ITransitionSubject" /> elements inside an
+        ///     <see cref="ItemsControl" />.
+        /// </value>
+        public TimeSpan CascadingDelay
+        {
+            get => (TimeSpan)GetValue(CascadingDelayProperty);
+            set => SetValue(CascadingDelayProperty, value);
+        }
+
+        #endregion
+
         #region ITransitionSubject Implementation
 
         /// <inheritdoc />
@@ -186,17 +204,23 @@ namespace Caliburn.Noesis.Transitions
 
         #region Public Methods
 
-        /// <summary>Gets the cascading delay.</summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
+        /// <summary>
+        ///     Gets the cascading delay between <see cref="ITransitionSubject" /> elements inside an
+        ///     <see cref="ItemsControl" />.
+        /// </summary>
+        /// <param name="element">The element from which to read the property value.</param>
+        /// <returns>The value of the CascadingDelay attached property.</returns>
         public static TimeSpan GetCascadingDelay(DependencyObject element)
         {
             return (TimeSpan)element.GetValue(CascadingDelayProperty);
         }
 
-        /// <summary>Sets the cascading delay.</summary>
-        /// <param name="element">The element.</param>
-        /// <param name="value">The value.</param>
+        /// <summary>
+        ///     Sets the cascading delay between <see cref="ITransitionSubject" /> elements inside an
+        ///     <see cref="ItemsControl" />.
+        /// </summary>
+        /// <param name="element">The element on which to set the attached property.</param>
+        /// <param name="value">The property value to set.</param>
         public static void SetCascadingDelay(DependencyObject element, TimeSpan value)
         {
             element.SetValue(CascadingDelayProperty, value);
