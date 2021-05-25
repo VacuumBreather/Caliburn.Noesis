@@ -54,7 +54,6 @@
         /// <summary>Initializes a new instance of the <see cref="BootstrapperBase{T}" /> class.</summary>
         protected BootstrapperBase()
         {
-            Execute.Dispatcher = Dispatcher.CurrentDispatcher;
             Application.Current.Startup += async (_, __) =>
                 {
                     await Execute.OnUIThreadAsync(OnEnable);
