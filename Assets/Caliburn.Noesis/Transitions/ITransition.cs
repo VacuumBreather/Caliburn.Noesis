@@ -1,8 +1,12 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
     using System.Windows.Media.Animation;
+#endif
 
     /// <summary>
     ///     Defines a transition effect for a <see cref="FrameworkElement" /> implementing
@@ -18,9 +22,15 @@ namespace Caliburn.Noesis.Transitions
         /// <value>The duration of the transition.</value>
         TimeSpan Duration { get; set; }
 
+#if UNITY_5_5_OR_NEWER
+        /// <summary>Gets or sets the easing function which is applied to the transition.</summary>
+        /// <value>The easing function which is applied to the transition.</value>
+        EasingFunctionBase EasingFunction { get; set; }
+#else
         /// <summary>Gets or sets the easing function which is applied to the transition.</summary>
         /// <value>The easing function which is applied to the transition.</value>
         IEasingFunction EasingFunction { get; set; }
+#endif
 
         /// <summary>>Gets or sets the origin point for the transition effect.</summary>
         /// <value>The origin point for the transition effect.</value>

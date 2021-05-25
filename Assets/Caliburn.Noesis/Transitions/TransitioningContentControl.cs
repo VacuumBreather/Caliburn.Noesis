@@ -1,6 +1,10 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
+#endif
 
     /// <summary>Enables transition effects for content.</summary>
     public class TransitioningContentControl : TransitionSubjectBase

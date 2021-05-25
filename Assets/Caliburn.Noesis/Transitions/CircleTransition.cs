@@ -1,10 +1,15 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
+    using Extensions;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
-    using Extensions;
+#endif
 
     /// <summary>A circular <see cref="ITransition" /> effect.</summary>
     /// <seealso cref="TransitionBase" />
@@ -31,7 +36,7 @@ namespace Caliburn.Noesis.Transitions
             // Calculate the radius of the clipping circle.
             var horizontalProportion = Math.Max(1.0 - Origin.X, Origin.X);
             var verticalProportion = Math.Max(1.0 - Origin.Y, Origin.Y);
-            var radius = Math.Sqrt(
+            var radius = (float)Math.Sqrt(
                 Math.Pow(effectSubject.ActualWidth * horizontalProportion, 2) + Math.Pow(
                     effectSubject.ActualHeight * verticalProportion,
                     2));

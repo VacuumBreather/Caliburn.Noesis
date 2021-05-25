@@ -1,14 +1,20 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
     using System.Windows.Markup;
     using System.Windows.Media.Animation;
+#endif
 
     /// <summary>A base class for a <see cref="ITransitionWipe" />. This is an abstract class.</summary>
     /// <seealso cref="MarkupExtension" />
     /// <seealso cref="ITransitionWipe" />
+#if !UNITY_5_5_OR_NEWER
     [MarkupExtensionReturnType(typeof(ITransitionWipe))]
+#endif
     public abstract class TransitionWipeBase : MarkupExtension, ITransitionWipe
     {
         #region ITransitionWipe Implementation
@@ -19,8 +25,13 @@ namespace Caliburn.Noesis.Transitions
         /// <inheritdoc />
         public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(500);
 
+#if UNITY_5_5_OR_NEWER
+        /// <inheritdoc />
+        public EasingFunctionBase EasingFunction { get; set; } = new SineEase();
+#else
         /// <inheritdoc />
         public IEasingFunction EasingFunction { get; set; } = new SineEase();
+#endif
 
         /// <inheritdoc />
         public void Wipe(TransitionerItem fromItem,

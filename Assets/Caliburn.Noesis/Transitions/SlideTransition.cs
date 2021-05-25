@@ -1,11 +1,16 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
     using System;
+    using Extensions;
+    using JetBrains.Annotations;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
-    using Extensions;
-    using JetBrains.Annotations;
+#endif
 
     /// <summary>
     ///     A <see cref="ITransition" /> effect which slides content from outside its containing area
@@ -18,10 +23,10 @@
     {
         #region Constants and Fields
 
-        private double endX;
-        private double endY;
-        private double startX;
-        private double startY;
+        private float endX;
+        private float endY;
+        private float startX;
+        private float startY;
         private TranslateTransform translateTransform;
 
         #endregion
@@ -80,7 +85,8 @@
             var container = string.IsNullOrEmpty(ContainerElementName)
                                 ? effectSubject
                                 : effectSubject.FindName(ContainerElementName) as
-                                      FrameworkElement ?? effectSubject;
+                                      FrameworkElement ??
+                                  effectSubject;
 
             // Set up coordinates
             this.endX = 0;
@@ -91,19 +97,23 @@
             switch (Direction)
             {
                 case SlideDirection.Left:
-                    this.startX = container.ActualWidth;
+                    // ReSharper disable once RedundantCast
+                    this.startX = (float)container.ActualWidth;
 
                     break;
                 case SlideDirection.Right:
-                    this.startX = -container.ActualWidth;
+                    // ReSharper disable once RedundantCast
+                    this.startX = (float)-container.ActualWidth;
 
                     break;
                 case SlideDirection.Up:
-                    this.startY = container.ActualHeight;
+                    // ReSharper disable once RedundantCast
+                    this.startY = (float)container.ActualHeight;
 
                     break;
                 case SlideDirection.Down:
-                    this.startY = -container.ActualHeight;
+                    // ReSharper disable once RedundantCast
+                    this.startY = (float)-container.ActualHeight;
 
                     break;
             }

@@ -1,16 +1,23 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
+#endif
 
     /// <summary>A base class for transition effects. This is an abstract class.</summary>
     /// <seealso cref="MarkupExtension" />
     /// <seealso cref="ITransition" />
+#if !UNITY_5_5_OR_NEWER
     [MarkupExtensionReturnType(typeof(ITransition))]
+#endif
     public abstract class TransitionBase : MarkupExtension, ITransition
     {
         #region ITransition Implementation
@@ -21,11 +28,19 @@ namespace Caliburn.Noesis.Transitions
         /// <inheritdoc />
         public TimeSpan Duration { get; set; } = TimeSpan.FromMilliseconds(500);
 
+#if UNITY_5_5_OR_NEWER
+        /// <inheritdoc />
+        public EasingFunctionBase EasingFunction { get; set; } = new SineEase();
+
+        /// <inheritdoc />
+        public Point Origin { get; set; } = new Point(0.5f, 0.5f);
+#else
         /// <inheritdoc />
         public IEasingFunction EasingFunction { get; set; } = new SineEase();
 
         /// <inheritdoc />
         public Point Origin { get; set; } = new Point(0.5, 0.5);
+#endif
 
         /// <inheritdoc />
         public abstract Timeline Build<TSubject>(TSubject effectSubject)

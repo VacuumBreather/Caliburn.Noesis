@@ -1,7 +1,12 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Media;
+#endif
 
     /// <summary>Provides extension methods for the <see cref="FrameworkElement" /> type.</summary>
     public static class FrameworkElementExtensions

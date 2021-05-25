@@ -1,11 +1,16 @@
 namespace Caliburn.Noesis.Transitions
 {
+    using Extensions;
     using System;
+    using JetBrains.Annotations;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
-    using Extensions;
-    using JetBrains.Annotations;
+#endif
 
     /// <summary>
     ///     A <see cref="ITransition" /> effect which shrinks the <see cref="ITransitionSubject" />
@@ -18,11 +23,11 @@ namespace Caliburn.Noesis.Transitions
     {
         #region Constants and Fields
 
-        private const double EndOpacity = 0.0;
-        private const double EndScale = 0.8;
+        private const float EndOpacity = 0.0f;
+        private const float EndScale = 0.8f;
 
-        private const double StartOpacity = 1.0;
-        private const double StartScale = 1.0;
+        private const float StartOpacity = 1.0f;
+        private const float StartScale = 1.0f;
 
         private ScaleTransform scaleTransform;
 
@@ -107,12 +112,12 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
-            effectSubject.Opacity = 1.0;
+            effectSubject.Opacity = 1.0f;
 
             if (this.scaleTransform is { })
             {
-                this.scaleTransform.ScaleX = 1.0;
-                this.scaleTransform.ScaleY = 1.0;
+                this.scaleTransform.ScaleX = 1.0f;
+                this.scaleTransform.ScaleY = 1.0f;
                 this.scaleTransform = null;
             }
         }
