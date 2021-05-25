@@ -3,6 +3,7 @@
     using System;
     using Cysharp.Threading.Tasks;
 #if !UNITY_5_5_OR_NEWER
+    using System.Windows;
     using System.Windows.Threading;
 
 #endif
@@ -13,12 +14,29 @@
         #region Public Properties
 
 #if !UNITY_5_5_OR_NEWER
-        /// <summary>Gets or sets the dispatcher.</summary>
-        /// <value>The dispatcher.</value>
-        public static Dispatcher Dispatcher { get; set; }
+        private static Dispatcher Dispatcher => Application.Current.Dispatcher;
 #endif
 
         #endregion
+
+        /// <summary>
+        /// Executes the action on the UI thread asynchronously.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        public static void BeginOnUIThread(this Action action)
+        {
+#if UNITY_5_5_OR_NEWER
+            OnUIThreadAsync(
+                () =>
+                    {
+                        action();
+
+                        return UniTask.CompletedTask;
+                    }).Forget();
+#else
+            Dispatcher.BeginInvoke(action);
+#endif
+        }
 
         #region Public Methods
 
@@ -43,7 +61,7 @@
             }
             else
             {
-                Dispatcher.CurrentDispatcher.Invoke(action);
+                Dispatcher.Invoke(action);
             }
 #endif
         }
@@ -57,7 +75,7 @@
             await UniTask.SwitchToMainThread();
             await action();
 #else
-            await Dispatcher.CurrentDispatcher.InvokeAsync(action);
+            await Dispatcher.InvokeAsync(action).Task.Unwrap();
 #endif
         }
 
