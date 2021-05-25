@@ -2,12 +2,16 @@ namespace Caliburn.Noesis.Transitions
 {
     using System;
     using System.Linq;
+    using Extensions;
+    using JetBrains.Annotations;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
     using System.Windows.Media.Animation;
-    using Extensions;
-    using JetBrains.Annotations;
+#endif
 
     /// <summary>
     ///     A base class for a <see cref="ContentControl" /> supporting <see cref="ITransition" />
@@ -16,11 +20,13 @@ namespace Caliburn.Noesis.Transitions
     /// <seealso cref="ContentControl" />
     /// <seealso cref="ITransitionSubject" />
     [PublicAPI]
+#if !UNITY_5_5_OR_NEWER
     [TemplatePart(Name = MatrixTransformPartName, Type = typeof(MatrixTransform))]
     [TemplatePart(Name = RotateTransformPartName, Type = typeof(RotateTransform))]
     [TemplatePart(Name = ScaleTransformPartName, Type = typeof(ScaleTransform))]
     [TemplatePart(Name = SkewTransformPartName, Type = typeof(SkewTransform))]
     [TemplatePart(Name = TranslateTransformPartName, Type = typeof(TranslateTransform))]
+#endif
     public abstract class TransitionSubjectBase : ContentControl, ITransitionSubject
     {
         #region Constants and Fields

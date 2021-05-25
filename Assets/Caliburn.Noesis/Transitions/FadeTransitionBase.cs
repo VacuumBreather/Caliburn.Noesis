@@ -1,8 +1,15 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+    using Single = System.Single;
+
+#else
+    using Single = System.Double;
     using System.Windows;
     using System.Windows.Media.Animation;
+#endif
 
     /// <summary>
     ///     A base class for fade-in and fade-out <see cref="ITransition" /> effects. This is an
@@ -54,8 +61,8 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
-            var startOpacity = FadeType == FadeTransitionType.FadeIn ? 0.0 : 1.0;
-            var endOpacity = FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0;
+            var startOpacity = (Single)(FadeType == FadeTransitionType.FadeIn ? 0.0 : 1.0);
+            var endOpacity = (Single)(FadeType == FadeTransitionType.FadeIn ? 1.0 : 0.0);
 
             var subjectDelay = GetTotalSubjectDelay(effectSubject);
 
@@ -91,7 +98,7 @@ namespace Caliburn.Noesis.Transitions
                 throw new ArgumentNullException(nameof(effectSubject));
             }
 
-            effectSubject.Opacity = 1.0;
+            effectSubject.Opacity = (Single)1.0;
         }
 
         #endregion

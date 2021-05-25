@@ -1,7 +1,12 @@
 namespace Caliburn.Noesis.Transitions
 {
     using System;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
+#endif
 
     /// <summary>
     ///     A <see cref="ITransitionWipe" /> which shrinks and fades out the old content while sliding
@@ -9,7 +14,7 @@ namespace Caliburn.Noesis.Transitions
     /// </summary>
     /// <seealso cref="TransitionWipeBase" />
     /// <seealso cref="ITransitionWipe" />
-    public class SlideOutWipe : TransitionWipeBase, ITransitionWipe
+    public class SlideOutWipe : TransitionWipeBase
     {
         #region Constants and Fields
 

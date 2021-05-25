@@ -2,10 +2,15 @@ namespace Caliburn.Noesis.Transitions
 {
     using System;
     using System.Linq;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
+#endif
 
     /// <summary>
     ///     Provides an easy way to transition from one content to another using

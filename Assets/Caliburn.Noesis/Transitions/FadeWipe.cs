@@ -1,8 +1,12 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
     using System;
-    using System.Windows;
     using JetBrains.Annotations;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+#else
+    using System.Windows;
+#endif
 
     /// <seealso cref="TransitionWipeBase" />
     /// <seealso cref="ITransitionWipe" />

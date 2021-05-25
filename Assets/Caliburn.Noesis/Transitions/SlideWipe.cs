@@ -1,8 +1,13 @@
 ﻿namespace Caliburn.Noesis.Transitions
 {
     using System;
-    using System.Windows;
     using JetBrains.Annotations;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
+    using System.Windows;
+#endif
 
     /// <summary>A directional slide <see cref="ITransitionWipe" />.</summary>
     /// <seealso cref="TransitionWipeBase" />
