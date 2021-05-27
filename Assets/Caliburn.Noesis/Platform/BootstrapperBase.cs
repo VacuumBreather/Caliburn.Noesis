@@ -144,7 +144,9 @@
 #endif
 
 #if UNITY_5_5_OR_NEWER
-        private async void Start()
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        [UsedImplicitly]
+        private async UniTaskVoid Start()
 #else
         private async UniTask Start()
 #endif
@@ -199,7 +201,9 @@
 #endif
 
 #if UNITY_5_5_OR_NEWER
-        private async void OnEnable()
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        [UsedImplicitly]
+        private async UniTaskVoid OnEnable()
 #else
         private async UniTask OnEnable()
 #endif
@@ -213,7 +217,9 @@
         }
 
 #if UNITY_5_5_OR_NEWER
-        private async void OnDisable()
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        [UsedImplicitly]
+        private async UniTaskVoid OnDisable()
 #else
         private async UniTask OnDisable()
 #endif
@@ -225,7 +231,9 @@
         }
 
 #if UNITY_5_5_OR_NEWER
-        private async void OnDestroy()
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        [UsedImplicitly]
+        private async UniTaskVoid OnDestroy()
 #else
         private async UniTask OnDestroy()
 #endif
