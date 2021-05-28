@@ -13,6 +13,9 @@
     {
         #region Constructors and Destructors
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SampleWindowView"/> class.
+        /// </summary>
         public SampleWindowView()
         {
             this.InitializeComponent();
