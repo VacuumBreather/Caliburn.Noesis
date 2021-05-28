@@ -4,11 +4,13 @@
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
+    using JetBrains.Annotations;
 
     /// <summary>
     ///     An implementation of <see cref="IConductor" /> that holds on to and activates only one
     ///     item at a time.
     /// </summary>
+    [PublicAPI]
     public partial class Conductor<T> : ConductorBaseWithActiveItem<T>
         where T : class
     {

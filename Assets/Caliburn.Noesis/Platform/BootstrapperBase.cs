@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
+    using System.Threading;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
@@ -17,39 +18,39 @@
     [PublicAPI]
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-#endif
+    public abstract class BootstrapperBase<T> : MonoBehaviour
+#else
     public abstract class BootstrapperBase<T>
-#if UNITY_5_5_OR_NEWER
-        : MonoBehaviour
 #endif
         where T : Screen
     {
         #region Constants and Fields
 
+        private CaliburnConfiguration configuration;
+
         private bool isInitialized;
         private ILogger logger;
+
 #if UNITY_5_5_OR_NEWER
         private NoesisView noesisView;
 #endif
+
+        private UniTaskCompletionSource onStartCompletion;
+        private UniTaskCompletionSource onEnableCompletion;
+        private UniTaskCompletionSource onDisableCompletion;
+
+        private CancellationTokenSource onEnableCancellation;
+        private CancellationTokenSource onDisableCancellation;
+
         private IWindowManager windowManager;
-        private CaliburnConfiguration configuration;
-
-        private UniTaskCompletionSource onEnableSource;
-        private UniTaskCompletionSource onDisableSource;
-
-        #endregion
 
 #if UNITY_5_5_OR_NEWER
-
-        #region Serialized Fields
-
         [SerializeField]
         [UsedImplicitly]
         private List<NoesisXaml> xamls;
+#endif
 
         #endregion
-
-#endif
 
 #if !UNITY_5_5_OR_NEWER
         #region Constructors and Destructors
@@ -59,13 +60,22 @@
         {
             Application.Current.Startup += async (_, __) =>
                 {
-                    await Execute.OnUIThreadAsync(OnEnable);
-                    await Execute.OnUIThreadAsync(Start);
+                    this.onEnableCancellation = new CancellationTokenSource();
+                    await OnEnableAsync(this.onEnableCancellation.Token);
+                    await StartAsync();
                 };
             Application.Current.Activated +=
-                async (_, __) => await Execute.OnUIThreadAsync(OnEnable);
+                async (_, __) =>
+                    {
+                        this.onEnableCancellation = new CancellationTokenSource();
+                        await OnEnableAsync(this.onEnableCancellation.Token);
+                    };
             Application.Current.Deactivated +=
-                async (_, __) => await Execute.OnUIThreadAsync(OnDisable);
+                async (_, __) =>
+                    {
+                        this.onDisableCancellation = new CancellationTokenSource();
+                        await OnDisableAsync(this.onDisableCancellation.Token);
+                    };
         }
 
         #endregion
@@ -84,6 +94,51 @@
             get => this.logger ??= LogManager.CreateLogger(GetType());
 #endif
             set => this.logger = value;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return GetType().Name;
+        }
+
+        /// <summary>Shuts the UI handled by this <see cref="BootstrapperBase{T}" /> down.</summary>
+        /// <remarks>
+        ///     This is also called when the bootstrapper is destroyed but then it is not guaranteed to
+        ///     finish if the shutdown process is a long running task.
+        /// </remarks>
+        public async UniTask ShutdownAsync()
+        {
+            if (!this.isInitialized)
+            {
+                return;
+            }
+
+            try
+            {
+                await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
+                await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
+
+                this.onEnableCancellation?.Cancel();
+
+                await OnShutdown();
+
+                if (this.windowManager is IDeactivate deactivate)
+                {
+                    await deactivate.DeactivateAsync(true);
+                }
+            }
+            finally
+            {
+                this.isInitialized = false;
+#if !UNITY_5_5_OR_NEWER
+                Application.Current.Shutdown();
+#endif
+            }
         }
 
         #endregion
@@ -131,63 +186,9 @@
 
         #endregion
 
-        #region Unity Methods
-
-#if UNITY_5_5_OR_NEWER
-        private void Awake()
-        {
-            this.noesisView = GetComponent<NoesisView>();
-
-            if (!this.noesisView)
-            {
-                Logger.Error(
-                    $"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
-            }
-        }
-#endif
-
-#if UNITY_5_5_OR_NEWER
-
-        // ReSharper disable once Unity.IncorrectMethodSignature
-        [UsedImplicitly]
-        private async UniTaskVoid Start()
-#else
-        private async UniTask Start()
-#endif
-        {
-            await StartAsync();
-        }
-
-        private async UniTask StartAsync()
-        {
-            await (this.onEnableSource?.Task ?? UniTask.CompletedTask);
-
 #if !UNITY_5_5_OR_NEWER
-            var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
-            window.Show();
-            window.Closing += OnWindowClosing;
-#endif
+        #region Event Handlers
 
-            await OnStartup();
-
-            if (!this.isInitialized)
-            {
-                Logger.Error($"{GetType()} has not been initialized.");
-
-                return;
-            }
-
-#if UNITY_5_5_OR_NEWER
-            this.noesisView.Content.DataContext = this.windowManager;
-#else
-            window.DataContext = this.windowManager;
-#endif
-
-            var mainContent = GetMainContentViewModel();
-            await this.windowManager.ShowMainContentAsync(mainContent);
-        }
-
-#if !UNITY_5_5_OR_NEWER
         private async void OnWindowClosing(object _, CancelEventArgs args)
         {
             if (args.Cancel)
@@ -206,112 +207,71 @@
 
             if (canClose)
             {
-                await Execute.OnUIThreadAsync(OnDestroy);
+                await ShutdownAsync();
             }
         }
+
+        #endregion
+
 #endif
 
 #if UNITY_5_5_OR_NEWER
+
+        #region Unity Methods
+
+        private void Awake()
+        {
+            this.noesisView = GetComponent<NoesisView>();
+
+            if (!this.noesisView)
+            {
+                Logger.Error(
+                    $"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
+            }
+        }
+
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        [UsedImplicitly]
+        private async UniTaskVoid OnDestroy()
+        {
+            if (this.isInitialized)
+            {
+                Logger.Warn(
+                    $"{this} was not shut down correctly. " +
+                    $"{nameof(ShutdownAsync)}() will now be called by {nameof(OnDestroy)}().\n" +
+                    "Any long running async shutdown logic is not guaranteed to be completed. " +
+                    $"{nameof(ShutdownAsync)}() should be called and awaited before {this} is destroyed.");
+
+                await ShutdownAsync();
+            }
+        }
+
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        [UsedImplicitly]
+        private async UniTaskVoid OnDisable()
+        {
+            this.onDisableCancellation = new CancellationTokenSource();
+            await OnDisableAsync(this.onDisableCancellation.Token);
+        }
 
         // ReSharper disable once Unity.IncorrectMethodSignature
         [UsedImplicitly]
         private async UniTaskVoid OnEnable()
-#else
-        private async UniTask OnEnable()
-#endif
         {
-            await OnEnableAsync();
+            this.onEnableCancellation = new CancellationTokenSource();
+            await OnEnableAsync(this.onEnableCancellation.Token);
         }
-
-        private async UniTask OnEnableAsync()
-        {
-            this.onEnableSource = new UniTaskCompletionSource();
-
-            try
-            {
-                Initialize();
-
-                if (this.windowManager is IActivate activate)
-                {
-                    await activate.ActivateAsync();
-                }
-            }
-            finally
-            {
-                this.onEnableSource?.TrySetResult();
-            }
-        }
-
-#if UNITY_5_5_OR_NEWER
 
         // ReSharper disable once Unity.IncorrectMethodSignature
         [UsedImplicitly]
-        private async void OnDisable()
-#else
-        private async UniTask OnDisable()
-#endif
+        private async UniTaskVoid Start()
         {
-            await OnDisableAsync();
-        }
-
-        private async UniTask OnDisableAsync()
-        {
-            this.onDisableSource = new UniTaskCompletionSource();
-
-            try
-            {
-                if (this.windowManager is IDeactivate deactivate)
-                {
-                    await deactivate.DeactivateAsync(false);
-                }
-            }
-            finally
-            {
-                this.onDisableSource?.TrySetResult();
-            }
-        }
-
-#if UNITY_5_5_OR_NEWER
-
-        // ReSharper disable once Unity.IncorrectMethodSignature
-        [UsedImplicitly]
-        private async void OnDestroy()
-#else
-        private async UniTask OnDestroy()
-#endif
-        {
-            await Shutdown();
-
-#if !UNITY_5_5_OR_NEWER
-            Application.Current.Shutdown();
-#endif
-        }
-
-        /// <summary>Shuts the UI handled by this <see cref="BootstrapperBase{T}" /> down.</summary>
-        /// <remarks>
-        ///     This is also called by <see cref="OnDestroy" /> but then not guaranteed to finish if it is
-        ///     a long running task.
-        /// </remarks>
-        public async UniTask Shutdown()
-        {
-            if (!this.isInitialized)
-            {
-                return;
-            }
-
-            await (this.onDisableSource?.Task ?? UniTask.CompletedTask);
-
-            await OnShutdown();
-
-            if (this.windowManager is IDeactivate deactivate)
-            {
-                await deactivate.DeactivateAsync(true);
-            }
-
-            this.isInitialized = false;
+            await StartAsync();
         }
 
         #endregion
+
+#endif
 
         #region Private Methods
 
@@ -334,6 +294,65 @@
             DataTemplateManager.RegisterDataTemplates(this.configuration, dictionary);
 
             this.isInitialized = true;
+        }
+
+        private async UniTask OnDisableAsync(CancellationToken cancellationToken)
+        {
+            using var guard = new CompletionSourceGuard(out this.onDisableCompletion);
+            this.onEnableCancellation?.Cancel();
+            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
+            await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
+
+            if (this.windowManager is IDeactivate deactivate)
+            {
+                await deactivate.DeactivateAsync(false, cancellationToken);
+            }
+        }
+
+        private async UniTask OnEnableAsync(CancellationToken cancellationToken)
+        {
+            using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
+
+            this.onDisableCancellation?.Cancel();
+            await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
+
+            Initialize();
+
+            if (this.windowManager is IActivate activate)
+            {
+                await activate.ActivateAsync(cancellationToken);
+            }
+        }
+
+        private async UniTask StartAsync()
+        {
+            using var guard = new CompletionSourceGuard(out this.onStartCompletion);
+
+            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
+
+#if !UNITY_5_5_OR_NEWER
+            var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
+            window.Show();
+            window.Closing += OnWindowClosing;
+#endif
+
+            await OnStartup();
+
+            if (!this.isInitialized)
+            {
+                Logger.Error($"{this} has not been initialized.");
+
+                return;
+            }
+
+#if UNITY_5_5_OR_NEWER
+            this.noesisView.Content.DataContext = this.windowManager;
+#else
+            window.DataContext = this.windowManager;
+#endif
+
+            var mainContent = GetMainContentViewModel();
+            await this.windowManager.ShowMainContentAsync(mainContent);
         }
 
         #endregion

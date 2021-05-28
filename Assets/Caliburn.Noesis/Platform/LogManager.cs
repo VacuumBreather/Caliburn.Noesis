@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
-
 #if UNITY_5_5_OR_NEWER
     using UnityEngine;
     using Object = UnityEngine.Object;

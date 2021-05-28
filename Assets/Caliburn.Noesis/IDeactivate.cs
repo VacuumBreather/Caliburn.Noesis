@@ -1,17 +1,18 @@
 ﻿namespace Caliburn.Noesis
 {
-    using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using JetBrains.Annotations;
 
     /// <summary>Denotes an instance which requires deactivation.</summary>
+    [PublicAPI]
     public interface IDeactivate
     {
         /// <summary>Raised after deactivation.</summary>
         event AsyncEventHandler<DeactivationEventArgs> Deactivated;
 
         /// <summary>Raised before deactivation.</summary>
-        event EventHandler<DeactivationEventArgs> Deactivating;
+        event AsyncEventHandler<DeactivationEventArgs> Deactivating;
 
         /// <summary>Deactivates this instance.</summary>
         /// <param name="close">Indicates whether or not this instance is being closed.</param>
