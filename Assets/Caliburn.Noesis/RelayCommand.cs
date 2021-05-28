@@ -2,8 +2,10 @@
 {
     using System;
     using System.Windows.Input;
+    using JetBrains.Annotations;
 
     /// <summary>A command which relays its execution to a delegate.</summary>
+    [PublicAPI]
     public class RelayCommand : IRaisingCommand
     {
         #region Constants and Fields
@@ -56,7 +58,7 @@
         /// <summary>Raises the <see cref="CanExecuteChanged" /> event.</summary>
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            Noesis.Execute.OnUIThread(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
         }
 
         #endregion
@@ -64,6 +66,7 @@
 
     /// <summary>A command which relays its execution to a delegate.</summary>
     /// <typeparam name="T">The type of the command parameter.</typeparam>
+    [PublicAPI]
     public class RelayCommand<T> : ICommand<T>
     {
         #region Constants and Fields
@@ -132,7 +135,7 @@
         /// <summary>Raises the <see cref="CanExecuteChanged" /> event.</summary>
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            Noesis.Execute.OnUIThread(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
         }
 
         #endregion
