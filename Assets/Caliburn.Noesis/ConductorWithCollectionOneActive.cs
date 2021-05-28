@@ -6,6 +6,7 @@
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
+    using JetBrains.Annotations;
 
     public partial class Conductor<T>
     {
@@ -20,6 +21,7 @@
             ///     An implementation of <see cref="IConductor" /> that holds on many items but only activates
             ///     one at a time.
             /// </summary>
+            [PublicAPI]
             public class OneActive : ConductorBaseWithActiveItem<T>
             {
                 #region Constants and Fields
