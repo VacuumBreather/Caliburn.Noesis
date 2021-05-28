@@ -2,19 +2,19 @@
 {
     using System;
     using Cysharp.Threading.Tasks;
+    using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
     using GUI = global::Noesis.GUI;
     using System.Collections.Generic;
-    using JetBrains.Annotations;
     using UnityEngine;
 
 #else
     using System.ComponentModel;
     using System.Windows;
-    using System.Windows.Threading;
 #endif
 
     /// <summary>Inherit from this class to configure and run the framework.</summary>
+    [PublicAPI]
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
 #endif
@@ -33,6 +33,9 @@
 #endif
         private IWindowManager windowManager;
         private CaliburnConfiguration configuration;
+
+        private UniTaskCompletionSource onEnableSource;
+        private UniTaskCompletionSource onDisableSource;
 
         #endregion
 
@@ -114,8 +117,8 @@
             return this.windowManager ??= new ShellViewModel();
         }
 
-        /// <summary>Override this to add custom behavior on exit.</summary>
-        protected virtual UniTask OnExit()
+        /// <summary>Override this to add custom behavior on shutdown.</summary>
+        protected virtual UniTask OnShutdown()
         {
             return UniTask.CompletedTask;
         }
@@ -144,6 +147,7 @@
 #endif
 
 #if UNITY_5_5_OR_NEWER
+
         // ReSharper disable once Unity.IncorrectMethodSignature
         [UsedImplicitly]
         private async UniTaskVoid Start()
@@ -151,6 +155,13 @@
         private async UniTask Start()
 #endif
         {
+            await StartAsync();
+        }
+
+        private async UniTask StartAsync()
+        {
+            await (this.onEnableSource?.Task ?? UniTask.CompletedTask);
+
 #if !UNITY_5_5_OR_NEWER
             var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
             window.Show();
@@ -191,7 +202,7 @@
                 canClose = await guardClose.CanCloseAsync();
             }
 
-            args.Cancel = !canClose;
+            args.Cancel = true;
 
             if (canClose)
             {
@@ -201,6 +212,7 @@
 #endif
 
 #if UNITY_5_5_OR_NEWER
+
         // ReSharper disable once Unity.IncorrectMethodSignature
         [UsedImplicitly]
         private async UniTaskVoid OnEnable()
@@ -208,42 +220,95 @@
         private async UniTask OnEnable()
 #endif
         {
-            Initialize();
+            await OnEnableAsync();
+        }
 
-            if (this.windowManager is IActivate activate)
+        private async UniTask OnEnableAsync()
+        {
+            this.onEnableSource = new UniTaskCompletionSource();
+
+            try
             {
-                await activate.ActivateAsync();
+                Initialize();
+
+                if (this.windowManager is IActivate activate)
+                {
+                    await activate.ActivateAsync();
+                }
+            }
+            finally
+            {
+                this.onEnableSource?.TrySetResult();
             }
         }
 
 #if UNITY_5_5_OR_NEWER
+
         // ReSharper disable once Unity.IncorrectMethodSignature
         [UsedImplicitly]
-        private async UniTaskVoid OnDisable()
+        private async void OnDisable()
 #else
         private async UniTask OnDisable()
 #endif
         {
-            if (this.windowManager is IDeactivate deactivate)
+            await OnDisableAsync();
+        }
+
+        private async UniTask OnDisableAsync()
+        {
+            this.onDisableSource = new UniTaskCompletionSource();
+
+            try
             {
-                await deactivate.DeactivateAsync(false);
+                if (this.windowManager is IDeactivate deactivate)
+                {
+                    await deactivate.DeactivateAsync(false);
+                }
+            }
+            finally
+            {
+                this.onDisableSource?.TrySetResult();
             }
         }
 
 #if UNITY_5_5_OR_NEWER
+
         // ReSharper disable once Unity.IncorrectMethodSignature
         [UsedImplicitly]
-        private async UniTaskVoid OnDestroy()
+        private async void OnDestroy()
 #else
         private async UniTask OnDestroy()
 #endif
         {
-            await OnExit();
+            await Shutdown();
+
+#if !UNITY_5_5_OR_NEWER
+            Application.Current.Shutdown();
+#endif
+        }
+
+        /// <summary>Shuts the UI handled by this <see cref="BootstrapperBase{T}" /> down.</summary>
+        /// <remarks>
+        ///     This is also called by <see cref="OnDestroy" /> but then not guaranteed to finish if it is
+        ///     a long running task.
+        /// </remarks>
+        public async UniTask Shutdown()
+        {
+            if (!this.isInitialized)
+            {
+                return;
+            }
+
+            await (this.onDisableSource?.Task ?? UniTask.CompletedTask);
+
+            await OnShutdown();
 
             if (this.windowManager is IDeactivate deactivate)
             {
                 await deactivate.DeactivateAsync(true);
             }
+
+            this.isInitialized = false;
         }
 
         #endregion
