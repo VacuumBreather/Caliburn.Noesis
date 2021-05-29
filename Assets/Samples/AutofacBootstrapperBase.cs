@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis.Samples
 {
     using System;
     using System.Collections.Generic;
