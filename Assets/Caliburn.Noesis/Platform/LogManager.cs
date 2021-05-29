@@ -3,113 +3,69 @@
     using System;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
-    using ILogger = Microsoft.Extensions.Logging.ILogger;
+    using Microsoft.Extensions.Logging.Abstractions;
+
 #if UNITY_5_5_OR_NEWER
-    using UnityEngine;
-    using Object = UnityEngine.Object;
 
 #endif
 
-    /// <summary>
-    ///     Responsible for creating various <see cref="Microsoft.Extensions.Logging.ILogger" />
-    ///     types.
-    /// </summary>
+    /// <summary>Responsible for creating <see cref="Microsoft.Extensions.Logging.ILogger" /> instances.</summary>
     [PublicAPI]
     public static class LogManager
     {
+        #region Constants and Fields
+
+        private const string FrameworkCategoryName = nameof(Caliburn);
+        private static ILoggerFactory loggerFactory = NullLoggerFactory.Instance;
+
+        #endregion
+
         #region Public Properties
 
-        /// <summary>Gets the minimum <see cref="LogLevel" /> handled by generated loggers.</summary>
-        public static LogLevel MinimumLogLevel { get; set; } = LogLevel.Debug;
+        /// <summary>
+        ///     Gets the global logger for the <see cref="Caliburn" />.<see cref="Caliburn.Noesis" />
+        ///     framework.
+        /// </summary>
+        public static ILogger FrameworkLogger { get; private set; } = NullLogger.Instance;
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>Creates a named <see cref="ILogger" /> for the specified context.</summary>
-        /// <param name="name">The category name of the logger.</param>
-        /// <param name="context">
-        ///     (Optional) The context of the logger. This should be a game object or a type
-        ///     for non unity classes.
-        /// </param>
-        /// <returns>The logger for the specified context.</returns>
-        public static ILogger CreateLogger(string name, object context = default)
+        /// <summary>
+        ///     Creates a new <see cref="ILogger" /> instance using the full name of the given
+        ///     <paramref name="type" />.
+        /// </summary>
+        /// <param name="type">The type defining the category.</param>
+        /// <returns>A new <see cref="ILogger" /> instance.</returns>
+        public static ILogger GetLogger(Type type)
         {
-            if (UnitTestDetector.IsInUnitTest)
-            {
-                return CreateForTesting(name, context);
-            }
-
-#if UNITY_5_5_OR_NEWER
-            return Application.isEditor
-                       ? CreateForEditor(name, context)
-                       : CreateForRuntime(name, context);
-#else
-            return CreateForEditor(name, context);
-#endif
+            return loggerFactory.CreateLogger(type);
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static ILogger CreateForEditor(string name, object context)
+        /// <summary>Creates a new <see cref="ILogger" /> instance using the full name of the given type.</summary>
+        /// <typeparam name="T">The type defining the category.</typeparam>
+        /// <returns>A new <see cref="ILogger" /> instance.</returns>
+        public static ILogger<T> GetLogger<T>()
+            where T : class
         {
-#if UNITY_5_5_OR_NEWER
-            return new DebugLogger(name, context as Object, (_, level) => level >= MinimumLogLevel);
-#else
-            return new DebugLogger(name, (_, level) => level >= MinimumLogLevel);
-#endif
+            return loggerFactory.CreateLogger<T>();
         }
 
-        private static ILogger CreateForRuntime(string name, object context)
+        /// <summary>Creates a new <see cref="ILogger" /> instance.</summary>
+        /// <param name="categoryName">The category name for messages produced by the logger.</param>
+        /// <returns>A new <see cref="ILogger" /> instance.</returns>
+        public static ILogger GetLogger(string categoryName)
         {
-#if UNITY_5_5_OR_NEWER
-            return new DebugLogger(
-                name,
-                context as Object,
-                (_, level) => (level >= MinimumLogLevel) && (level >= LogLevel.Information));
-#else
-            return new DebugLogger(
-                name,
-                (_, level) => (level >= MinimumLogLevel) && (level >= LogLevel.Information));
-#endif
+            return loggerFactory.CreateLogger(categoryName);
         }
 
-        private static ILogger CreateForTesting(string name, object context)
+        /// <summary>Sets the <see cref="ILoggerFactory" /> used by this manager to create loggers.</summary>
+        /// <param name="factory">The <see cref="ILoggerFactory" /> this manager should use.</param>
+        public static void SetLoggerFactory(ILoggerFactory factory)
         {
-            return NullLogger.Instance;
-        }
-
-        #endregion
-
-        #region Nested Types
-
-        private class NullLogger : ILogger
-        {
-            private NullLogger()
-            {
-            }
-
-            public static NullLogger Instance { get; } = new NullLogger();
-
-            public IDisposable BeginScope<TState>(TState state)
-            {
-                return Disposable.Empty;
-            }
-
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return false;
-            }
-
-            public void Log<TState>(LogLevel logLevel,
-                                    EventId eventId,
-                                    TState state,
-                                    Exception exception,
-                                    Func<TState, Exception, string> formatter)
-            {
-            }
+            loggerFactory = factory;
+            FrameworkLogger = loggerFactory.CreateLogger(FrameworkCategoryName);
         }
 
         #endregion

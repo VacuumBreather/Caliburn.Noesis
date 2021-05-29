@@ -8,7 +8,6 @@
     using System.Reflection;
     using Extensions;
     using JetBrains.Annotations;
-    using Microsoft.Extensions.Logging;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
@@ -18,11 +17,9 @@
 
     /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
     [PublicAPI]
-    public class AssemblySource : IHaveLogger
+    public class AssemblySource
     {
         #region Constants and Fields
-
-        private static ILogger logger;
 
         private readonly IBindableCollection<Assembly> typeAssemblies =
             new BindableCollection<Assembly>();
@@ -50,35 +47,12 @@
 
         #endregion
 
-        #region Private Properties
-
-        private ILogger Logger
-        {
-            get => logger ??= LogManager.CreateLogger(GetType().Name);
-            set => logger = value;
-        }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>Adds an assembly to the <see cref="AssemblySource" />.</summary>
         /// <param name="assembly">The assembly to add.</param>
         public void Add(Assembly assembly)
         {
-            using var _ = Logger.GetMethodTracer(assembly);
-
             if (!this.typeAssemblies.Contains(assembly))
             {
                 this.typeAssemblies.Add(assembly);
@@ -89,10 +63,6 @@
         /// <param name="assemblies">The range of assemblies to add.</param>
         public void AddRange(IEnumerable<Assembly> assemblies)
         {
-            // ReSharper disable once PossibleMultipleEnumeration
-            using var _ = Logger.GetMethodTracer(assemblies);
-
-            // ReSharper disable once PossibleMultipleEnumeration
             this.typeAssemblies.AddRange(
                 assemblies.Where(assembly => !this.typeAssemblies.Contains(assembly)));
         }
@@ -100,8 +70,6 @@
         /// <summary>Removes all assemblies from the <see cref="AssemblySource" />.</summary>
         public void Clear()
         {
-            using var _ = Logger.GetMethodTracer();
-
             this.typeAssemblies.Clear();
         }
 
@@ -109,8 +77,6 @@
         /// <param name="name">The name to search for.</param>
         public Type FindTypeByName(string name)
         {
-            using var _ = Logger.GetMethodTracer(name);
-
             return FindTypeByNames(
                 new[]
                     {
@@ -122,10 +88,6 @@
         /// <param name="names">A sequence of names to search for.</param>
         public Type FindTypeByNames(IEnumerable<string> names)
         {
-            // ReSharper disable once PossibleMultipleEnumeration
-            using var _ = Logger.GetMethodTracer(names);
-
-            // ReSharper disable once PossibleMultipleEnumeration
             return names?.Select(n => this.typeNameCache.GetValueOrDefault(n))
                         .NotNull()
                         .FirstOrDefault();

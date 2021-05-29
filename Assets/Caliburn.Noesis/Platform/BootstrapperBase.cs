@@ -87,8 +87,8 @@
         /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
         protected ILogger Logger
         {
-            get => this.logger ??= LogManager.CreateLogger(GetType().Name);
-            private set => this.logger = value;
+            get => this.logger ??= LogManager.FrameworkLogger;
+            set => this.logger = value;
         }
 
         #endregion
@@ -98,8 +98,13 @@
         /// <inheritdoc />
         public virtual object GetService(Type serviceType)
         {
-            return serviceType == typeof(IWindowManager)
-                       ? new ShellViewModel()
+            if (serviceType == typeof(IWindowManager))
+            {
+                return new ShellViewModel();
+            }
+
+            return serviceType == typeof(ViewLocator)
+                       ? new ViewLocator(new NameTransformer())
                        : Activator.CreateInstance(serviceType);
         }
 
@@ -140,6 +145,8 @@
 
             try
             {
+                Logger.LogInformation("{Bootstrapper} shutting down", this);
+
                 await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
                 await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
 
@@ -178,9 +185,13 @@
         }
 
         /// <summary>Override this to add custom behavior on initialization.</summary>
-        protected virtual UniTask OnInitialize()
+        protected virtual void OnInitialize()
         {
-            return UniTask.CompletedTask;
+#if UNITY_5_5_OR_NEWER
+            LogManager.SetLoggerFactory(new DebugLoggerFactory(this, LogLevel.Information));
+#else
+            LogManager.SetLoggerFactory(new DebugLoggerFactory(LogLevel.Information));
+#endif
         }
 
         /// <summary>Override this to add custom behavior on shutdown.</summary>
@@ -304,16 +315,13 @@
                 return;
             }
 
-            OnInitialize();
-
-            using var _ = Logger.GetMethodTracer();
-
             var assemblySource = new AssemblySource();
             assemblySource.AddRange(SelectAssemblies());
 
             ConfigureIoCContainer(assemblySource.ViewModelTypes);
 
-            var viewLocator = new ViewLocator();
+            var viewLocator = GetService<ViewLocator>();
+            viewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
             ConfigureViewLocator(viewLocator);
 
             this.windowManager = GetService<IWindowManager>();
@@ -326,7 +334,11 @@
 
             DataTemplateManager.RegisterDataTemplates(viewLocator, assemblySource, dictionary);
 
+            OnInitialize();
+
             this.isInitialized = true;
+            
+            Logger.LogInformation("{Bootstrapper} initialized", this);
         }
 
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
@@ -346,14 +358,14 @@
 
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
-            using var _ = Logger.GetMethodTracer(cancellationToken);
-
             using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
             await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
 
             Initialize();
+
+            using var _ = Logger.GetMethodTracer(cancellationToken);
 
             if (this.windowManager is IActivate activate)
             {

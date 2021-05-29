@@ -55,7 +55,7 @@
         /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
         protected ILogger Logger
         {
-            get => logger ??= LogManager.CreateLogger(GetType().Name);
+            get => logger ??= LogManager.FrameworkLogger;
             private set => logger = value;
         }
 

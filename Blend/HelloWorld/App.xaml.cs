@@ -8,11 +8,5 @@
     /// </summary>
     public partial class App : Application
     {
-        /// <inheritdoc />
-        protected override void OnStartup(StartupEventArgs e)
-        {
-            LogConfigurator.SetMinimumLogLevel();
-            base.OnStartup(e);
-        }
     }
 }

@@ -37,9 +37,9 @@
 
         #region Private Properties
 
-        private ILogger Logger
+        private static ILogger Logger
         {
-            get => logger ??= LogManager.CreateLogger(GetType().Name);
+            get => logger ??= LogManager.FrameworkLogger;
             set => logger = value;
         }
 

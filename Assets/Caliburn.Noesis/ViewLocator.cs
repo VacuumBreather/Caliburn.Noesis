@@ -14,9 +14,9 @@
         #region Constants and Fields
 
         private const string DefaultViewSuffix = "View";
-        private static ILogger logger;
 
         private readonly List<string> viewSuffixList = new List<string>();
+        private ILogger logger;
 
         private string defaultSubNsViewModels;
         private string defaultSubNsViews;
@@ -31,9 +31,10 @@
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="ViewLocator" /> class.</summary>
-        public ViewLocator()
+        /// <param name="nameTransformer">The <see cref="NameTransformer" /> used for type name resolution.</param>
+        public ViewLocator(NameTransformer nameTransformer)
         {
-            ConfigureTypeMappings(new TypeMappingConfiguration());
+            NameTransformer = nameTransformer;
         }
 
         #endregion
@@ -42,11 +43,11 @@
 
         private ILogger Logger
         {
-            get => logger ??= LogManager.CreateLogger(GetType().Name);
-            set => logger = value;
+            get => this.logger ??= LogManager.FrameworkLogger;
+            set => this.logger = value;
         }
 
-        private NameTransformer NameTransformer { get; } = new NameTransformer();
+        private NameTransformer NameTransformer { get; }
 
         #endregion
 
