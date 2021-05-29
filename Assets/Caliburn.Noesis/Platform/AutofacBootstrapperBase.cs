@@ -1,10 +1,10 @@
-﻿namespace Caliburn.Noesis.Autofac
+﻿namespace Caliburn.Noesis
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Autofac;
     using Cysharp.Threading.Tasks;
-    using global::Autofac;
     using JetBrains.Annotations;
 
     /// <summary>
