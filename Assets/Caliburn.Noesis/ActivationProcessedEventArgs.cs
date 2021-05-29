@@ -1,12 +1,14 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
+    using JetBrains.Annotations;
 
     /// <summary>
     ///     Event arguments for the <see cref="IConductor.ActivationProcessed" /> event. Contains
     ///     details about the success or failure of an item's activation through an
     ///     <see cref="IConductor" />.
     /// </summary>
+    [PublicAPI]
     public class ActivationProcessedEventArgs : EventArgs
     {
         #region Public Properties

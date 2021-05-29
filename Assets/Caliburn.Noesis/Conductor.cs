@@ -21,6 +21,8 @@
                                                         CancellationToken cancellationToken =
                                                             default)
         {
+            using var _ = Logger.GetMethodTracer(item, cancellationToken);
+
             if ((item != null) && item.Equals(ActiveItem))
             {
                 if (IsActive)
@@ -55,6 +57,8 @@
         public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken =
                                                               default)
         {
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+
             var closeResult = await CloseStrategy.ExecuteAsync(
                                   new[]
                                       {
@@ -75,6 +79,8 @@
                                                           CancellationToken cancellationToken =
                                                               default)
         {
+            using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
+
             if ((item == null) || !item.Equals(ActiveItem))
             {
                 return;
@@ -111,6 +117,8 @@
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected override UniTask OnActivateAsync(CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+
             return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
         }
 
@@ -121,6 +129,8 @@
         protected override UniTask OnDeactivateAsync(bool close,
                                                      CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+
             return ScreenExtensions.TryDeactivateAsync(ActiveItem, close, cancellationToken);
         }
 

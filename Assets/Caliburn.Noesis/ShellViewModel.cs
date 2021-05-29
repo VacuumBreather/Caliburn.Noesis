@@ -2,6 +2,7 @@
 {
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using Extensions;
     using JetBrains.Annotations;
 
     /// <summary>The root view model of the UI.</summary>
@@ -41,6 +42,8 @@
         public async UniTask<bool?> ShowDialogAsync(DialogScreen rootModel,
                                                     CancellationToken cancellationToken = default)
         {
+            using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
+
             return await DialogConductor.ShowDialogAsync(rootModel, cancellationToken);
         }
 
@@ -48,6 +51,8 @@
         public async UniTask ShowMainContentAsync(Screen rootModel,
                                                   CancellationToken cancellationToken = default)
         {
+            using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
+
             await MainContentConductor.ActivateItemAsync(rootModel, cancellationToken);
         }
 
@@ -55,6 +60,8 @@
         public UniTask ShowPopupAsync(PropertyChangedBase rootModel,
                                       CancellationToken cancellationToken = default)
         {
+            using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
+
             return UniTask.CompletedTask;
         }
 
@@ -62,6 +69,8 @@
         public async UniTask ShowWindowAsync(WindowScreen rootModel,
                                              CancellationToken cancellationToken = default)
         {
+            using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
+
             await WindowConductor.ActivateItemAsync(rootModel, cancellationToken);
         }
 

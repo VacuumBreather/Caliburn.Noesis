@@ -4,12 +4,15 @@
     using Cysharp.Threading.Tasks;
     using Extensions;
     using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>A base implementation of <see cref="IScreen" />.</summary>
     [PublicAPI]
     public abstract class Screen : PropertyChangedBase, IScreen, IChild
     {
         #region Constants and Fields
+
+        private static ILogger logger;
 
         private UniTaskCompletionSource initializationCompletion;
         private UniTaskCompletionSource activateCompletion;
@@ -22,8 +25,6 @@
 
         private bool isActive;
         private bool isInitialized;
-
-        private ILogger logger;
         private object parent;
 
         #endregion
@@ -52,11 +53,10 @@
         #region Protected Properties
 
         /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        /// <remarks>Override this to specify a custom logger.</remarks>
-        protected virtual ILogger Logger
+        protected ILogger Logger
         {
-            get => this.logger ??= LogManager.CreateLogger(GetType());
-            set => this.logger = value;
+            get => logger ??= LogManager.CreateLogger(GetType().Name);
+            private set => logger = value;
         }
 
         #endregion
@@ -81,6 +81,8 @@
                 return;
             }
 
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+
             using var guard = new CompletionSourceGuard(out this.activateCompletion);
             this.activateCancellation =
                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -95,7 +97,7 @@
             {
                 using var initGuard = new CompletionSourceGuard(out this.initializationCompletion);
 
-                Logger.Trace($"Initializing {this}...");
+                Logger.LogDebug("Initializing {Screen}...", this);
 
                 // Deactivation is not allowed to cancel initialization, so we are only
                 // passing the token that was passed to us.
@@ -103,7 +105,7 @@
                 IsInitialized = initialized = true;
             }
 
-            Logger.Trace($"Activating {this}...");
+            Logger.LogDebug("Activating {Screen}...", this);
             await OnActivateAsync(this.activateCancellation.Token);
 
             IsActive = true;
@@ -112,7 +114,7 @@
 
             if (this.activateCancellation?.IsCancellationRequested == true)
             {
-                Logger.Info($"Activation of {this} was cancelled.");
+                Logger.LogDebug("Activation of {Screen} cancelled", this);
             }
         }
 
@@ -153,6 +155,8 @@
         /// <inheritdoc />
         async UniTask IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(close, cancellationToken);
+
             using var guard = new CompletionSourceGuard(out this.deactivateCompletion);
             this.deactivateCancellation =
                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
@@ -175,7 +179,7 @@
 
             if (IsActive || (IsInitialized && close))
             {
-                Logger.Trace($"Deactivating {this}...");
+                Logger.LogDebug("Deactivating {Screen}...", this);
                 await RaiseDeactivatingAsync(close, this.deactivateCancellation.Token);
                 await OnDeactivateAsync(close, this.deactivateCancellation.Token);
 
@@ -185,13 +189,13 @@
 
                 if (close)
                 {
-                    Logger.Trace($"Closed {this}.");
+                    Logger.LogDebug("Closed {Screen}", this);
                 }
             }
 
             if (this.deactivateCancellation?.IsCancellationRequested == true)
             {
-                Logger.Info($"Deactivation of {this} was cancelled.");
+                Logger.LogDebug("Deactivation of {Screen} cancelled", this);
             }
         }
 
@@ -214,6 +218,17 @@
         {
             get => this.displayName;
             set => Set(ref this.displayName, value);
+        }
+
+        #endregion
+
+        #region IHaveLogger Implementation
+
+        /// <inheritdoc />
+        ILogger IHaveLogger.Logger
+        {
+            get => Logger;
+            set => Logger = value;
         }
 
         #endregion
@@ -260,6 +275,8 @@
         private async UniTask RaiseActivatedAsync(bool wasInitialized,
                                                   CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(wasInitialized, cancellationToken);
+
             await (Activated?.InvokeAllAsync(
                        this,
                        new ActivationEventArgs { WasInitialized = wasInitialized },
@@ -270,6 +287,8 @@
         private async UniTask RaiseDeactivatedAsync(bool wasClosed,
                                                     CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(wasClosed, cancellationToken);
+
             await (Deactivated?.InvokeAllAsync(
                        this,
                        new DeactivationEventArgs { WasClosed = wasClosed },
@@ -280,6 +299,8 @@
         private async UniTask RaiseDeactivatingAsync(bool wasClosed,
                                                      CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(wasClosed, cancellationToken);
+
             await (Deactivating?.InvokeAllAsync(
                        this,
                        new DeactivationEventArgs { WasClosed = wasClosed },

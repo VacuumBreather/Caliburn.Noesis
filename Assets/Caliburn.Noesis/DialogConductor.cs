@@ -2,6 +2,8 @@
 {
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using Extensions;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>A conductor for dialogs.</summary>
     public class DialogConductor : Conductor<DialogScreen>
@@ -25,6 +27,9 @@
                                               bool? dialogResult,
                                               CancellationToken cancellationToken = default)
         {
+            using var _ = Logger.GetMethodTracer(dialog, dialogResult, cancellationToken);
+
+            Logger.LogDebug("Closing {@Dialog}...", dialog);
             await DeactivateItemAsync(dialog, true, cancellationToken);
 
             if (ActiveItem != dialog)
@@ -46,8 +51,11 @@
         public async UniTask<bool?> ShowDialogAsync(DialogScreen dialog,
                                                     CancellationToken cancellationToken = default)
         {
+            using var _ = Logger.GetMethodTracer(dialog, cancellationToken);
+
             this.taskCompletionSource = new UniTaskCompletionSource<bool?>();
 
+            Logger.LogDebug("Showing {@Dialog}...", dialog);
             await ActivateItemAsync(dialog, cancellationToken);
 
             return await (ActiveItem == dialog
@@ -63,6 +71,8 @@
         protected override async UniTask OnDeactivateAsync(bool close,
                                                            CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(close, cancellationToken);
+
             await ChangeActiveItemAsync(null, true, cancellationToken);
 
             this.taskCompletionSource?.TrySetResult(null);

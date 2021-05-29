@@ -8,6 +8,7 @@
     using Cysharp.Threading.Tasks;
     using Extensions;
     using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
 
     public partial class Conductor<T>
     {
@@ -99,6 +100,8 @@
                     T item,
                     CancellationToken cancellationToken = default)
                 {
+                    using var _ = Logger.GetMethodTracer(item, cancellationToken);
+
                     if (item == null)
                     {
                         return;
@@ -120,6 +123,8 @@
                 public override async UniTask<bool> CanCloseAsync(
                     CancellationToken cancellationToken = default)
                 {
+                    using var _ = Logger.GetMethodTracer(cancellationToken);
+
                     var closeResult = await CloseStrategy.ExecuteAsync(
                                           this.items.ToList(),
                                           cancellationToken);
@@ -147,6 +152,8 @@
                     bool close,
                     CancellationToken cancellationToken = default)
                 {
+                    using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
+
                     if (item == null)
                     {
                         return;
@@ -188,6 +195,8 @@
                 /// <returns>The item to be activated.</returns>
                 protected override T EnsureItem(T newItem)
                 {
+                    using var _ = Logger.GetMethodTracer(newItem);
+
                     var index = this.items.IndexOf(newItem);
 
                     if (index == -1)
@@ -206,6 +215,8 @@
                 protected override async UniTask OnActivateAsync(
                     CancellationToken cancellationToken)
                 {
+                    using var _ = Logger.GetMethodTracer(cancellationToken);
+
                     foreach (var activate in this.items.OfType<IActivate>())
                     {
                         await activate.ActivateAsync(cancellationToken);
@@ -220,6 +231,8 @@
                     bool close,
                     CancellationToken cancellationToken)
                 {
+                    using var _ = Logger.GetMethodTracer(close, cancellationToken);
+
                     foreach (var deactivate in this.items.OfType<IDeactivate>())
                     {
                         await deactivate.DeactivateAsync(close, cancellationToken);
@@ -235,6 +248,8 @@
                 protected override async UniTask OnInitializeAsync(
                     CancellationToken cancellationToken)
                 {
+                    using var _ = Logger.GetMethodTracer(cancellationToken);
+
                     if (this.conductPublicItems)
                     {
                         var publicItems = GetType()
@@ -253,7 +268,7 @@
 
                         foreach (var item in publicItems)
                         {
-                            Logger.Trace($"{ToString()} detected and conducts public item {item}");
+                            Logger.LogDebug("{@Conductor} will conduct {Item}", this, item);
                         }
 
                         await UniTask.WhenAll(
@@ -269,6 +284,8 @@
                                                          CancellationToken cancellationToken =
                                                              default)
                 {
+                    using var _ = Logger.GetMethodTracer(item, cancellationToken);
+
                     await ScreenExtensions.TryDeactivateAsync(item, true, cancellationToken);
 
                     this.items.Remove(item);

@@ -3,6 +3,7 @@
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using Extensions;
 
     /// <summary>A base class for dialog screens.</summary>
     public abstract class DialogScreen : Screen
@@ -36,6 +37,8 @@
         /// <inheritdoc />
         public override sealed async UniTask TryCloseAsync(bool? dialogResult = null)
         {
+            using var _ = Logger.GetMethodTracer(dialogResult);
+
             if (!(Parent is DialogConductor dialogConductor))
             {
                 throw new InvalidOperationException(

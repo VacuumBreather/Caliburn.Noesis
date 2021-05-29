@@ -5,7 +5,10 @@
     using System.Reflection;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using Extensions;
     using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
+    using ILogger = Microsoft.Extensions.Logging.ILogger;
 #if UNITY_5_5_OR_NEWER
     using GUI = global::Noesis.GUI;
     using UnityEngine;
@@ -82,15 +85,10 @@
         #region Protected Properties
 
         /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        /// <remarks>Override this to specify a custom logger.</remarks>
-        protected virtual ILogger Logger
+        protected ILogger Logger
         {
-#if UNITY_5_5_OR_NEWER
-            get => this.logger ??= LogManager.CreateLogger(this);
-#else
-            get => this.logger ??= LogManager.CreateLogger(GetType());
-#endif
-            set => this.logger = value;
+            get => this.logger ??= LogManager.CreateLogger(GetType().Name);
+            private set => this.logger = value;
         }
 
         #endregion
@@ -138,6 +136,8 @@
                 return;
             }
 
+            using var _ = Logger.GetMethodTracer();
+
             try
             {
                 await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
@@ -175,6 +175,12 @@
         /// <param name="viewLocator">The <see cref="ViewLocator" /> to configure.</param>
         protected virtual void ConfigureViewLocator(ViewLocator viewLocator)
         {
+        }
+
+        /// <summary>Override this to add custom behavior on initialization.</summary>
+        protected virtual UniTask OnInitialize()
+        {
+            return UniTask.CompletedTask;
         }
 
         /// <summary>Override this to add custom behavior on shutdown.</summary>
@@ -240,8 +246,10 @@
 
             if (!this.noesisView)
             {
-                Logger.Error(
-                    $"{GetType()} must be on the same game object as the {nameof(NoesisView)} component.");
+                Logger.LogError(
+                    "{Bootstrapper} must be on same game object as {NoesisView}",
+                    this,
+                    nameof(NoesisView));
             }
         }
 
@@ -251,11 +259,10 @@
         {
             if (this.isInitialized)
             {
-                Logger.Warn(
-                    $"{this} was not shut down correctly. " +
-                    $"{nameof(ShutdownAsync)}() will now be called by {nameof(OnDestroy)}().\n" +
-                    "Any long running async shutdown logic is not guaranteed to be completed. " +
-                    $"{nameof(ShutdownAsync)}() should be called and awaited before {this} is destroyed.");
+                Logger.LogWarning(
+                    "{Bootstrapper} not shut down correctly - call {ShutdownAsync}() before destroying",
+                    this,
+                    nameof(ShutdownAsync));
 
                 await ShutdownAsync();
             }
@@ -297,6 +304,10 @@
                 return;
             }
 
+            OnInitialize();
+
+            using var _ = Logger.GetMethodTracer();
+
             var assemblySource = new AssemblySource();
             assemblySource.AddRange(SelectAssemblies());
 
@@ -320,6 +331,8 @@
 
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+
             using var guard = new CompletionSourceGuard(out this.onDisableCompletion);
             this.onEnableCancellation?.Cancel();
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
@@ -333,6 +346,8 @@
 
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+
             using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
@@ -348,6 +363,8 @@
 
         private async UniTask StartAsync()
         {
+            using var _ = Logger.GetMethodTracer();
+
             using var guard = new CompletionSourceGuard(out this.onStartCompletion);
 
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
@@ -362,7 +379,7 @@
 
             if (!this.isInitialized)
             {
-                Logger.Error($"{this} has not been initialized.");
+                Logger.LogError("{Bootstrapper} not initialized", this);
 
                 return;
             }
