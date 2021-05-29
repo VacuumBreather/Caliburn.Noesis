@@ -3,16 +3,19 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using Extensions;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     ///     Class for managing the list of rules for transforming view-model type names into view type
     ///     names.
     /// </summary>
-    public class NameTransformer : BindableCollection<NameTransformer.Rule>
+    public class NameTransformer : BindableCollection<NameTransformer.Rule>, IHaveLogger
     {
         #region Constants and Fields
 
         private const RegexOptions Options = RegexOptions.Compiled;
+        private static ILogger logger;
 
         private bool useEagerRuleSelection = true;
 
@@ -28,6 +31,27 @@
         {
             get => this.useEagerRuleSelection;
             set => this.useEagerRuleSelection = value;
+        }
+
+        #endregion
+
+        #region Private Properties
+
+        private ILogger Logger
+        {
+            get => logger ??= LogManager.CreateLogger(GetType().Name);
+            set => logger = value;
+        }
+
+        #endregion
+
+        #region IHaveLogger Implementation
+
+        /// <inheritdoc />
+        ILogger IHaveLogger.Logger
+        {
+            get => Logger;
+            set => Logger = value;
         }
 
         #endregion
@@ -60,6 +84,8 @@
                             string replaceValue,
                             string globalFilterPattern = null)
         {
+            using var _ = Logger.GetMethodTracer(replacePattern, replaceValue, globalFilterPattern);
+
             AddRule(
                 replacePattern,
                 new[]
@@ -95,10 +121,18 @@
                             IEnumerable<string> replaceValueList,
                             string globalFilterPattern = null)
         {
+            // ReSharper disable once PossibleMultipleEnumeration
+            using var _ = Logger.GetMethodTracer(
+                replacePattern,
+                replaceValueList,
+                globalFilterPattern);
+
             Add(
                 new Rule
                     {
                         ReplacePattern = replacePattern,
+
+                        // ReSharper disable once PossibleMultipleEnumeration
                         ReplacementValues = replaceValueList,
                         GlobalFilterPattern = globalFilterPattern
                     });
@@ -109,6 +143,8 @@
         /// <returns>The transformed names.</returns>
         public IEnumerable<string> Transform(string source)
         {
+            using var _ = Logger.GetMethodTracer(source);
+
             var nameList = new List<string>();
             var rules = this.Reverse();
 

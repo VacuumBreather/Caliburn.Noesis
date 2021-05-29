@@ -113,6 +113,7 @@
     <Compile Include="Assets\Samples\FileExplorer\Scripts\Views\FileDialogView.xaml.cs" />
     <Compile Include="Assets\Samples\FileExplorer\Scripts\Views\MainView.xaml.cs" />
     <Compile Include="Assets\Samples\FileExplorer\Scripts\Views\SampleWindowView.xaml.cs" />
+    <Compile Include="Assets\Samples\LogConfigurator.cs" />
     <Compile Include="Blend\FileExplorer\App.xaml.cs" />
     <Compile Include="Blend\FileExplorer\Properties\AssemblyInfo.cs" />
   </ItemGroup>

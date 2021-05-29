@@ -3,13 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Extensions;
+    using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>Responsible for mapping view-model types to their corresponding view types.</summary>
-    public class ViewLocator
+    [PublicAPI]
+    public class ViewLocator : IHaveLogger
     {
         #region Constants and Fields
 
         private const string DefaultViewSuffix = "View";
+        private static ILogger logger;
 
         private readonly List<string> viewSuffixList = new List<string>();
 
@@ -26,10 +31,8 @@
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="ViewLocator" /> class.</summary>
-        /// <param name="logger">(Optional) The logger for this instance.</param>
-        public ViewLocator(ILogger logger = null)
+        public ViewLocator()
         {
-            Logger = logger ?? LogManager.CreateLogger(GetType());
             ConfigureTypeMappings(new TypeMappingConfiguration());
         }
 
@@ -37,9 +40,24 @@
 
         #region Private Properties
 
-        private ILogger Logger { get; }
+        private ILogger Logger
+        {
+            get => logger ??= LogManager.CreateLogger(GetType().Name);
+            set => logger = value;
+        }
 
         private NameTransformer NameTransformer { get; } = new NameTransformer();
+
+        #endregion
+
+        #region IHaveLogger Implementation
+
+        /// <inheritdoc />
+        ILogger IHaveLogger.Logger
+        {
+            get => Logger;
+            set => Logger = value;
+        }
 
         #endregion
 
@@ -49,6 +67,8 @@
         /// <param name="viewSuffix">(Optional) Suffix for type name. Should be "View" or synonym of "View".</param>
         public void AddDefaultTypeMapping(string viewSuffix = DefaultViewSuffix)
         {
+            using var _ = Logger.GetMethodTracer(viewSuffix);
+
             if (!this.useNameSuffixesInMappings)
             {
                 return;
@@ -69,6 +89,9 @@
                                         IEnumerable<string> nsTargets,
                                         string viewSuffix = DefaultViewSuffix)
         {
+            // ReSharper disable once PossibleMultipleEnumeration
+            using var _ = Logger.GetMethodTracer(nsSource, nsTargets, viewSuffix);
+
             // We need to terminate with "." in order to concatenate with type name later.
             var nsEncoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
@@ -81,6 +104,8 @@
 
             // Capture the namespace as "nsOrig" in case we need to use it in the output in the future.
             var nsReplace = RegExHelper.GetCaptureGroup("nsOrig", nsEncoded);
+
+            // ReSharper disable once PossibleMultipleEnumeration
             var nsTargetsRegEx = nsTargets.Select(t => t + ".").ToArray();
 
             AddTypeMapping(nsReplace, null, nsTargetsRegEx, viewSuffix);
@@ -94,6 +119,8 @@
                                         string nsTarget,
                                         string viewSuffix = DefaultViewSuffix)
         {
+            using var _ = Logger.GetMethodTracer(nsSource, nsTarget, viewSuffix);
+
             AddNamespaceMapping(
                 nsSource,
                 new[]
@@ -111,6 +138,9 @@
                                            IEnumerable<string> nsTargets,
                                            string viewSuffix = DefaultViewSuffix)
         {
+            // ReSharper disable once PossibleMultipleEnumeration
+            using var _ = Logger.GetMethodTracer(nsSource, nsTargets, viewSuffix);
+
             // We need to terminate with "." in order to concatenate with type name later.
             var nsEncoded = RegExHelper.NamespaceToRegEx(nsSource + ".");
 
@@ -136,6 +166,8 @@
 
             var rxMid = RegExHelper.GetCaptureGroup("subNs", nsEncoded);
             var rxReplace = string.Concat(rxBeforeSrc, rxMid, rxAfterSrc);
+
+            // ReSharper disable once PossibleMultipleEnumeration
             var nsTargetsRegEx = nsTargets
                                  .Select(t => string.Concat(rxBeforeTgt, t, ".", rxAfterTgt))
                                  .ToArray();
@@ -151,6 +183,8 @@
                                            string nsTarget,
                                            string viewSuffix = DefaultViewSuffix)
         {
+            using var _ = Logger.GetMethodTracer(nsSource, nsTarget, viewSuffix);
+
             AddSubNamespaceMapping(
                 nsSource,
                 new[]
@@ -170,6 +204,14 @@
                                    IEnumerable<string> nsTargetsRegEx,
                                    string viewSuffix = DefaultViewSuffix)
         {
+            using var _ = Logger.GetMethodTracer(
+                nsSourceReplaceRegEx,
+                nsSourceFilterRegEx,
+
+                // ReSharper disable once PossibleMultipleEnumeration
+                nsTargetsRegEx,
+                viewSuffix);
+
             RegisterViewSuffix(viewSuffix);
 
             var repSuffix = this.useNameSuffixesInMappings ? viewSuffix : string.Empty;
@@ -206,6 +248,8 @@
                     nsSourceReplaceRegEx,
                     string.Format(this.nameFormat, rxBase, rxSuffix),
                     "$"),
+
+                // ReSharper disable once PossibleMultipleEnumeration
                 nsTargetsRegEx.Select(t => t + string.Format(this.nameFormat, BaseGroup, repSuffix))
                               .ToArray(),
                 rxSourceFilter);
@@ -221,6 +265,12 @@
                                    string nsTargetRegEx,
                                    string viewSuffix = DefaultViewSuffix)
         {
+            using var _ = Logger.GetMethodTracer(
+                nsSourceReplaceRegEx,
+                nsSourceFilterRegEx,
+                nsTargetRegEx,
+                viewSuffix);
+
             AddTypeMapping(
                 nsSourceReplaceRegEx,
                 nsSourceFilterRegEx,
@@ -242,6 +292,8 @@
         /// </param>
         public void ConfigureTypeMappings(TypeMappingConfiguration config)
         {
+            using var _ = Logger.GetMethodTracer(config);
+
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
             {
                 throw new ArgumentException(
@@ -279,19 +331,30 @@
         /// <returns>The located view type or <c>null</c> if no such type could be found.</returns>
         public Type LocateTypeForModelType(Type modelType, AssemblySource assemblySource)
         {
+            using var _ = Logger.GetMethodTracer(modelType, assemblySource);
+
             var modelTypeName = modelType.FullName;
 
             modelTypeName = modelTypeName?.Substring(
                 0,
                 modelTypeName.IndexOf('`') < 0 ? modelTypeName.Length : modelTypeName.IndexOf('`'));
 
-            var viewTypeList = TransformName(modelTypeName).ToList();
-            var viewType = assemblySource.FindTypeByNames(viewTypeList);
+            var viewTypes = TransformName(modelTypeName).ToList();
+            var viewType = assemblySource.FindTypeByNames(viewTypes);
 
             if (viewType == null)
             {
-                Logger.Info(
-                    $"No view not found for {modelType.Name}. {(viewTypeList.Any() ? "Searched:" + string.Join(", ", viewTypeList.ToArray()) : "No mappings found")}.");
+                if (viewTypes.Any())
+                {
+                    Logger.LogDebug(
+                        "No view found for {ModelType} - no match among {ViewTypes}",
+                        modelType.Name,
+                        string.Join(", ", viewTypes.ToArray()));
+                }
+                else
+                {
+                    Logger.LogDebug("No view found for {ModelType}", modelType.Name);
+                }
             }
 
             return viewType;
@@ -306,6 +369,8 @@
         /// <param name="viewSuffix">Suffix for type name. Should  be "View" or synonym of "View".</param>
         public void RegisterViewSuffix(string viewSuffix)
         {
+            using var _ = Logger.GetMethodTracer(viewSuffix);
+
             if (this.viewSuffixList.Count(s => s == viewSuffix) == 0)
             {
                 this.viewSuffixList.Add(viewSuffix);
@@ -317,6 +382,8 @@
         /// <returns>Enumeration of transformed names.</returns>
         public IEnumerable<string> TransformName(string typeName)
         {
+            using var _ = Logger.GetMethodTracer(typeName);
+
             return NameTransformer.Transform(typeName);
         }
 
@@ -326,6 +393,8 @@
 
         private void SetAllDefaults()
         {
+            using var _ = Logger.GetMethodTracer();
+
             if (this.useNameSuffixesInMappings)
             {
                 // Add support for all view suffixes

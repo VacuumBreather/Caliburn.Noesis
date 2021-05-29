@@ -55,6 +55,8 @@
             bool closePrevious,
             CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(newItem, closePrevious, cancellationToken);
+
             await ScreenExtensions.TryDeactivateAsync(
                 this.activeItem,
                 closePrevious,
@@ -72,15 +74,6 @@
             }
 
             OnActivationProcessed(this.activeItem, true);
-        }
-
-        /// <summary>Changes the active item.</summary>
-        /// <param name="newItem">The new item to activate.</param>
-        /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        protected UniTask ChangeActiveItemAsync(T newItem, bool closePrevious)
-        {
-            return ChangeActiveItemAsync(newItem, closePrevious, CancellationToken.None);
         }
 
         #endregion

@@ -85,6 +85,8 @@
                     T item,
                     CancellationToken cancellationToken = default)
                 {
+                    using var _ = Logger.GetMethodTracer(item, cancellationToken);
+
                     if ((item != null) && item.Equals(ActiveItem))
                     {
                         if (IsActive)
@@ -105,6 +107,8 @@
                 public override async UniTask<bool> CanCloseAsync(
                     CancellationToken cancellationToken = default)
                 {
+                    using var _ = Logger.GetMethodTracer(cancellationToken);
+
                     var closeResult = await CloseStrategy.ExecuteAsync(
                                           this.items.ToList(),
                                           cancellationToken);
@@ -155,6 +159,8 @@
                     bool close,
                     CancellationToken cancellationToken = default)
                 {
+                    using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
+
                     if (item == null)
                     {
                         return;
@@ -198,6 +204,8 @@
                 /// <remarks>Called after an active item is closed.</remarks>
                 protected virtual T DetermineNextItemToActivate(IList<T> list, int lastIndex)
                 {
+                    using var _ = Logger.GetMethodTracer(list, lastIndex);
+
                     var toRemoveAt = lastIndex - 1;
 
                     if ((toRemoveAt == -1) && (list.Count > 1))
@@ -218,6 +226,8 @@
                 /// <returns>The item to be activated.</returns>
                 protected override T EnsureItem(T newItem)
                 {
+                    using var _ = Logger.GetMethodTracer(newItem);
+
                     if (newItem == null)
                     {
                         newItem = DetermineNextItemToActivate(
@@ -246,6 +256,8 @@
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 protected override UniTask OnActivateAsync(CancellationToken cancellationToken)
                 {
+                    using var _ = Logger.GetMethodTracer(cancellationToken);
+
                     return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
                 }
 
@@ -257,6 +269,8 @@
                     bool close,
                     CancellationToken cancellationToken)
                 {
+                    using var _ = Logger.GetMethodTracer(close, cancellationToken);
+
                     if (close)
                     {
                         foreach (var deactivate in this.items.OfType<IDeactivate>())
@@ -283,6 +297,8 @@
                                                          CancellationToken cancellationToken =
                                                              default)
                 {
+                    using var _ = Logger.GetMethodTracer(item, cancellationToken);
+
                     if (item.Equals(ActiveItem))
                     {
                         var index = this.items.IndexOf(item);
