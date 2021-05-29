@@ -1,18 +1,10 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer
 {
+    using Autofac;
     using ViewModels;
 
     /// <summary>The bootstrapper for the file explorer sample.</summary>
-    public class FileExplorerBootstrapper : BootstrapperBase<MainViewModel>
+    public class FileExplorerBootstrapper : AutofacBootstrapperBase<MainViewModel>
     {
-        #region Protected Methods
-
-        /// <inheritdoc />
-        protected override MainViewModel GetMainContentViewModel()
-        {
-            return new MainViewModel(GetWindowManager());
-        }
-
-        #endregion
     }
 }

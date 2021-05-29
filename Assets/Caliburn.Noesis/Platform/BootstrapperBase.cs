@@ -1,12 +1,13 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
+    using System.Collections.Generic;
+    using System.Reflection;
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
     using GUI = global::Noesis.GUI;
-    using System.Collections.Generic;
     using UnityEngine;
 
 #else
@@ -18,15 +19,13 @@
     [PublicAPI]
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class BootstrapperBase<T> : MonoBehaviour
+    public abstract class BootstrapperBase<T> : MonoBehaviour, IServiceProvider
 #else
-    public abstract class BootstrapperBase<T>
+    public abstract class BootstrapperBase<T> : IServiceProvider
 #endif
         where T : Screen
     {
         #region Constants and Fields
-
-        private CaliburnConfiguration configuration;
 
         private bool isInitialized;
         private ILogger logger;
@@ -64,18 +63,16 @@
                     await OnEnableAsync(this.onEnableCancellation.Token);
                     await StartAsync();
                 };
-            Application.Current.Activated +=
-                async (_, __) =>
-                    {
-                        this.onEnableCancellation = new CancellationTokenSource();
-                        await OnEnableAsync(this.onEnableCancellation.Token);
-                    };
-            Application.Current.Deactivated +=
-                async (_, __) =>
-                    {
-                        this.onDisableCancellation = new CancellationTokenSource();
-                        await OnDisableAsync(this.onDisableCancellation.Token);
-                    };
+            Application.Current.Activated += async (_, __) =>
+                {
+                    this.onEnableCancellation = new CancellationTokenSource();
+                    await OnEnableAsync(this.onEnableCancellation.Token);
+                };
+            Application.Current.Deactivated += async (_, __) =>
+                {
+                    this.onDisableCancellation = new CancellationTokenSource();
+                    await OnDisableAsync(this.onDisableCancellation.Token);
+                };
         }
 
         #endregion
@@ -98,7 +95,30 @@
 
         #endregion
 
+        #region IServiceProvider Implementation
+
+        /// <inheritdoc />
+        public virtual object GetService(Type serviceType)
+        {
+            return serviceType == typeof(IWindowManager)
+                       ? new ShellViewModel()
+                       : Activator.CreateInstance(serviceType);
+        }
+
+        #endregion
+
         #region Public Methods
+
+        /// <summary>Gets the service object of the specified type.</summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <returns>
+        ///     A service object of type serviceType.<br />-or-<br /><c>null</c> if there is no service
+        ///     object of type serviceType.
+        /// </returns>
+        public TService GetService<TService>()
+        {
+            return (TService)GetService(typeof(TService));
+        }
 
         /// <inheritdoc />
         public override string ToString()
@@ -145,31 +165,16 @@
 
         #region Protected Methods
 
-        /// <summary>Override this to return your own modified configuration.</summary>
-        /// <returns>The <see cref="CaliburnConfiguration" /> to be used by the framework.</returns>
-        protected virtual CaliburnConfiguration GetConfiguration()
+        /// <summary>Override to configure your dependency injection container.</summary>
+        /// <param name="viewModelTypes">All relevant view-model types exported by the configured assemblies.</param>
+        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes)
         {
-            return CaliburnConfiguration.Default;
         }
 
-        /// <summary>
-        ///     Override this to return the instance of your main content view-model. You can return an
-        ///     instance retrieved from an IoC container here.
-        /// </summary>
-        /// <returns>The main content view-model.</returns>
-        protected virtual T GetMainContentViewModel()
+        /// <summary>Override this to modify the configuration of the <see cref="ViewLocator" />.</summary>
+        /// <param name="viewLocator">The <see cref="ViewLocator" /> to configure.</param>
+        protected virtual void ConfigureViewLocator(ViewLocator viewLocator)
         {
-            return Activator.CreateInstance<T>();
-        }
-
-        /// <summary>
-        ///     Override this to return your own implementation of <see cref="IWindowManager" />. You can
-        ///     return an instance retrieved from an IoC container here.
-        /// </summary>
-        /// <returns>The <see cref="IWindowManager" /> instance.</returns>
-        protected virtual IWindowManager GetWindowManager()
-        {
-            return this.windowManager ??= new ShellViewModel();
         }
 
         /// <summary>Override this to add custom behavior on shutdown.</summary>
@@ -182,6 +187,16 @@
         protected virtual UniTask OnStartup()
         {
             return UniTask.CompletedTask;
+        }
+
+        /// <summary>Override to tell the framework where to find assemblies to inspect for view-models, etc.</summary>
+        /// <returns>A list of assemblies to inspect.</returns>
+        protected virtual IEnumerable<Assembly> SelectAssemblies()
+        {
+            return new[]
+                       {
+                           GetType().Assembly
+                       };
         }
 
         #endregion
@@ -282,8 +297,15 @@
                 return;
             }
 
-            this.windowManager = GetWindowManager();
-            this.configuration = GetConfiguration();
+            var assemblySource = new AssemblySource();
+            assemblySource.AddRange(SelectAssemblies());
+
+            ConfigureIoCContainer(assemblySource.ViewModelTypes);
+
+            var viewLocator = new ViewLocator();
+            ConfigureViewLocator(viewLocator);
+
+            this.windowManager = GetService<IWindowManager>();
 
 #if UNITY_5_5_OR_NEWER
             var dictionary = GUI.GetApplicationResources();
@@ -291,7 +313,7 @@
             var dictionary = Application.Current.Resources;
 #endif
 
-            DataTemplateManager.RegisterDataTemplates(this.configuration, dictionary);
+            DataTemplateManager.RegisterDataTemplates(viewLocator, assemblySource, dictionary);
 
             this.isInitialized = true;
         }
@@ -351,7 +373,7 @@
             window.DataContext = this.windowManager;
 #endif
 
-            var mainContent = GetMainContentViewModel();
+            var mainContent = GetService<T>();
             await this.windowManager.ShowMainContentAsync(mainContent);
         }
 
