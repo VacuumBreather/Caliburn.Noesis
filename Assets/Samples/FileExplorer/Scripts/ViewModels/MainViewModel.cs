@@ -1,8 +1,6 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer.ViewModels
 {
-#if !UNITY_5_5_OR_NEWER
     using System;
-#endif
     using System.IO;
     using System.Text;
     using System.Threading;
@@ -13,6 +11,7 @@
 
     /// <summary>The main view-model of the sample UI.</summary>
     /// <seealso cref="Screen" />
+    [PublicAPI]
     public class MainViewModel : Screen
     {
         #region Constants and Fields
@@ -26,9 +25,17 @@
         #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="MainViewModel" /> class.</summary>
-        public MainViewModel(IWindowManager windowManager)
+        /// <param name="windowManager">The window manager.</param>
+        /// <param name="fileDialog">The file dialog.</param>
+        /// <param name="createSampleWindow">A function to create sample windows.</param>
+        public MainViewModel(IWindowManager windowManager,
+                             FileDialogViewModel fileDialog,
+                             Func<SampleWindowViewModel> createSampleWindow)
         {
             WindowManager = windowManager;
+            FileDialog = fileDialog;
+            CreateSampleWindow = createSampleWindow;
+
             OpenDialogCommand =
                 new AsyncRelayCommand(OpenDialogAsync, () => IsActive).RaiseWith(this);
             CancelCommand =
@@ -64,7 +71,9 @@
 
         #region Private Properties
 
-        private FileDialogViewModel FileDialog { get; } = new FileDialogViewModel();
+        private Func<SampleWindowViewModel> CreateSampleWindow { get; }
+
+        private FileDialogViewModel FileDialog { get; }
 
         private IWindowManager WindowManager { get; }
 
@@ -90,7 +99,7 @@
 
         private async UniTask AddWindow()
         {
-            await WindowManager.ShowWindowAsync(new SampleWindowViewModel());
+            await WindowManager.ShowWindowAsync(CreateSampleWindow());
         }
 
         private void CancelReadingFile()
@@ -109,7 +118,7 @@
             switch (result)
             {
                 case true when FileDialog.SelectedFile.Exists:
-                    cancelled = await ReadFileAsync();
+                    cancelled = await ReadFileAsync(FileDialog.SelectedFile);
 
                     break;
                 case true when !FileDialog.SelectedFile.Exists:
@@ -128,7 +137,7 @@
             }
         }
 
-        private async Task<bool> ReadFileAsync()
+        private async Task<bool> ReadFileAsync(FileInfo file)
         {
             using var token = this.asyncGuard.Token;
             using var tokenSource =
@@ -137,7 +146,7 @@
             var cancellationToken = this.cancellationTokenSource.Token;
             var cancelled = cancellationToken.IsCancellationRequested;
 
-            using var streamReader = File.OpenText(FileDialog.SelectedFile.FullName);
+            using var streamReader = File.OpenText(file.FullName);
 
             FileContent = string.Empty;
             var stringBuilder = new StringBuilder();

@@ -3,15 +3,16 @@
     using System;
     using System.Linq;
     using Extensions;
+    using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Markup;
 #endif
 
     /// <summary>Creates data templates for view-models.</summary>
+    [PublicAPI]
     public static class DataTemplateManager
     {
         #region Public Methods
@@ -40,29 +41,26 @@
         ///     Creates data templates for all view-model types found in the specified
         ///     <see cref="AssemblySource" />.
         /// </summary>
-        /// <param name="configuration">
-        ///     The framework configuration containing the relevant
-        ///     <see cref="AssemblySource" /> and the <see cref="ViewLocator" />.
-        /// </param>
+        /// <param name="viewLocator">The view locator used to map view-model to view types.</param>
+        /// <param name="assemblySource">The assembly source containing relevant types.</param>
         /// <param name="resourceDictionary">
         ///     The <see cref="ResourceDictionary" /> to register the data
         ///     templates in.
         /// </param>
-        public static void RegisterDataTemplates(CaliburnConfiguration configuration,
+        public static void RegisterDataTemplates(ViewLocator viewLocator,
+                                                 AssemblySource assemblySource,
                                                  ResourceDictionary resourceDictionary)
         {
-            configuration.AssemblySource.ViewModelTypes
-                         .Select(
-                             vmType =>
-                                 (vmType,
-                                     configuration.ViewLocator.LocateTypeForModelType(
-                                         vmType,
-                                         configuration.AssemblySource)))
-                         .ForEach(
-                             ((Type vmType, Type vType) mapping) => RegisterDataTemplate(
-                                 mapping.vmType,
-                                 mapping.vType,
-                                 resourceDictionary));
+            assemblySource.ViewModelTypes
+                          .Select(
+                              vmType =>
+                                  (vmType,
+                                      viewLocator.LocateTypeForModelType(vmType, assemblySource)))
+                          .ForEach(
+                              ((Type vmType, Type vType) mapping) => RegisterDataTemplate(
+                                  mapping.vmType,
+                                  mapping.vType,
+                                  resourceDictionary));
         }
 
         #endregion

@@ -7,14 +7,15 @@
     using System.Linq;
     using System.Reflection;
     using Extensions;
+    using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
 #endif
 
     /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
+    [PublicAPI]
     public class AssemblySource
     {
         #region Constants and Fields
@@ -51,14 +52,18 @@
         /// <param name="assembly">The assembly to add.</param>
         public void Add(Assembly assembly)
         {
-            this.typeAssemblies.Add(assembly);
+            if (!this.typeAssemblies.Contains(assembly))
+            {
+                this.typeAssemblies.Add(assembly);
+            }
         }
 
         /// <summary>Adds a range of assemblies to the <see cref="AssemblySource" />.</summary>
         /// <param name="assemblies">The range of assemblies to add.</param>
         public void AddRange(IEnumerable<Assembly> assemblies)
         {
-            this.typeAssemblies.AddRange(assemblies);
+            this.typeAssemblies.AddRange(
+                assemblies.Where(assembly => !this.typeAssemblies.Contains(assembly)));
         }
 
         /// <summary>Removes all assemblies from the <see cref="AssemblySource" />.</summary>
@@ -130,6 +135,7 @@
             return assembly.GetExportedTypes()
                            .Where(type => !type.IsGenericType)
                            .Where(type => !type.IsInterface)
+                           .Where(type => !type.IsAbstract)
                            .Where(type => !type.IsNested)
                            .Where(
                                type => type.IsDerivedFromOrImplements(typeof(UIElement)) ||
