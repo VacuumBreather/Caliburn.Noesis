@@ -164,10 +164,10 @@
             {
                 method = new StackFrame(stackIndex++).GetMethod();
             }
-            while (ShouldBeIgnored(method));
+            while ((method != null) && ShouldBeIgnored(method));
 
-            methodName = method.GetTrimmedName();
-            methodParams = method.GetParameters();
+            methodName = method?.GetTrimmedName();
+            methodParams = method?.GetParameters();
 
             MethodBase methodCalledBy;
 
@@ -175,10 +175,10 @@
             {
                 methodCalledBy = new StackFrame(stackIndex++).GetMethod();
             }
-            while (ShouldBeIgnored(methodCalledBy));
+            while ((methodCalledBy != null) && ShouldBeIgnored(methodCalledBy));
 
-            callingMethod = methodCalledBy.GetTrimmedName();
-            callingType = methodCalledBy.ReflectedType?.Name ?? "<unknown type>";
+            callingMethod = methodCalledBy?.GetTrimmedName();
+            callingType = methodCalledBy?.ReflectedType?.Name ?? "<unknown type>";
         }
 
         private static string GetTrimmedName(this MethodBase method)
@@ -207,6 +207,11 @@
                                             string callingMethod,
                                             string callingType)
         {
+            if (methodParams is null || methodParamValues is null)
+            {
+                return;
+            }
+
             string parameterList;
 
             if (methodParams.Length == methodParamValues.Length)
