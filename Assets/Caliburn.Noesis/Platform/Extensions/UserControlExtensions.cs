@@ -1,6 +1,7 @@
 ﻿#if UNITY_5_5_OR_NEWER
 namespace Caliburn.Noesis.Extensions
 {
+    using System;
     using System.Runtime.CompilerServices;
     using global::Noesis;
 
@@ -24,9 +25,10 @@ namespace Caliburn.Noesis.Extensions
 
         private static string GetXamlPath(string callerFilePath)
         {
-            var xamlPath = callerFilePath?.Substring(callerFilePath?.IndexOf("Assets") ?? 0)
-                                         .Replace(".cs", string.Empty)
-                                         .Replace('\\', '/');
+            var xamlPath = callerFilePath
+                           ?.Substring(callerFilePath.IndexOf("Assets", StringComparison.Ordinal))
+                           .Replace(".cs", string.Empty)
+                           .Replace('\\', '/');
 
             return xamlPath;
         }
