@@ -2,8 +2,9 @@ namespace Caliburn.Noesis.Samples.HelloWorld.ViewModels
 {
     using JetBrains.Annotations;
 
-    /// <summary>Main view-model of the sample</summary>
-    [UsedImplicitly]
+    /// <summary>The main view-model of the sample.</summary>
+    /// <seealso cref="Screen" />
+    [PublicAPI]
     public class MainViewModel : Screen
     {
         #region Public Properties
