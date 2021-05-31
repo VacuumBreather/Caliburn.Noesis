@@ -9,13 +9,13 @@
 
 #endif
 
-    /// <summary>Interaction logic for MainView.xaml</summary>
-    public partial class MainView : UserControl
+    /// <summary>Interaction logic for BrushFromColorView.xaml</summary>
+    public partial class BrushFromColorView : UserControl
     {
         #region Constructors and Destructors
 
-        /// <summary>Initializes a new instance of the <see cref="MainView" /> class.</summary>
-        public MainView()
+        /// <summary>Initializes a new instance of the <see cref="BrushFromColorView" /> class.</summary>
+        public BrushFromColorView()
         {
             this.InitializeComponent();
         }
