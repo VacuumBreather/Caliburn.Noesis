@@ -271,7 +271,7 @@
 
             var canClose = true;
 
-            if (this.windowManager is IGuardClose guardClose)
+            if (WindowManager is IGuardClose guardClose)
             {
                 canClose = await guardClose.CanCloseAsync();
             }
@@ -477,7 +477,7 @@
 #if UNITY_5_5_OR_NEWER
             this.noesisView.Content.DataContext = WindowManager;
 #else
-            window.DataContext = this.windowManager;
+            window.DataContext = WindowManager;
 #endif
 
             var mainContent = GetService<T>();
