@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -56,29 +55,7 @@
                 /// </summary>
                 public AllActive()
                 {
-                    this.items.CollectionChanged += (s, e) =>
-                        {
-                            switch (e.Action)
-                            {
-                                case NotifyCollectionChangedAction.Add:
-                                    e.NewItems.OfType<IChild>().ForEach(x => x.Parent = this);
-
-                                    break;
-                                case NotifyCollectionChangedAction.Remove:
-                                    e.OldItems.OfType<IChild>().ForEach(x => x.Parent = null);
-
-                                    break;
-                                case NotifyCollectionChangedAction.Replace:
-                                    e.NewItems.OfType<IChild>().ForEach(x => x.Parent = this);
-                                    e.OldItems.OfType<IChild>().ForEach(x => x.Parent = null);
-
-                                    break;
-                                case NotifyCollectionChangedAction.Reset:
-                                    this.items.OfType<IChild>().ForEach(x => x.Parent = this);
-
-                                    break;
-                            }
-                        };
+                    this.AssignParentOnCollectionChanged(this.items);
                 }
 
                 #endregion
@@ -92,10 +69,7 @@
 
                 #region Public Methods
 
-                /// <summary>Activates the specified item.</summary>
-                /// <param name="item">The item to activate.</param>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
+                /// <inheritdoc />
                 public override async UniTask ActivateItemAsync(
                     T item,
                     CancellationToken cancellationToken = default)
@@ -117,9 +91,7 @@
                     OnActivationProcessed(item, true);
                 }
 
-                /// <summary>Called to check whether or not this instance can close.</summary>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
+                /// <inheritdoc />
                 public override async UniTask<bool> CanCloseAsync(
                     CancellationToken cancellationToken = default)
                 {
@@ -142,11 +114,7 @@
                     return closeResult.CloseCanOccur;
                 }
 
-                /// <summary>Deactivates the specified item.</summary>
-                /// <param name="item">The item to close.</param>
-                /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
+                /// <inheritdoc />
                 public override async UniTask DeactivateItemAsync(
                     T item,
                     bool close,
@@ -154,33 +122,14 @@
                 {
                     using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
 
-                    if (item == null)
-                    {
-                        return;
-                    }
-
-                    if (close)
-                    {
-                        var closeResult = await CloseStrategy.ExecuteAsync(
-                                              new[]
-                                                  {
-                                                      item
-                                                  },
-                                              CancellationToken.None);
-
-                        if (closeResult.CloseCanOccur)
-                        {
-                            await CloseItemCoreAsync(item, cancellationToken);
-                        }
-                    }
-                    else
-                    {
-                        await ScreenExtensions.TryDeactivateAsync(item, false, cancellationToken);
-                    }
+                    await this.DeactivateItemAsync(
+                        item,
+                        close,
+                        CloseItemCoreAsync,
+                        cancellationToken);
                 }
 
-                /// <summary>Gets the children.</summary>
-                /// <returns>The collection of children.</returns>
+                /// <inheritdoc />
                 public override IEnumerable<T> GetChildren()
                 {
                     return this.items;
@@ -190,9 +139,7 @@
 
                 #region Protected Methods
 
-                /// <summary>Ensures that an item is ready to be activated.</summary>
-                /// <param name="newItem">The item that is about to be activated.</param>
-                /// <returns>The item to be activated.</returns>
+                /// <inheritdoc />
                 protected override T EnsureItem(T newItem)
                 {
                     using var _ = Logger.GetMethodTracer(newItem);
@@ -211,7 +158,7 @@
                     return base.EnsureItem(newItem);
                 }
 
-                /// <summary>Called when activating.</summary>
+                /// <inheritdoc />
                 protected override async UniTask OnActivateAsync(
                     CancellationToken cancellationToken)
                 {
@@ -223,10 +170,7 @@
                     }
                 }
 
-                /// <summary>Called when deactivating.</summary>
-                /// <param name="close">Indicates whether this instance will be closed.</param>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
+                /// <inheritdoc />
                 protected override async UniTask OnDeactivateAsync(
                     bool close,
                     CancellationToken cancellationToken)
@@ -244,7 +188,7 @@
                     }
                 }
 
-                /// <summary>Called when initializing.</summary>
+                /// <inheritdoc />
                 protected override async UniTask OnInitializeAsync(
                     CancellationToken cancellationToken)
                 {
