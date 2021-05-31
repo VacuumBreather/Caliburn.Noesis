@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Noesis.FileExplorer
 {
     using System.Windows;
+    using Samples;
 
     /// <summary>
     /// Interaction logic for App.xaml

@@ -2,6 +2,7 @@
 {
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
+
 #else
     using System.Windows.Markup;
     using System.Windows.Media;
@@ -30,6 +31,10 @@
         {
         }
 
+        #endregion
+
+        #region Constructors and Destructors
+
         /// <summary>Initializes a new instance of the <see cref="SolidBrushExtension" /> class.</summary>
         /// <param name="color">The color of the brush.</param>
         public SolidBrushExtension(Color color)
@@ -43,6 +48,10 @@
 
         /// <summary>Gets the color of the brush.</summary>
         /// <value>The color of the brush.</value>
+
+        #endregion
+
+        #region Public Methods
         public Color Color { get; set; } = Colors.Transparent;
 
         /// <summary>Gets or sets the opacity.</summary>
