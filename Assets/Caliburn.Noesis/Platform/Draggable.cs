@@ -28,7 +28,7 @@
                 PropertyNameHelper.GetName(nameof(IsDragHandleProperty)),
                 typeof(bool),
                 typeof(Draggable),
-                new PropertyMetadata(default(bool), OnIsDragHandleChanged));
+                new PropertyMetadata(default(bool), OnPropertyChanged));
 
         /// <summary>
         ///     BringToFrontOnClick property. This is an attached property. Draggable defines the
@@ -40,7 +40,7 @@
                 PropertyNameHelper.GetName(nameof(BringToFrontOnClickProperty)),
                 typeof(bool),
                 typeof(Draggable),
-                new PropertyMetadata(default(bool), OnBringToFrontOnClickChanged));
+                new PropertyMetadata(default(bool), OnPropertyChanged));
 
         private static readonly DependencyProperty AttachedElementProperty =
             DependencyProperty.RegisterAttached(
@@ -229,36 +229,8 @@
             return (Canvas)element.GetValue(ParentCanvasProperty);
         }
 
-        private static void OnBringToFrontOnClickChanged(DependencyObject d,
-                                                         DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is FrameworkElement element) || (e.NewValue == e.OldValue))
-            {
-                return;
-            }
-
-            if (Equals(e.NewValue, true))
-            {
-                var (canvas, draggableElement) = FindRelevantElements(element);
-
-                if (canvas is null || draggableElement is null)
-                {
-                    return;
-                }
-
-                SetParentCanvas(element, canvas);
-                SetAttachedElement(element, draggableElement);
-
-                element.MouseLeftButtonDown += OnElementMouseLeftButtonDown;
-            }
-            else
-            {
-                element.MouseLeftButtonDown -= OnElementMouseLeftButtonDown;
-            }
-        }
-
-        private static void OnIsDragHandleChanged(DependencyObject d,
-                                                  DependencyPropertyChangedEventArgs e)
+        private static void OnPropertyChanged(DependencyObject d,
+                                              DependencyPropertyChangedEventArgs e)
         {
             if (!(d is FrameworkElement element) || (e.NewValue == e.OldValue))
             {
