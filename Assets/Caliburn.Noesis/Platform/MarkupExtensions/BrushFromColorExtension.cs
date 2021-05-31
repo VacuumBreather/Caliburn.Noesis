@@ -1,21 +1,22 @@
-﻿namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis.MarkupExtensions
 {
     using System;
     using System.Collections.Generic;
+    using JetBrains.Annotations;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows.Markup;
     using System.Windows.Media;
 #endif
 
     /// <summary>
-    ///     Implements a markup extension that returns a SolidColorBrush corresponding to the
-    ///     specified color.
+    ///     Implements a markup extension that returns a <see cref="SolidColorBrush" /> corresponding
+    ///     to the specified <see cref="Color" />.
     /// </summary>
     /// <remarks>The brushes are frozen and cached.</remarks>
-    public class SolidBrushExtension : MarkupExtension
+    [PublicAPI]
+    public class BrushFromColorExtension : MarkupExtension
     {
         #region Constants and Fields
 
@@ -24,22 +25,11 @@
 
         #endregion
 
-        #region Constructors and Destructors
-
-        /// <summary>Initializes a new instance of the <see cref="SolidBrushExtension" /> class.</summary>
-        /// <param name="color">The color of the brush.</param>
-        public SolidBrushExtension(Color color)
-        {
-            Color = color;
-        }
-
-        #endregion
-
         #region Public Properties
 
         /// <summary>Gets the color of the brush.</summary>
         /// <value>The color of the brush.</value>
-        public Color Color { get; }
+        public Color Color { get; set; }
 
         #endregion
 
