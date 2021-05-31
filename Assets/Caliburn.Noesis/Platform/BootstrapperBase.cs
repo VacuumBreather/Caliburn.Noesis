@@ -44,8 +44,6 @@
         private CancellationTokenSource onEnableCancellation;
         private CancellationTokenSource onDisableCancellation;
 
-        private IWindowManager windowManager;
-
 #if UNITY_5_5_OR_NEWER
         [SerializeField]
         [UsedImplicitly]
@@ -95,6 +93,10 @@
         #region Private Properties
 
         private Container IoCContainer { get; set; }
+
+        private IWindowManager WindowManager { get; set; }
+
+        private ViewLocator ViewLocator { get; set; }
 
         #endregion
 
@@ -152,7 +154,7 @@
 
                 await OnShutdown();
 
-                if (this.windowManager is IDeactivate deactivate)
+                if (WindowManager is IDeactivate deactivate)
                 {
                     await deactivate.DeactivateAsync(true);
                 }
@@ -171,16 +173,25 @@
         #region Protected Methods
 
         /// <summary>Override to configure your dependency injection container.</summary>
-        /// <param name="viewModelTypes">All relevant view-model types exported by the configured assemblies.</param>
+        /// <param name="viewModelTypes">
+        ///     All relevant view-model types exported by the configured assemblies,
+        ///     excluding any view-model implementing <see cref="IWindowManager" />.
+        /// </param>
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
         ///     <see cref="GetService" /> to let the framework use it. The following types need to be
-        ///     registered here for the framework itself:
+        ///     registered here at a minimum:
         ///     <list type="bullet">
-        ///         <item>An <see cref="IWindowManager" /> implementation</item>
-        ///         <item>The <see cref="ViewLocator" /></item> <item>The <see cref="NameTransformer" /></item>
-        ///         <item>All relevant view models</item>
+        ///         <item>
+        ///             An <see cref="IWindowManager" /> implementation, using singleton lifetime in this
+        ///             scope
+        ///         </item>
+        ///         <item>The <see cref="Noesis.ViewLocator" />, using singleton lifetime in this scope</item>
+        ///         <item>The <see cref="NameTransformer" />, using singleton lifetime in this scope</item>
+        ///         <item>All relevant view-models and services</item>
         ///     </list>
+        ///     The view-model implementing <see cref="IWindowManager" /> will not be part of the
+        ///     <paramref name="viewModelTypes" /> sequence.
         /// </remarks>
         protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes)
         {
@@ -201,20 +212,23 @@
             }
         }
 
-        /// <summary>Override this to modify the configuration of the <see cref="ViewLocator" />.</summary>
-        /// <param name="viewLocator">The <see cref="ViewLocator" /> to configure.</param>
+        /// <summary>Override this to modify the configuration of the <see cref="Noesis.ViewLocator" />.</summary>
+        /// <param name="viewLocator">The <see cref="Noesis.ViewLocator" /> to configure.</param>
         protected virtual void ConfigureViewLocator(ViewLocator viewLocator)
         {
         }
 
         /// <summary>Override this to add custom logic on initialization.</summary>
-        protected virtual void OnInitialize()
+        /// <returns><c>true</c> if the custom initialization logic was successful; otherwise, <c>false</c>.</returns>
+        protected virtual bool OnInitialize()
         {
 #if UNITY_5_5_OR_NEWER
             LogManager.SetLoggerFactory(new DebugLoggerFactory(this, LogLevel.Information));
 #else
             LogManager.SetLoggerFactory(new DebugLoggerFactory(LogLevel.Information));
 #endif
+
+            return true;
         }
 
         /// <summary>Override this to add custom logic on shutdown.</summary>
@@ -229,7 +243,10 @@
             return UniTask.CompletedTask;
         }
 
-        /// <summary>Override to tell the framework where to find assemblies to inspect for views, view-models, etc.</summary>
+        /// <summary>
+        ///     Override to tell the framework where to find assemblies to inspect for views, view-models,
+        ///     etc.
+        /// </summary>
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
@@ -344,47 +361,45 @@
 
             ConfigureIoCContainer(assemblySource.ViewModelTypes);
 
-            var viewLocator = GetService<ViewLocator>();
-
-            if (viewLocator is null)
+            try
             {
-                Logger.LogError(
-                    "{ViewLocator1} not found - please register {ViewLocator2} and {NameTransformer} in DI container",
-                    nameof(ViewLocator),
-                    nameof(ViewLocator),
-                    nameof(NameTransformer));
-
-                return;
+                ViewLocator = GetService<ViewLocator>();
+            }
+            catch
+            {
+                ViewLocator = null;
             }
 
-            viewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
-            ConfigureViewLocator(viewLocator);
-
-            this.windowManager = GetService<IWindowManager>();
-
-            if (this.windowManager is null)
+            if (ViewLocator != null)
             {
-                Logger.LogError(
-                    "{IWindowManager1} not found - please register {IWindowManager2} implementation in DI container",
-                    nameof(IWindowManager),
-                    nameof(IWindowManager));
-
-                return;
-            }
+                ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
+                ConfigureViewLocator(ViewLocator);
 
 #if UNITY_5_5_OR_NEWER
-            var dictionary = GUI.GetApplicationResources();
+                var dictionary = GUI.GetApplicationResources();
 #else
-            var dictionary = Application.Current.Resources;
+                var dictionary = Application.Current.Resources;
 #endif
 
-            DataTemplateManager.RegisterDataTemplates(viewLocator, assemblySource, dictionary);
+                DataTemplateManager.RegisterDataTemplates(ViewLocator, assemblySource, dictionary);
+            }
 
-            OnInitialize();
+            try
+            {
+                WindowManager = GetService<IWindowManager>();
+            }
+            catch
+            {
+                WindowManager = null;
+            }
 
-            this.isInitialized = true;
+            var wasOnInitializeSuccessful = OnInitialize();
 
-            Logger.LogInformation("{Bootstrapper} initialized", this);
+            if (wasOnInitializeSuccessful && (ViewLocator != null) && (WindowManager != null))
+            {
+                this.isInitialized = true;
+                Logger.LogInformation("{Bootstrapper} initialized", this);
+            }
         }
 
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
@@ -396,7 +411,7 @@
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
             await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
 
-            if (this.windowManager is IDeactivate deactivate)
+            if (WindowManager is IDeactivate deactivate)
             {
                 await deactivate.DeactivateAsync(false, cancellationToken);
             }
@@ -413,7 +428,7 @@
 
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
-            if (this.windowManager is IActivate activate)
+            if (WindowManager is IActivate activate)
             {
                 await activate.ActivateAsync(cancellationToken);
             }
@@ -435,6 +450,23 @@
 
             await OnStartup();
 
+            if (ViewLocator is null)
+            {
+                Logger.LogError(
+                    "{ViewLocator1} not found - please register {ViewLocator2} and {NameTransformer} in DI container",
+                    nameof(Noesis.ViewLocator),
+                    nameof(Noesis.ViewLocator),
+                    nameof(NameTransformer));
+            }
+
+            if (WindowManager is null)
+            {
+                Logger.LogError(
+                    "{IWindowManager1} not found - please register {IWindowManager2} implementation in DI container",
+                    nameof(IWindowManager),
+                    nameof(IWindowManager));
+            }
+
             if (!this.isInitialized)
             {
                 Logger.LogError("{Bootstrapper} not initialized", this);
@@ -443,13 +475,13 @@
             }
 
 #if UNITY_5_5_OR_NEWER
-            this.noesisView.Content.DataContext = this.windowManager;
+            this.noesisView.Content.DataContext = WindowManager;
 #else
             window.DataContext = this.windowManager;
 #endif
 
             var mainContent = GetService<T>();
-            await this.windowManager.ShowMainContentAsync(mainContent);
+            await WindowManager.ShowMainContentAsync(mainContent);
         }
 
         #endregion
