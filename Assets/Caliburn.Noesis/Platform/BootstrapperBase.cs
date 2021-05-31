@@ -79,7 +79,6 @@
         }
 
         #endregion
-
 #endif
 
         #region Protected Properties
@@ -93,19 +92,18 @@
 
         #endregion
 
+        #region Private Properties
+
+        private Container IoCContainer { get; set; }
+
+        #endregion
+
         #region IServiceProvider Implementation
 
         /// <inheritdoc />
         public virtual object GetService(Type serviceType)
         {
-            if (serviceType == typeof(IWindowManager))
-            {
-                return new ShellViewModel();
-            }
-
-            return serviceType == typeof(ViewLocator)
-                       ? new ViewLocator(new NameTransformer())
-                       : Activator.CreateInstance(serviceType);
+            return IoCContainer.GetService(serviceType);
         }
 
         #endregion
@@ -174,8 +172,33 @@
 
         /// <summary>Override to configure your dependency injection container.</summary>
         /// <param name="viewModelTypes">All relevant view-model types exported by the configured assemblies.</param>
+        /// <remarks>
+        ///     If you are configuring your own DI container you also need to override
+        ///     <see cref="GetService" /> to let the framework use it. The following types need to be
+        ///     registered here for the framework itself:
+        ///     <list type="bullet">
+        ///         <item>An <see cref="IWindowManager" /> implementation</item>
+        ///         <item>The <see cref="ViewLocator" /></item> <item>The <see cref="NameTransformer" /></item>
+        ///         <item>All relevant view models</item>
+        ///     </list>
+        /// </remarks>
         protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes)
         {
+            IoCContainer = new Container();
+
+            IoCContainer.Register<IWindowManager>(typeof(ShellViewModel)).AsSingleton();
+            IoCContainer.Register<ViewLocator>().AsSingleton();
+            IoCContainer.Register<NameTransformer>().AsSingleton();
+
+            foreach (var type in viewModelTypes)
+            {
+                IoCContainer.Register(type, type);
+
+                foreach (var @interface in type.GetInterfaces())
+                {
+                    IoCContainer.Register(@interface, type);
+                }
+            }
         }
 
         /// <summary>Override this to modify the configuration of the <see cref="ViewLocator" />.</summary>
@@ -184,7 +207,7 @@
         {
         }
 
-        /// <summary>Override this to add custom behavior on initialization.</summary>
+        /// <summary>Override this to add custom logic on initialization.</summary>
         protected virtual void OnInitialize()
         {
 #if UNITY_5_5_OR_NEWER
@@ -194,13 +217,13 @@
 #endif
         }
 
-        /// <summary>Override this to add custom behavior on shutdown.</summary>
+        /// <summary>Override this to add custom logic on shutdown.</summary>
         protected virtual UniTask OnShutdown()
         {
             return UniTask.CompletedTask;
         }
 
-        /// <summary>Override this to add custom behavior to execute after the application starts.</summary>
+        /// <summary>Override this to add custom logic on startup.</summary>
         protected virtual UniTask OnStartup()
         {
             return UniTask.CompletedTask;
@@ -212,6 +235,7 @@
         {
             return new[]
                        {
+                           Assembly.GetExecutingAssembly(),
                            GetType().Assembly
                        };
         }
@@ -321,10 +345,32 @@
             ConfigureIoCContainer(assemblySource.ViewModelTypes);
 
             var viewLocator = GetService<ViewLocator>();
+
+            if (viewLocator is null)
+            {
+                Logger.LogError(
+                    "{ViewLocator1} not found - please register {ViewLocator2} and {NameTransformer} in DI container",
+                    nameof(ViewLocator),
+                    nameof(ViewLocator),
+                    nameof(NameTransformer));
+
+                return;
+            }
+
             viewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
             ConfigureViewLocator(viewLocator);
 
             this.windowManager = GetService<IWindowManager>();
+
+            if (this.windowManager is null)
+            {
+                Logger.LogError(
+                    "{IWindowManager1} not found - please register {IWindowManager2} implementation in DI container",
+                    nameof(IWindowManager),
+                    nameof(IWindowManager));
+
+                return;
+            }
 
 #if UNITY_5_5_OR_NEWER
             var dictionary = GUI.GetApplicationResources();
@@ -337,7 +383,7 @@
             OnInitialize();
 
             this.isInitialized = true;
-            
+
             Logger.LogInformation("{Bootstrapper} initialized", this);
         }
 
