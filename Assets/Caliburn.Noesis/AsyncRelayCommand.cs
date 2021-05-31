@@ -4,8 +4,10 @@
     using System.Windows.Input;
     using Cysharp.Threading.Tasks;
     using Extensions;
+    using JetBrains.Annotations;
 
     /// <summary>A command which relays its execution to an asynchronous delegate.</summary>
+    [PublicAPI]
     public class AsyncRelayCommand : IAsyncCommand
     {
         #region Constants and Fields
@@ -79,7 +81,7 @@
         /// <summary>Raises the <see cref="CanExecuteChanged" /> event.</summary>
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            Execute.OnUIThread(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
         }
 
         #endregion
@@ -87,6 +89,7 @@
 
     /// <summary>A command which relays its execution to an asynchronous delegate.</summary>
     /// <typeparam name="T">The type of the command parameter.</typeparam>
+    [PublicAPI]
     public class AsyncRelayCommand<T> : IAsyncCommand<T>
     {
         #region Constants and Fields
@@ -160,7 +163,7 @@
         /// <summary>Raises the <see cref="CanExecuteChanged" /> event.</summary>
         public void RaiseCanExecuteChanged()
         {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            Execute.OnUIThread(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
         }
 
         #endregion
