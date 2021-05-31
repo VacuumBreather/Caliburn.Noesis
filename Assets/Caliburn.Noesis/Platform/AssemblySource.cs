@@ -34,7 +34,6 @@
         public AssemblySource()
         {
             this.typeAssemblies.CollectionChanged += OnTypeAssembliesCollectionChanged;
-            this.typeAssemblies.Add(Assembly.GetExecutingAssembly());
         }
 
         #endregion
