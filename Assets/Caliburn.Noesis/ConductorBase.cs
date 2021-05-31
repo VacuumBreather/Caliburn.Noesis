@@ -20,28 +20,18 @@
 
         #endregion
 
-        #region Public Properties
-
-        /// <summary>Gets or sets the close strategy.</summary>
-        /// <value>The close strategy.</value>
-        public ICloseStrategy<T> CloseStrategy
-        {
-            get => this.closeStrategy ?? (this.closeStrategy = new DefaultCloseStrategy<T>());
-            set => this.closeStrategy = value;
-        }
-
-        #endregion
-
         #region IConductor Implementation
 
-        /// <summary>Occurs when an activation request is processed.</summary>
+        /// <inheritdoc />
         public virtual event EventHandler<ActivationProcessedEventArgs> ActivationProcessed;
 
+        /// <inheritdoc />
         UniTask IConductor.ActivateItemAsync(object item, CancellationToken cancellationToken)
         {
             return ActivateItemAsync((T)item, cancellationToken);
         }
 
+        /// <inheritdoc />
         UniTask IConductor.DeactivateItemAsync(object item,
                                                bool close,
                                                CancellationToken cancellationToken)
@@ -53,21 +43,19 @@
 
         #region IConductor<T> Implementation
 
-        /// <summary>Activates the specified item.</summary>
-        /// <param name="item">The item to activate.</param>
-        /// <param name="cancellationToken">
-        ///     A cancellation token that can be used by other objects or threads
-        ///     to receive notice of cancellation.
-        /// </param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <summary>Gets or sets the close strategy.</summary>
+        /// <value>The close strategy.</value>
+        public ICloseStrategy<T> CloseStrategy
+        {
+            get => this.closeStrategy ?? (this.closeStrategy = new DefaultCloseStrategy<T>());
+            set => this.closeStrategy = value;
+        }
+
+        /// <inheritdoc />
         public abstract UniTask ActivateItemAsync(T item,
                                                   CancellationToken cancellationToken = default);
 
-        /// <summary>Deactivates the specified item.</summary>
-        /// <param name="item">The item to close.</param>
-        /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
+        /// <inheritdoc />
         public abstract UniTask DeactivateItemAsync(T item,
                                                     bool close,
                                                     CancellationToken cancellationToken = default);
@@ -76,6 +64,7 @@
 
         #region IParent Implementation
 
+        /// <inheritdoc />
         IEnumerable IParent.GetChildren()
         {
             return GetChildren();
@@ -85,8 +74,7 @@
 
         #region IParent<T> Implementation
 
-        /// <summary>Gets the children.</summary>
-        /// <returns>The collection of children.</returns>
+        /// <inheritdoc />
         public abstract IEnumerable<T> GetChildren();
 
         #endregion

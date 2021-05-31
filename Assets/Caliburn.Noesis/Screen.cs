@@ -122,7 +122,7 @@
 
         #region IChild Implementation
 
-        /// <summary>Gets or sets the parent <see cref="IConductor" />.</summary>
+        /// <inheritdoc />
         public object Parent
         {
             get => this.parent;
@@ -246,6 +246,8 @@
         #region Protected Methods
 
         /// <summary>Called when activating.</summary>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual UniTask OnActivateAsync(CancellationToken cancellationToken)
         {
             return UniTask.CompletedTask;
