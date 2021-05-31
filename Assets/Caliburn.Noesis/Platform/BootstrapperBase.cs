@@ -229,7 +229,7 @@
             return UniTask.CompletedTask;
         }
 
-        /// <summary>Override to tell the framework where to find assemblies to inspect for view-models, etc.</summary>
+        /// <summary>Override to tell the framework where to find assemblies to inspect for views, view-models, etc.</summary>
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {

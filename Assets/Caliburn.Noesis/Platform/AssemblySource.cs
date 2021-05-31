@@ -15,7 +15,7 @@
     using System.Windows;
 #endif
 
-    /// <summary>A source of assemblies that contain view or view-model types relevant to the framework.</summary>
+    /// <summary>A source of assemblies that contain view and view-model types relevant to the framework.</summary>
     [PublicAPI]
     public class AssemblySource
     {
