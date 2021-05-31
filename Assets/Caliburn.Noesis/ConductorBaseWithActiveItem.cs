@@ -33,8 +33,7 @@
 
         #region IHaveActiveItem Implementation
 
-        /// <summary>The currently active item.</summary>
-        /// <value></value>
+        /// <inheritdoc />
         object IHaveActiveItem.ActiveItem
         {
             get => ActiveItem;
