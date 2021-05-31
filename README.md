@@ -4,6 +4,9 @@ A port of Caliburn.Micro, a small, yet powerful framework, designed for building
 
 [![Build status](https://ci.appveyor.com/api/projects/status/x2761vva24ga9wrs?svg=true)](https://ci.appveyor.com/project/VacuumBreather/caliburn-noesis)
 [![CodeFactor](https://www.codefactor.io/repository/github/vacuumbreather/caliburn.noesis/badge)](https://www.codefactor.io/repository/github/vacuumbreather/caliburn.noesis)
+[![Release](https://img.shields.io/github/release/VacuumBreather/Caliburn.Noesis.svg?style=flat-square)](https://github.com/VacuumBreather/Caliburn.Noesis/releases/latest)
+[![Issues](https://img.shields.io/github/issues/VacuumBreather/Caliburn.Noesis.svg?style=flat-square)](https://github.com/VacuumBreather/Caliburn.Noesis/issues)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/VacuumBreather/Caliburn.Noesis/blob/master/LICENSE)
 
 ## Notice
 
