@@ -3,11 +3,13 @@
     using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using JetBrains.Annotations;
 
     /// <summary>
     ///     Provides extension methods for the <see cref="IScreen" /> and <see cref="IConductor" />
     ///     types.
     /// </summary>
+    [PublicAPI]
     public static class ScreenExtensions
     {
         #region Public Methods
@@ -29,7 +31,9 @@
         {
             var childReference = new WeakReference(child);
 
-            void OnParentActivated(object sender, ActivationEventArgs e)
+            async UniTask OnParentActivated(object sender,
+                                            ActivationEventArgs e,
+                                            CancellationToken cancellationToken)
             {
                 var activate = (IActivate)childReference.Target;
 
@@ -39,7 +43,7 @@
                 }
                 else
                 {
-                    activate.ActivateAsync(CancellationToken.None);
+                    await activate.ActivateAsync(cancellationToken);
                 }
             }
 
@@ -78,17 +82,19 @@
         {
             var childReference = new WeakReference(child);
 
-            async UniTask AsyncEventHandler(object s, DeactivationEventArgs e)
+            async UniTask AsyncEventHandler(object sender,
+                                            DeactivationEventArgs e,
+                                            CancellationToken cancellationToken)
             {
                 var deactivate = (IDeactivate)childReference.Target;
 
                 if (deactivate == null)
                 {
-                    ((IDeactivate)s).Deactivated -= AsyncEventHandler;
+                    ((IDeactivate)sender).Deactivated -= AsyncEventHandler;
                 }
                 else
                 {
-                    await deactivate.DeactivateAsync(e.WasClosed, CancellationToken.None);
+                    await deactivate.DeactivateAsync(e.WasClosed, cancellationToken);
                 }
             }
 
