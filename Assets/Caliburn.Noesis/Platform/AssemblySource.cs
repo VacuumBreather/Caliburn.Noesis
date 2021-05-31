@@ -42,7 +42,8 @@
 
         /// <summary>Gets all extracted view-model types.</summary>
         public IEnumerable<Type> ViewModelTypes => this.typeNameCache.Values.Where(
-            type => type.IsDerivedFromOrImplements(typeof(INotifyPropertyChanged)));
+            type => type.IsDerivedFromOrImplements(typeof(INotifyPropertyChanged)) &&
+                    !type.IsDerivedFromOrImplements(typeof(IWindowManager)));
 
         #endregion
 
