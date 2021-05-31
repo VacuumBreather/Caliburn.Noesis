@@ -196,7 +196,7 @@
                 }
 
 #if UNITY_5_5_OR_NEWER
-                var color = GetLogColor<TState>(logLevel);
+                var color = GetLogColor(logLevel);
 
                 message =
                     $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
@@ -240,7 +240,7 @@
             }
 
 #if UNITY_5_5_OR_NEWER
-            private static string GetLogColor<TState>(LogLevel logLevel)
+            private static string GetLogColor(LogLevel logLevel)
             {
                 var color = "#FFFFFFFF";
 
