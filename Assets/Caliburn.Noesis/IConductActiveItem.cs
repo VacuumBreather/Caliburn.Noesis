@@ -6,7 +6,7 @@
     }
 
     /// <summary>An <see cref="IConductor{T}" /> that also implements <see cref="IHaveActiveItem" />.</summary>
-    public interface IConductActiveItem<T> : IConductor<T>, IHaveActiveItem
+    public interface IConductActiveItem<in T> : IConductor<T>, IConductActiveItem
     {
     }
 }
