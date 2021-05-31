@@ -196,35 +196,7 @@
                 }
 
 #if UNITY_5_5_OR_NEWER
-                var color = "#FFFFFFFF";
-
-                switch (logLevel)
-                {
-                    case LogLevel.Trace:
-                        color = "#87CEFA";
-
-                        break;
-                    case LogLevel.Debug:
-                        color = "#FF69B4";
-
-                        break;
-                    case LogLevel.Information:
-                        color = "#1E90FF";
-
-                        break;
-                    case LogLevel.Warning:
-                        color = "#FFD700";
-
-                        break;
-                    case LogLevel.Error:
-                        color = "#FF4500";
-
-                        break;
-                    case LogLevel.Critical:
-                        color = "#DC143C";
-
-                        break;
-                }
+                var color = GetLogColor<TState>(logLevel);
 
                 message =
                     $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
@@ -266,6 +238,43 @@
                 System.Diagnostics.Debug.WriteLine(message, this.categoryName);
 #endif
             }
+
+#if UNITY_5_5_OR_NEWER
+            private static string GetLogColor<TState>(LogLevel logLevel)
+            {
+                var color = "#FFFFFFFF";
+
+                switch (logLevel)
+                {
+                    case LogLevel.Trace:
+                        color = "#87CEFA";
+
+                        break;
+                    case LogLevel.Debug:
+                        color = "#FF69B4";
+
+                        break;
+                    case LogLevel.Information:
+                        color = "#1E90FF";
+
+                        break;
+                    case LogLevel.Warning:
+                        color = "#FFD700";
+
+                        break;
+                    case LogLevel.Error:
+                        color = "#FF4500";
+
+                        break;
+                    case LogLevel.Critical:
+                        color = "#DC143C";
+
+                        break;
+                }
+
+                return color;
+            }
+#endif
 
             private bool Filter(string _, LogLevel level)
             {
