@@ -52,7 +52,8 @@
 #else
             builder.Register(_ => new DebugLoggerFactory(LogLevel.Trace))
 #endif
-                   .As<ILoggerFactory>().SingleInstance();
+                   .As<ILoggerFactory>()
+                   .SingleInstance();
 
             builder.ComponentRegistryBuilder.Registered += (_, args) =>
                 {
@@ -76,7 +77,7 @@
             }
 
             Container = builder.Build();
-            
+
             LogManager.SetLoggerFactory(Container.Resolve<ILoggerFactory>());
             Logger = Container.Resolve<ILoggerFactory>().CreateLogger(GetType().Name);
         }

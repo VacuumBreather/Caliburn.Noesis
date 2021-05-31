@@ -140,11 +140,6 @@
                 this.filter = Filter;
             }
 
-            private bool Filter(string _, LogLevel level)
-            {
-                return level >= MinimalLogLevel;
-            }
-
 #if UNITY_5_5_OR_NEWER
             public DebugLogger(string categoryName,
                                Object context,
@@ -231,7 +226,8 @@
                         break;
                 }
 
-                message = $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
+                message =
+                    $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
 
                 switch (logLevel)
                 {
@@ -269,6 +265,11 @@
 
                 System.Diagnostics.Debug.WriteLine(message, this.categoryName);
 #endif
+            }
+
+            private bool Filter(string _, LogLevel level)
+            {
+                return level >= MinimalLogLevel;
             }
         }
 
