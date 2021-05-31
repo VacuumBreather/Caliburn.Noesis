@@ -20,20 +20,19 @@
 
         #endregion
 
-        /// <summary>
-        /// Executes the action on the UI thread asynchronously.
-        /// </summary>
+        /// <summary>Executes the action on the UI thread asynchronously.</summary>
         /// <param name="action">The action to execute.</param>
         public static void BeginOnUIThread(this Action action)
         {
 #if UNITY_5_5_OR_NEWER
             OnUIThreadAsync(
-                () =>
-                    {
-                        action();
+                    () =>
+                        {
+                            action();
 
-                        return UniTask.CompletedTask;
-                    }).Forget();
+                            return UniTask.CompletedTask;
+                        })
+                .Forget();
 #else
             Dispatcher.BeginInvoke(action);
 #endif
