@@ -3,12 +3,14 @@
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
+    using JetBrains.Annotations;
 
     /// <summary>
     ///     A base class for various implementations of <see cref="IConductor" /> that maintain an
     ///     active item.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
+    [PublicAPI]
     public abstract class ConductorBaseWithActiveItem<T> : ConductorBase<T>, IConductActiveItem<T>
         where T : class
     {
@@ -53,6 +55,8 @@
             bool closePrevious,
             CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(newItem, closePrevious, cancellationToken);
+
             await ScreenExtensions.TryDeactivateAsync(
                 this.activeItem,
                 closePrevious,
@@ -70,15 +74,6 @@
             }
 
             OnActivationProcessed(this.activeItem, true);
-        }
-
-        /// <summary>Changes the active item.</summary>
-        /// <param name="newItem">The new item to activate.</param>
-        /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        protected UniTask ChangeActiveItemAsync(T newItem, bool closePrevious)
-        {
-            return ChangeActiveItemAsync(newItem, closePrevious, CancellationToken.None);
         }
 
         #endregion

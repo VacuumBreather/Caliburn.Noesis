@@ -5,9 +5,12 @@
     using System.Collections.Generic;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using Extensions;
+    using JetBrains.Annotations;
 
     /// <summary>A base class for various implementations of <see cref="IConductor" />.</summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
+    [PublicAPI]
     public abstract class ConductorBase<T> : Screen, IConductor<T>, IParent<T>
         where T : class
     {
@@ -95,6 +98,8 @@
         /// <returns>The item to be activated.</returns>
         protected virtual T EnsureItem(T newItem)
         {
+            using var _ = Logger.GetMethodTracer(newItem);
+
             if (newItem is IChild child && (child.Parent != this))
             {
                 child.Parent = this;
@@ -108,6 +113,8 @@
         /// <param name="success">If set to <c>true</c> the activation was successful.</param>
         protected virtual void OnActivationProcessed(T item, bool success)
         {
+            using var _ = Logger.GetMethodTracer(item, success);
+
             if (item == null)
             {
                 return;

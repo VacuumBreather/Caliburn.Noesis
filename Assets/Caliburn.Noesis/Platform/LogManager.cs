@@ -1,327 +1,71 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
-    using System.Collections.Generic;
-    using System.Runtime.CompilerServices;
+    using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Abstractions;
 
 #if UNITY_5_5_OR_NEWER
-    using UnityEngine;
-    using Object = UnityEngine.Object;
 
 #endif
 
-    /// <summary>Responsible for creating various <see cref="ILogger" /> types.</summary>
+    /// <summary>Responsible for creating <see cref="Microsoft.Extensions.Logging.ILogger" /> instances.</summary>
+    [PublicAPI]
     public static class LogManager
     {
         #region Constants and Fields
 
-        private static readonly Dictionary<string, ILogger> StaticLoggers =
-            new Dictionary<string, ILogger>();
+        private const string FrameworkCategoryName = nameof(Caliburn);
+        private static ILoggerFactory loggerFactory = NullLoggerFactory.Instance;
 
         #endregion
 
         #region Public Properties
 
         /// <summary>
-        ///     Gets or sets the function which creates a <see cref="ILogger" /> for the given context
-        ///     intended for development in the editor.
+        ///     Gets the global logger for the <see cref="Caliburn" />.<see cref="Caliburn.Noesis" />
+        ///     framework.
         /// </summary>
-        /// <returns>
-        ///     A function which creates a <see cref="ILogger" /> for the given context intended for
-        ///     development in the editor.
-        /// </returns>
-        public static Func<object, ILogger> CreateForEditor { get; set; } = context =>
-#if UNITY_5_5_OR_NEWER
-            new UnityConsoleLogger(context);
-#else
-            new DebugConsoleLogger(context);
-#endif
-
-        /// <summary>
-        ///     Gets or sets the function which creates a <see cref="ILogger" /> for the given context
-        ///     intended for runtime use.
-        /// </summary>
-        /// <returns>
-        ///     A function which creates a <see cref="ILogger" /> for the given context intended for
-        ///     runtime use.
-        /// </returns>
-        public static Func<object, ILogger> CreateForRuntime { get; set; } = context =>
-#if UNITY_5_5_OR_NEWER
-            new UnityConsoleLogger(context);
-#else
-            new DebugConsoleLogger(context);
-#endif
-
-        /// <summary>
-        ///     Gets or sets the function which creates a <see cref="ILogger" /> for the given context
-        ///     intended for testing only.
-        /// </summary>
-        /// <returns>
-        ///     A function which creates a <see cref="ILogger" /> for the given context intended for
-        ///     testing only.
-        /// </returns>
-        public static Func<object, ILogger> CreateForTesting { get; set; } =
-            context => NullLogger.Instance;
+        public static ILogger FrameworkLogger { get; private set; } = NullLogger.Instance;
 
         #endregion
 
         #region Public Methods
 
-        /// <summary>Creates a <see cref="ILogger" /> for the specified context.</summary>
-        /// <param name="context">
-        ///     The context of the logger. This should be a game object or a type for non
-        ///     unity classes.
-        /// </param>
-        /// <returns>The logger for the specified context.</returns>
-        public static ILogger CreateLogger(object context)
-        {
-            if (!(context is Type type))
-            {
-                return CreateLoggerInternal(context);
-            }
-
-            if (StaticLoggers.TryGetValue(type.Name, out var staticLogger))
-            {
-                return staticLogger;
-            }
-
-            staticLogger = CreateLoggerInternal(type.Name);
-
-            StaticLoggers[type.Name] = staticLogger;
-
-            return staticLogger;
-        }
-
         /// <summary>
-        ///     Gets a method tracer which logs the entry and exit of a method. Use with a using
-        ///     expression at the beginning of a method.
+        ///     Creates a new <see cref="ILogger" /> instance using the full name of the given
+        ///     <paramref name="type" />.
         /// </summary>
-        /// <example>
-        ///     <code>
-        /// using var _ = LogManager.GetMethodTracer(Logger);
-        /// </code>
-        /// </example>
-        /// <param name="logger">The logger.</param>
-        /// <param name="callingMember">The name of the calling member.</param>
-        /// <returns>A method tracer.</returns>
-        public static IDisposable GetMethodTracer(ILogger logger,
-                                                  [CallerMemberName] string callingMember = default)
+        /// <param name="type">The type defining the category.</param>
+        /// <returns>A new <see cref="ILogger" /> instance.</returns>
+        public static ILogger GetLogger(Type type)
         {
-            return new MethodTracer(logger, callingMember);
+            return loggerFactory.CreateLogger(type);
         }
 
-        #endregion
-
-        #region Private Methods
-
-        private static ILogger CreateLoggerInternal(object context)
+        /// <summary>Creates a new <see cref="ILogger" /> instance using the full name of the given type.</summary>
+        /// <typeparam name="T">The type defining the category.</typeparam>
+        /// <returns>A new <see cref="ILogger" /> instance.</returns>
+        public static ILogger<T> GetLogger<T>()
+            where T : class
         {
-            if (UnitTestDetector.IsInUnitTest)
-            {
-                return CreateForTesting?.Invoke(context) ?? NullLogger.Instance;
-            }
-
-#if UNITY_5_5_OR_NEWER
-            return Application.isEditor
-                       ? CreateForEditor?.Invoke(context) ?? NullLogger.Instance
-                       : CreateForRuntime?.Invoke(context) ?? NullLogger.Instance;
-#else
-            return CreateForEditor?.Invoke(context) ?? NullLogger.Instance;
-#endif
+            return loggerFactory.CreateLogger<T>();
         }
 
-        #endregion
-
-        #region Nested Types
-
-        private class MethodTracer : IDisposable
+        /// <summary>Creates a new <see cref="ILogger" /> instance.</summary>
+        /// <param name="categoryName">The category name for messages produced by the logger.</param>
+        /// <returns>A new <see cref="ILogger" /> instance.</returns>
+        public static ILogger GetLogger(string categoryName)
         {
-            public MethodTracer(ILogger logger, string callingMember)
-            {
-                Logger = logger;
-                CallingMember = callingMember ?? "<unknown>";
-                Logger.Trace($">>>> {CallingMember}");
-            }
-
-            private string CallingMember { get; }
-
-            private ILogger Logger { get; }
-
-            void IDisposable.Dispose()
-            {
-                Logger.Trace($"<<<< {CallingMember}");
-            }
+            return loggerFactory.CreateLogger(categoryName);
         }
 
-        private class NullLogger : ILogger
+        /// <summary>Sets the <see cref="ILoggerFactory" /> used by this manager to create loggers.</summary>
+        /// <param name="factory">The <see cref="ILoggerFactory" /> this manager should use.</param>
+        public static void SetLoggerFactory(ILoggerFactory factory)
         {
-            private NullLogger()
-            {
-            }
-
-            /// <summary>Gets the static singleton instance of this logger.</summary>
-            public static ILogger Instance { get; } = new NullLogger();
-
-            /// <inheritdoc />
-            public void Assert(bool test, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Assert(bool test, Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Assert(Func<bool> test, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Assert(Func<bool> test,
-                               Object context,
-                               string message,
-                               params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Debug(string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Debug(Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Debug(Exception exception, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Debug(Exception exception,
-                              Object context,
-                              string message,
-                              params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Error(string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Error(Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Error(Exception exception, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Error(Exception exception,
-                              Object context,
-                              string message,
-                              params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Fatal(string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Fatal(Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Fatal(Exception exception, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Fatal(Exception exception,
-                              Object context,
-                              string message,
-                              params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Info(string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Info(Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Info(Exception exception, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Info(Exception exception,
-                             Object context,
-                             string message,
-                             params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Trace(string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Trace(Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Trace(Exception exception, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Trace(Exception exception,
-                              Object context,
-                              string message,
-                              params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Warn(string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Warn(Object context, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Warn(Exception exception, string message, params object[] args)
-            {
-            }
-
-            /// <inheritdoc />
-            public void Warn(Exception exception,
-                             Object context,
-                             string message,
-                             params object[] args)
-            {
-            }
+            loggerFactory = factory;
+            FrameworkLogger = loggerFactory.CreateLogger(FrameworkCategoryName);
         }
 
         #endregion

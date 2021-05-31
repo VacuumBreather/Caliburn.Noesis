@@ -4,6 +4,7 @@
     using System.Collections.Generic;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
+
 #else
     using System.Windows.Markup;
     using System.Windows.Media;
@@ -16,8 +17,14 @@
     /// <remarks>The brushes are frozen and cached.</remarks>
     public class SolidBrushExtension : MarkupExtension
     {
+        #region Constants and Fields
+
         private static readonly IDictionary<Color, SolidColorBrush> CachedBrushes =
             new Dictionary<Color, SolidColorBrush>();
+
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>Initializes a new instance of the <see cref="SolidBrushExtension" /> class.</summary>
         /// <param name="color">The color of the brush.</param>
@@ -26,9 +33,17 @@
             Color = color;
         }
 
+        #endregion
+
+        #region Public Properties
+
         /// <summary>Gets the color of the brush.</summary>
         /// <value>The color of the brush.</value>
         public Color Color { get; }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         ///     Returns the <see cref="SolidColorBrush" /> corresponding to the color specified by this
@@ -50,5 +65,7 @@
 
             return solidColorBrush;
         }
+
+        #endregion
     }
 }

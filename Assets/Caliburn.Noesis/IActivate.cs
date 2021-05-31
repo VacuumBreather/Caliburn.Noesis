@@ -1,14 +1,15 @@
 ﻿namespace Caliburn.Noesis
 {
-    using System;
     using System.Threading;
     using Cysharp.Threading.Tasks;
+    using JetBrains.Annotations;
 
     /// <summary>Denotes an instance which requires activation.</summary>
+    [PublicAPI]
     public interface IActivate
     {
         /// <summary>Raised after activation occurs.</summary>
-        event EventHandler<ActivationEventArgs> Activated;
+        event AsyncEventHandler<ActivationEventArgs> Activated;
 
         /// <summary>Indicates whether or not this instance is active.</summary>
         bool IsActive { get; }

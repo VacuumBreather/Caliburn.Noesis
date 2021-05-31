@@ -9,6 +9,7 @@
                                IActivate,
                                IDeactivate,
                                IGuardClose,
+                               IHaveLogger,
                                INotifyPropertyChangedEx
     {
     }
