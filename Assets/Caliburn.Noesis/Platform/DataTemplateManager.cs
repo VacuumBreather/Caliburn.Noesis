@@ -32,9 +32,9 @@
             var dataTemplate = CreateTemplate(viewModelType, viewType);
 
 #if UNITY_5_5_OR_NEWER
-            dictionary.Add(viewModelType, dataTemplate);
+            dictionary[viewModelType] = dataTemplate;
 #else
-            dictionary.Add(dataTemplate.DataTemplateKey!, dataTemplate);
+            dictionary[dataTemplate.DataTemplateKey!] = dataTemplate;
 #endif
         }
 
