@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer.Views
 {
     using System;
-    using Extensions;
 #if UNITY_5_5_OR_NEWER
+    using Extensions;
     using global::Noesis;
 
 #else
