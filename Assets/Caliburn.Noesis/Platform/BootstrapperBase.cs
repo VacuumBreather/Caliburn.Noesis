@@ -100,7 +100,7 @@
 
         private ViewLocator ViewLocator { get; } = new ViewLocator();
 
-        private AssemblySource AssemblySource { get; set; }
+        private AssemblySource AssemblySource { get; } = new AssemblySource();
 
         #endregion
 
@@ -388,7 +388,6 @@
                 return;
             }
 
-            AssemblySource = new AssemblySource();
             AssemblySource.AddRange(SelectAssemblies());
 
             ConfigureIoCContainer(AssemblySource.ViewModelTypes, AssemblySource.ViewTypes);
@@ -409,9 +408,19 @@
             Logger.LogInformation("Resolving window manager");
             WindowManager = GetService<IWindowManager>();
 
+            if (WindowManager is null)
+            {
+                Logger.LogError(
+                    "Window manager not found - please register {IWindowManager} implementation in DI container",
+                    nameof(IWindowManager));
+                Logger.LogError("Initialization failed");
+
+                return;
+            }
+
             var wasOnInitializeSuccessful = OnInitialize();
 
-            if (!wasOnInitializeSuccessful || (WindowManager == null))
+            if (!wasOnInitializeSuccessful)
             {
                 Logger.LogError("Initialization failed");
 
@@ -464,15 +473,6 @@
             Logger.LogInformation("Starting...");
 
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
-
-            if (WindowManager is null)
-            {
-                Logger.LogError(
-                    "Window manager not found - please register {IWindowManager} implementation in DI container",
-                    nameof(IWindowManager));
-
-                return;
-            }
 
 #if UNITY_5_5_OR_NEWER
             var dictionary = this.noesisView.Content.Resources;
