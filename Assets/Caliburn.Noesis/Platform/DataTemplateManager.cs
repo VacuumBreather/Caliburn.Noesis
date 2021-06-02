@@ -4,6 +4,7 @@
     using System.Linq;
     using Extensions;
     using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 
@@ -16,6 +17,23 @@
     [PublicAPI]
     public static class DataTemplateManager
     {
+        #region Constants and Fields
+
+        private static ILogger logger;
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>Gets or sets the <see cref="ILogger" /> for this type.</summary>
+        public static ILogger Logger
+        {
+            get => logger ??= LogManager.FrameworkLogger;
+            set => logger = value;
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -25,16 +43,22 @@
         /// <param name="viewModelType">The view-model type.</param>
         /// <param name="viewType">The view type.</param>
         /// <param name="dictionary">The <see cref="ResourceDictionary" /> to register the data template in.</param>
+        /// <param name="onRegister">A callback to execute when the data template was registered.</param>
         public static void RegisterDataTemplate(Type viewModelType,
                                                 Type viewType,
-                                                ResourceDictionary dictionary)
+                                                ResourceDictionary dictionary,
+                                                Action<DataTemplate> onRegister)
         {
+            using var _ = Logger.GetMethodTracer(viewModelType, viewType, dictionary, onRegister);
+
             var dataTemplate = CreateTemplate(viewModelType, viewType);
+            onRegister(dataTemplate);
+            dataTemplate.Seal();
 
 #if UNITY_5_5_OR_NEWER
-            dictionary.Add(viewModelType, dataTemplate);
+            dictionary[viewModelType] = dataTemplate;
 #else
-            dictionary.Add(dataTemplate.DataTemplateKey!, dataTemplate);
+            dictionary[dataTemplate.DataTemplateKey!] = dataTemplate;
 #endif
         }
 
@@ -48,10 +72,18 @@
         ///     The <see cref="ResourceDictionary" /> to register the data
         ///     templates in.
         /// </param>
+        /// <param name="onRegister">A callback to execute whenever a data template was registered.</param>
         public static void RegisterDataTemplates(ViewLocator viewLocator,
                                                  AssemblySource assemblySource,
-                                                 ResourceDictionary resourceDictionary)
+                                                 ResourceDictionary resourceDictionary,
+                                                 Action<DataTemplate> onRegister)
         {
+            using var _ = Logger.GetMethodTracer(
+                viewLocator,
+                assemblySource,
+                resourceDictionary,
+                onRegister);
+
             assemblySource.ViewModelTypes
                           .Select(
                               vmType =>
@@ -61,7 +93,8 @@
                               ((Type vmType, Type vType) mapping) => RegisterDataTemplate(
                                   mapping.vmType,
                                   mapping.vType,
-                                  resourceDictionary));
+                                  resourceDictionary,
+                                  onRegister));
         }
 
         #endregion
@@ -70,21 +103,29 @@
 
         private static DataTemplate CreateTemplate(Type viewModelType, Type viewType)
         {
+            using var _ = Logger.GetMethodTracer(viewModelType, viewType);
+
             string xamlTemplate;
 
             if (viewType != null)
             {
+                Logger.LogDebug("Creating data template for {ViewModel}", viewModelType);
+
                 xamlTemplate = "<DataTemplate\n" +
                                "  xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n" +
                                "  xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n" +
                                $"  xmlns:vm=\"clr-namespace:{viewModelType.Namespace};assembly={viewModelType.Assembly.GetName().Name}\"\n" +
-                               $"  xmlns:v=\"clr-namespace:{viewType.Namespace};assembly={viewType.Assembly.GetName().Name}\"\n" +
+                               $"  xmlns:cal=\"clr-namespace:{typeof(View).Namespace};assembly={typeof(View).Assembly.GetName().Name}\"\n" +
                                $"  DataType=\"{{x:Type vm:{viewModelType.Name}}}\">\n" +
-                               $"    <v:{viewType.Name} />\n" +
+                               "    <ContentPresenter cal:View.Model=\"{Binding}\" />\n" +
                                "</DataTemplate>";
             }
             else if (viewModelType.IsDerivedFromOrImplements(typeof(DialogScreen)))
             {
+                Logger.LogWarning(
+                    "Creating placeholder dialog template for {ViewModel}",
+                    viewModelType);
+
                 xamlTemplate = "<DataTemplate\n" +
                                "    xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n" +
                                $"    xmlns:vm=\"clr-namespace:{viewModelType.Namespace};assembly={viewModelType.Assembly.GetName().Name}\"\n" +
@@ -146,6 +187,10 @@
             }
             else
             {
+                Logger.LogWarning(
+                    "Creating placeholder data template for {ViewModel}",
+                    viewModelType);
+
                 xamlTemplate = "<DataTemplate\n" +
                                "  xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n" +
                                "  xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n" +
