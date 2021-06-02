@@ -13,6 +13,7 @@
 
 #else
     using System.Windows;
+    using System.Windows.Controls;
 #endif
 
     /// <summary>A source of assemblies that contain view and view-model types relevant to the framework.</summary>
@@ -43,7 +44,14 @@
         /// <summary>Gets all extracted view-model types.</summary>
         public IEnumerable<Type> ViewModelTypes => this.typeNameCache.Values.Where(
             type => type.IsDerivedFromOrImplements(typeof(INotifyPropertyChanged)) &&
+                    !type.IsDerivedFromOrImplements(typeof(DialogConductor)) &&
+                    !type.IsDerivedFromOrImplements(typeof(WindowConductor)) &&
                     !type.IsDerivedFromOrImplements(typeof(IWindowManager)));
+
+        /// <summary>Gets all extracted view types.</summary>
+        public IEnumerable<Type> ViewTypes => this.typeNameCache.Values.Where(
+            type => type.IsDerivedFromOrImplements(typeof(UserControl)) &&
+                    (type != typeof(ShellView)));
 
         #endregion
 

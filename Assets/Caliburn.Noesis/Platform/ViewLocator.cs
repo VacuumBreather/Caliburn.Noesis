@@ -6,17 +6,23 @@
     using Extensions;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
+    using System.Windows;
+    using System.Windows.Controls;
+#endif
 
     /// <summary>Responsible for mapping view-model types to their corresponding view types.</summary>
     [PublicAPI]
-    public class ViewLocator : IHaveLogger
+    public class ViewLocator
     {
         #region Constants and Fields
 
         private const string DefaultViewSuffix = "View";
 
         private readonly List<string> viewSuffixList = new List<string>();
-        private ILogger logger;
 
         private string defaultSubNsViewModels;
         private string defaultSubNsViews;
@@ -28,37 +34,11 @@
 
         #endregion
 
-        #region Constructors and Destructors
-
-        /// <summary>Initializes a new instance of the <see cref="ViewLocator" /> class.</summary>
-        /// <param name="nameTransformer">The <see cref="NameTransformer" /> used for type name resolution.</param>
-        public ViewLocator(NameTransformer nameTransformer)
-        {
-            NameTransformer = nameTransformer;
-        }
-
-        #endregion
-
         #region Private Properties
 
-        private ILogger Logger
-        {
-            get => this.logger ??= LogManager.FrameworkLogger;
-            set => this.logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
-        private NameTransformer NameTransformer { get; }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
+        private NameTransformer NameTransformer { get; } = new NameTransformer();
 
         #endregion
 
@@ -326,9 +306,96 @@
             SetAllDefaults();
         }
 
+        /// <summary>Retrieves the view from the IoC container or tries to create it if not found.</summary>
+        /// <param name="viewType">The type of view to create.</param>
+        /// <param name="resolveView">The factory function used to retrieve the view from the IoC container.</param>
+        /// <remarks>Pass the type of view as a parameter and receive an instance of the view.</remarks>
+        public UIElement GetOrCreateViewType(Type viewType, Func<Type, UIElement> resolveView)
+        {
+            TextBlock CreatePlaceholderView() =>
+                new TextBlock { Text = $"Cannot create {viewType.FullName}." };
+
+            if (viewType.IsInterface ||
+                viewType.IsAbstract ||
+                !viewType.IsDerivedFromOrImplements(typeof(UIElement)))
+            {
+                return CreatePlaceholderView();
+            }
+
+            var view = resolveView(viewType);
+
+            if (view != null)
+            {
+                return view;
+            }
+
+            try
+            {
+                view = (UIElement)Activator.CreateInstance(viewType);
+            }
+            catch (Exception)
+            {
+                return CreatePlaceholderView();
+            }
+
+            return view;
+        }
+
+        /// <summary>Locates the view for the specified model instance.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="viewFactory">A factory function to create a view from its type.</param>
+        /// <param name="assemblySource">
+        ///     A source of assemblies that contain view and view-model types relevant
+        ///     to the framework.
+        /// </param>
+        /// <returns>The view.</returns>
+        /// <remarks>
+        ///     Pass the model instance, display location (or null) and the context (or null) as
+        ///     parameters and receive a view instance.
+        /// </remarks>
+        public UIElement LocateForModel(object model,
+                                        Func<Type, UIElement> viewFactory,
+                                        AssemblySource assemblySource)
+        {
+            if (model is IViewAware { View: UIElement view })
+            {
+                Logger.LogDebug("Using cached view for {ViewModel}", model);
+
+                return view;
+            }
+
+            return LocateForModelType(model.GetType(), viewFactory, assemblySource);
+        }
+
+        /// <summary>Locates the view for the specified model type.</summary>
+        /// <param name="modelType">The type of the model.</param>
+        /// <param name="resolveView">The factory function used to retrieve the view from the IoC container.</param>
+        /// <param name="assemblySource">
+        ///     A source of assemblies that contain view and view-model types relevant
+        ///     to the framework.
+        /// </param>
+        /// <returns>The view.</returns>
+        /// <remarks>
+        ///     Pass the model type, display location (or null) and the context instance (or null) as
+        ///     parameters and receive a view instance.
+        /// </remarks>
+        public UIElement LocateForModelType(Type modelType,
+                                            Func<Type, UIElement> resolveView,
+                                            AssemblySource assemblySource)
+        {
+            var viewType = LocateTypeForModelType(modelType, assemblySource);
+
+            return viewType == null
+                       ? new TextBlock { Text = $"Cannot find view for {modelType}." }
+                       : GetOrCreateViewType(viewType, resolveView);
+        }
+
         /// <summary>Locates the view type based on the specified model type.</summary>
         /// <param name="modelType">The model type.</param>
-        /// <param name="assemblySource">The <see cref="AssemblySource" /> containing the relevant types.</param>
+        /// <param name="assemblySource">
+        ///     A source of assemblies that contain view and view-model types relevant
+        ///     to the framework.
+        /// </param>
         /// <returns>The located view type or <c>null</c> if no such type could be found.</returns>
         public Type LocateTypeForModelType(Type modelType, AssemblySource assemblySource)
         {
@@ -398,7 +465,7 @@
 
             if (this.useNameSuffixesInMappings)
             {
-                // Add support for all view suffixes
+                // Add support for all view suffixes.
                 this.viewSuffixList.ForEach(AddDefaultTypeMapping);
             }
             else

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Autofac;
     using Autofac.Core.Resolving.Pipeline;
     using Cysharp.Threading.Tasks;
@@ -35,7 +34,14 @@
         /// <inheritdoc />
         public override object GetService(Type serviceType)
         {
-            return Container.Resolve(serviceType);
+            try
+            {
+                return Container.Resolve(serviceType);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #endregion
@@ -43,14 +49,15 @@
         #region Protected Methods
 
         /// <inheritdoc />
-        protected override void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes)
+        protected override void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes,
+                                                      IEnumerable<Type> viewTypes)
         {
             var builder = new ContainerBuilder();
 
 #if UNITY_5_5_OR_NEWER
-            builder.Register(_ => new DebugLoggerFactory(this, LogLevel.Trace))
+            builder.Register(_ => new DebugLoggerFactory(this, LogLevel.Information))
 #else
-            builder.Register(_ => new DebugLoggerFactory(LogLevel.Trace))
+            builder.Register(_ => new DebugLoggerFactory(LogLevel.Information))
 #endif
                    .As<ILoggerFactory>()
                    .SingleInstance();
@@ -65,10 +72,13 @@
 
             builder.RegisterInstance(this).As<IServiceProvider>().SingleInstance();
             builder.RegisterType<ShellViewModel>().As<IWindowManager>().SingleInstance();
-            builder.RegisterType<ViewLocator>().AsSelf().SingleInstance();
-            builder.RegisterType<NameTransformer>().AsSelf().SingleInstance();
 
-            foreach (var type in viewModelTypes.Where(type => type != typeof(ShellViewModel)))
+            foreach (var type in viewTypes)
+            {
+                builder.RegisterType(type).AsSelf().InstancePerDependency();
+            }
+
+            foreach (var type in viewModelTypes)
             {
                 builder.RegisterType(type)
                        .AsSelf()
@@ -77,9 +87,6 @@
             }
 
             Container = builder.Build();
-
-            LogManager.SetLoggerFactory(Container.Resolve<ILoggerFactory>());
-            Logger = Container.Resolve<ILoggerFactory>().CreateLogger(GetType().Name);
         }
 
         /// <inheritdoc />
@@ -107,7 +114,7 @@
                 {
                     // Resolve and attach the logger.
                     hasLogger.Logger = context.Resolve<ILoggerFactory>()
-                                              .CreateLogger(hasLogger.GetType().Name);
+                                              .CreateLogger(LogManager.FrameworkCategoryName);
                 }
             }
         }

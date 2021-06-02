@@ -8,7 +8,7 @@
 
     /// <summary>A base implementation of <see cref="IScreen" />.</summary>
     [PublicAPI]
-    public abstract class Screen : PropertyChangedBase, IScreen, IChild
+    public abstract class Screen : ViewAware, IScreen, IChild
     {
         #region Constants and Fields
 
@@ -97,7 +97,7 @@
             {
                 using var initGuard = new CompletionSourceGuard(out this.initializationCompletion);
 
-                Logger.LogDebug("Initializing {Screen}...", this);
+                Logger.LogDebug("Initializing {@Screen}...", this);
 
                 // Deactivation is not allowed to cancel initialization, so we are only
                 // passing the token that was passed to us.
@@ -105,7 +105,7 @@
                 IsInitialized = initialized = true;
             }
 
-            Logger.LogDebug("Activating {Screen}...", this);
+            Logger.LogDebug("Activating {@Screen}...", this);
             await OnActivateAsync(this.activateCancellation.Token);
 
             IsActive = true;
@@ -114,7 +114,7 @@
 
             if (this.activateCancellation?.IsCancellationRequested == true)
             {
-                Logger.LogDebug("Activation of {Screen} cancelled", this);
+                Logger.LogDebug("Activation of {@Screen} cancelled", this);
             }
         }
 
@@ -179,7 +179,7 @@
 
             if (IsActive || (IsInitialized && close))
             {
-                Logger.LogDebug("Deactivating {Screen}...", this);
+                Logger.LogDebug("Deactivatin@g {@Screen}...", this);
                 await RaiseDeactivatingAsync(close, this.deactivateCancellation.Token);
                 await OnDeactivateAsync(close, this.deactivateCancellation.Token);
 
@@ -189,13 +189,13 @@
 
                 if (close)
                 {
-                    Logger.LogDebug("Closed {Screen}", this);
+                    Logger.LogDebug("Closed {@Screen}", this);
                 }
             }
 
             if (this.deactivateCancellation?.IsCancellationRequested == true)
             {
-                Logger.LogDebug("Deactivation of {Screen} cancelled", this);
+                Logger.LogDebug("Deactivation of {@Screen} cancelled", this);
             }
         }
 
@@ -229,16 +229,6 @@
         {
             get => Logger;
             set => Logger = value;
-        }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return DisplayName;
         }
 
         #endregion

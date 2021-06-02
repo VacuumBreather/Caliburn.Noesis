@@ -9,7 +9,9 @@
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
+    using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
+    using global::Noesis;
     using GUI = global::Noesis.GUI;
     using UnityEngine;
 
@@ -96,16 +98,26 @@
 
         private IWindowManager WindowManager { get; set; }
 
-        private ViewLocator ViewLocator { get; set; }
+        private ViewLocator ViewLocator { get; } = new ViewLocator();
+
+        private AssemblySource AssemblySource { get; set; }
 
         #endregion
 
         #region IServiceProvider Implementation
 
         /// <inheritdoc />
+        /// <remarks>This method must not throw exceptions.</remarks>
         public virtual object GetService(Type serviceType)
         {
-            return IoCContainer.GetService(serviceType);
+            try
+            {
+                return IoCContainer.GetService(serviceType);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #endregion
@@ -177,29 +189,39 @@
         ///     All relevant view-model types exported by the configured assemblies,
         ///     excluding any view-model implementing <see cref="IWindowManager" />.
         /// </param>
+        /// <param name="viewTypes">
+        ///     All relevant view types exported by the configured assemblies, excluding
+        ///     <see cref="ShellView" />.
+        /// </param>
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
-        ///     <see cref="GetService" /> to let the framework use it. The following types need to be
+        ///     <see cref="GetService" /> to let the framework use it. <br /> The following types need to be
         ///     registered here at a minimum:
         ///     <list type="bullet">
         ///         <item>
         ///             An <see cref="IWindowManager" /> implementation, using singleton lifetime in this
         ///             scope
         ///         </item>
-        ///         <item>The <see cref="Noesis.ViewLocator" />, using singleton lifetime in this scope</item>
-        ///         <item>The <see cref="NameTransformer" />, using singleton lifetime in this scope</item>
-        ///         <item>All relevant view-models and services</item>
+        ///         <item>
+        ///             Optionally a <see cref="ILoggerFactory" />, using singleton lifetime in this scope,
+        ///             if you want to provide your own to the framework
+        ///         </item>
+        ///         <item>All relevant view, view-models and services</item>
         ///     </list>
         ///     The view-model implementing <see cref="IWindowManager" /> will not be part of the
         ///     <paramref name="viewModelTypes" /> sequence.
         /// </remarks>
-        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes)
+        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes,
+                                                     IEnumerable<Type> viewTypes)
         {
             IoCContainer = new Container();
 
             IoCContainer.Register<IWindowManager>(typeof(ShellViewModel)).AsSingleton();
-            IoCContainer.Register<ViewLocator>().AsSingleton();
-            IoCContainer.Register<NameTransformer>().AsSingleton();
+
+            foreach (var viewType in viewTypes)
+            {
+                IoCContainer.Register(viewType, viewType);
+            }
 
             foreach (var type in viewModelTypes)
             {
@@ -349,6 +371,13 @@
 
         #region Private Methods
 
+        private void AddImportantResources(ResourceDictionary resourceDictionary)
+        {
+            resourceDictionary[nameof(IServiceProvider)] = this;
+            resourceDictionary[nameof(AssemblySource)] = AssemblySource;
+            resourceDictionary[nameof(ViewLocator)] = ViewLocator;
+        }
+
         private void Initialize()
         {
             if (this.isInitialized)
@@ -356,22 +385,23 @@
                 return;
             }
 
-            var assemblySource = new AssemblySource();
-            assemblySource.AddRange(SelectAssemblies());
+            AssemblySource = new AssemblySource();
+            AssemblySource.AddRange(SelectAssemblies());
 
-            ConfigureIoCContainer(assemblySource.ViewModelTypes);
+            ConfigureIoCContainer(AssemblySource.ViewModelTypes, AssemblySource.ViewTypes);
 
-            try
+            if (GetService<ILoggerFactory>() is { } loggerFactory)
             {
-                ViewLocator = GetService<ViewLocator>();
+                LogManager.SetLoggerFactory(loggerFactory);
             }
-            catch
-            {
-                ViewLocator = null;
-            }
+
+            using var _ = Logger.GetMethodTracer();
+
+            Logger.LogInformation("Initializing...");
 
             if (ViewLocator != null)
             {
+                Logger.LogInformation("Configuring type mappings");
                 ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
                 ConfigureViewLocator(ViewLocator);
 
@@ -381,24 +411,22 @@
                 var dictionary = Application.Current.Resources;
 #endif
 
-                DataTemplateManager.RegisterDataTemplates(ViewLocator, assemblySource, dictionary);
+                Logger.LogInformation("Registering data templates");
+                DataTemplateManager.RegisterDataTemplates(
+                    ViewLocator,
+                    AssemblySource,
+                    dictionary,
+                    template => AddImportantResources(template.Resources));
             }
 
-            try
-            {
-                WindowManager = GetService<IWindowManager>();
-            }
-            catch
-            {
-                WindowManager = null;
-            }
+            WindowManager = GetService<IWindowManager>();
 
             var wasOnInitializeSuccessful = OnInitialize();
 
             if (wasOnInitializeSuccessful && (ViewLocator != null) && (WindowManager != null))
             {
                 this.isInitialized = true;
-                Logger.LogInformation("{Bootstrapper} initialized", this);
+                Logger.LogInformation("Initialization complete");
             }
         }
 
@@ -476,8 +504,10 @@
 
 #if UNITY_5_5_OR_NEWER
             this.noesisView.Content.DataContext = WindowManager;
+            AddImportantResources(this.noesisView.Content.Resources);
 #else
             window.DataContext = WindowManager;
+            AddImportantResources(window.Resources);
 #endif
 
             var mainContent = GetService<T>();

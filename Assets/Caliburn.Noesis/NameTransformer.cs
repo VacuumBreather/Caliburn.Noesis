@@ -10,12 +10,11 @@
     ///     Class for managing the list of rules for transforming view-model type names into view type
     ///     names.
     /// </summary>
-    public class NameTransformer : BindableCollection<NameTransformer.Rule>, IHaveLogger
+    public class NameTransformer : BindableCollection<NameTransformer.Rule>
     {
         #region Constants and Fields
 
         private const RegexOptions Options = RegexOptions.Compiled;
-        private static ILogger logger;
 
         private bool useEagerRuleSelection = true;
 
@@ -37,22 +36,7 @@
 
         #region Private Properties
 
-        private static ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            set => logger = value;
-        }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
