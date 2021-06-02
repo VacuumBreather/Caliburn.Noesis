@@ -15,11 +15,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0.0" />
-    <PackageReference Include="Noesis.GUI.Extensions" Version="3.0.6" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
-    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
-    <PackageReference Include="UniTask" Version="2.2.5.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0.0" />
+    <PackageReference Include="Noesis.GUI.Extensions" Version="3.0.6" />
+    <PackageReference Include="UniTask" Version="2.2.5.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\Assets\Caliburn.Noesis\**\*.cs" LinkBase="Caliburn.Noesis" />
