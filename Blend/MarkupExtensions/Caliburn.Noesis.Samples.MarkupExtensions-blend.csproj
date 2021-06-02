@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>8</LangVersion>
+    <TargetFramework>net472</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Caliburn.Noesis</RootNamespace>
+    <AssemblyName>Caliburn.Noesis.Samples.MarkupExtensions</AssemblyName>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0.0" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0.0" />
+    <PackageReference Include="Noesis.GUI.Extensions" Version="3.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0.0" />
+    <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="4.7.1" />
+    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    <PackageReference Include="System.Windows.Interactivity.WPF" Version="2.0.20525" />
+    <PackageReference Include="UniTask" Version="2.2.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Assets\Caliburn.Noesis\**\*.cs" LinkBase="Caliburn.Noesis" />
+    <Page Include="..\..\Assets\Caliburn.Noesis\**\*.xaml" LinkBase="Caliburn.Noesis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Assets\Samples\MarkupExtensions\**\*.cs" LinkBase="MarkupExtensions" />
+    <Page Include="..\..\Assets\Samples\MarkupExtensions\**\*.xaml" LinkBase="MarkupExtensions" />
+    <Resource Include="..\..\Assets\Samples\MarkupExtensions\**\*.ttf" LinkBase="MarkupExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Assets\Samples\AutofacBootstrapperBase.cs" LinkBase="MarkupExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs" />
+  </ItemGroup>
+</Project>
