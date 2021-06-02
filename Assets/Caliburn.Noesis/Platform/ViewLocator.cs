@@ -308,9 +308,12 @@
 
         /// <summary>Retrieves the view from the IoC container or tries to create it if not found.</summary>
         /// <param name="viewType">The type of view to create.</param>
-        /// <param name="resolveView">The factory function used to retrieve the view from the IoC container.</param>
+        /// <param name="serviceProvider">
+        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
+        ///     IoC container.
+        /// </param>
         /// <remarks>Pass the type of view as a parameter and receive an instance of the view.</remarks>
-        public UIElement GetOrCreateViewType(Type viewType, Func<Type, UIElement> resolveView)
+        public UIElement GetOrCreateViewType(Type viewType, IServiceProvider serviceProvider)
         {
             TextBlock CreatePlaceholderView() =>
                 new TextBlock { Text = $"Cannot create {viewType.FullName}." };
@@ -322,7 +325,7 @@
                 return CreatePlaceholderView();
             }
 
-            var view = resolveView(viewType);
+            var view = serviceProvider.GetService(viewType) as UIElement;
 
             if (view != null)
             {
@@ -343,7 +346,10 @@
 
         /// <summary>Locates the view for the specified model instance.</summary>
         /// <param name="model">The model.</param>
-        /// <param name="viewFactory">A factory function to create a view from its type.</param>
+        /// <param name="serviceProvider">
+        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
+        ///     IoC container.
+        /// </param>
         /// <param name="assemblySource">
         ///     A source of assemblies that contain view and view-model types relevant
         ///     to the framework.
@@ -354,7 +360,7 @@
         ///     parameters and receive a view instance.
         /// </remarks>
         public UIElement LocateForModel(object model,
-                                        Func<Type, UIElement> viewFactory,
+                                        IServiceProvider serviceProvider,
                                         AssemblySource assemblySource)
         {
             if (model is IViewAware { View: UIElement view })
@@ -364,12 +370,15 @@
                 return view;
             }
 
-            return LocateForModelType(model.GetType(), viewFactory, assemblySource);
+            return LocateForModelType(model.GetType(), serviceProvider, assemblySource);
         }
 
         /// <summary>Locates the view for the specified model type.</summary>
         /// <param name="modelType">The type of the model.</param>
-        /// <param name="resolveView">The factory function used to retrieve the view from the IoC container.</param>
+        /// <param name="serviceProvider">
+        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
+        ///     IoC container.
+        /// </param>
         /// <param name="assemblySource">
         ///     A source of assemblies that contain view and view-model types relevant
         ///     to the framework.
@@ -380,14 +389,14 @@
         ///     parameters and receive a view instance.
         /// </remarks>
         public UIElement LocateForModelType(Type modelType,
-                                            Func<Type, UIElement> resolveView,
+                                            IServiceProvider serviceProvider,
                                             AssemblySource assemblySource)
         {
             var viewType = LocateTypeForModelType(modelType, assemblySource);
 
             return viewType == null
                        ? new TextBlock { Text = $"Cannot find view for {modelType}." }
-                       : GetOrCreateViewType(viewType, resolveView);
+                       : GetOrCreateViewType(viewType, serviceProvider);
         }
 
         /// <summary>Locates the view type based on the specified model type.</summary>
