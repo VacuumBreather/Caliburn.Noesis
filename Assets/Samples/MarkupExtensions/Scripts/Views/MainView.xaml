@@ -13,15 +13,5 @@
     <TabControl
         DisplayMemberPath="DisplayName"
         ItemsSource="{Binding Items, Mode=OneWay}"
-        SelectedItem="{Binding ActiveItem, Mode=TwoWay}">
-        <TabControl.ContentTemplate>
-            <DataTemplate>
-                <ContentControl
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                    Content="{Binding Mode=OneWay}"
-                    IsTabStop="False" />
-            </DataTemplate>
-        </TabControl.ContentTemplate>
-    </TabControl>
+        SelectedItem="{Binding ActiveItem, Mode=TwoWay}" />
 </UserControl>
