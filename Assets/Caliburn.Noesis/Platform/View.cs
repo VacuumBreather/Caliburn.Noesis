@@ -128,9 +128,7 @@
                 out var assemblySource,
                 out var viewLocator))
             {
-                UIElement ResolveView(Type type) => serviceProvider.GetService(type) as UIElement;
-
-                var view = viewLocator.LocateForModel(viewModel, ResolveView, assemblySource);
+                var view = viewLocator.LocateForModel(viewModel, serviceProvider, assemblySource);
 
                 if (viewModel is IViewAware viewAware && !ReferenceEquals(viewAware.View, view))
                 {
@@ -150,7 +148,7 @@
 
                     view = viewLocator.LocateForModelType(
                         viewModel.GetType(),
-                        ResolveView,
+                        serviceProvider,
                         assemblySource);
 
                     SetContentProperty(targetLocation, view);
