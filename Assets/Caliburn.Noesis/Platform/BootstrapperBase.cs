@@ -157,7 +157,7 @@
 
             try
             {
-                Logger.LogInformation("{Bootstrapper} shutting down", this);
+                Logger.LogInformation("Shutting down...");
 
                 await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
                 await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
@@ -170,6 +170,8 @@
                 {
                     await deactivate.DeactivateAsync(true);
                 }
+
+                Logger.LogInformation("Shutdown complete");
             }
             finally
             {
@@ -334,8 +336,8 @@
             if (this.isInitialized)
             {
                 Logger.LogWarning(
-                    "{Bootstrapper} not shut down correctly - call {ShutdownAsync}() before destroying",
-                    this,
+                    "Async shutdown logic not guaranteed to complete before {@GameObject} destruction - call and await {ShutdownAsync}() before destroying",
+                    gameObject,
                     nameof(ShutdownAsync));
 
                 await ShutdownAsync();
@@ -497,7 +499,7 @@
 
             if (!this.isInitialized)
             {
-                Logger.LogError("{Bootstrapper} not initialized", this);
+                Logger.LogError("Initialization failed");
 
                 return;
             }
