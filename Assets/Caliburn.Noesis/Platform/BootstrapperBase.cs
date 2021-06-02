@@ -12,7 +12,6 @@
     using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-    using GUI = global::Noesis.GUI;
     using UnityEngine;
 
 #else
@@ -62,6 +61,7 @@
         {
             Application.Current.Startup += async (_, __) =>
                 {
+                    Initialize();
                     this.onEnableCancellation = new CancellationTokenSource();
                     await OnEnableAsync(this.onEnableCancellation.Token);
                     await StartAsync();
@@ -148,16 +148,16 @@
         /// </remarks>
         public async UniTask ShutdownAsync()
         {
+            using var _ = Logger.GetMethodTracer();
+
             if (!this.isInitialized)
             {
                 return;
             }
 
-            using var _ = Logger.GetMethodTracer();
-
             try
             {
-                Logger.LogInformation("{Bootstrapper} shutting down", this);
+                Logger.LogInformation("Shutting down...");
 
                 await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
                 await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
@@ -170,6 +170,8 @@
                 {
                     await deactivate.DeactivateAsync(true);
                 }
+
+                Logger.LogInformation("Shutdown complete");
             }
             finally
             {
@@ -334,8 +336,8 @@
             if (this.isInitialized)
             {
                 Logger.LogWarning(
-                    "{Bootstrapper} not shut down correctly - call {ShutdownAsync}() before destroying",
-                    this,
+                    "Async shutdown logic not guaranteed to complete before {@GameObject} destruction - call and await {ShutdownAsync}() before destroying",
+                    gameObject,
                     nameof(ShutdownAsync));
 
                 await ShutdownAsync();
@@ -354,6 +356,7 @@
         [UsedImplicitly]
         private async UniTaskVoid OnEnable()
         {
+            Initialize();
             this.onEnableCancellation = new CancellationTokenSource();
             await OnEnableAsync(this.onEnableCancellation.Token);
         }
@@ -399,42 +402,31 @@
 
             Logger.LogInformation("Initializing...");
 
-            if (ViewLocator != null)
-            {
-                Logger.LogInformation("Configuring type mappings");
-                ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
-                ConfigureViewLocator(ViewLocator);
+            Logger.LogInformation("Configuring type mappings");
+            ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
+            ConfigureViewLocator(ViewLocator);
 
-#if UNITY_5_5_OR_NEWER
-                var dictionary = GUI.GetApplicationResources();
-#else
-                var dictionary = Application.Current.Resources;
-#endif
-
-                Logger.LogInformation("Registering data templates");
-                DataTemplateManager.RegisterDataTemplates(
-                    ViewLocator,
-                    AssemblySource,
-                    dictionary,
-                    template => AddImportantResources(template.Resources));
-            }
-
+            Logger.LogInformation("Resolving window manager");
             WindowManager = GetService<IWindowManager>();
 
             var wasOnInitializeSuccessful = OnInitialize();
 
-            if (wasOnInitializeSuccessful && (ViewLocator != null) && (WindowManager != null))
+            if (!wasOnInitializeSuccessful || (WindowManager == null))
             {
-                this.isInitialized = true;
-                Logger.LogInformation("Initialization complete");
+                Logger.LogError("Initialization failed");
+
+                return;
             }
+
+            this.isInitialized = true;
+            Logger.LogInformation("Initialization complete");
         }
 
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
-
             using var guard = new CompletionSourceGuard(out this.onDisableCompletion);
+
             this.onEnableCancellation?.Cancel();
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
             await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
@@ -447,14 +439,11 @@
 
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
+            using var _ = Logger.GetMethodTracer(cancellationToken);
             using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
             await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
-
-            Initialize();
-
-            using var _ = Logger.GetMethodTracer(cancellationToken);
 
             if (WindowManager is IActivate activate)
             {
@@ -465,53 +454,62 @@
         private async UniTask StartAsync()
         {
             using var _ = Logger.GetMethodTracer();
-
             using var guard = new CompletionSourceGuard(out this.onStartCompletion);
 
-            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
-
-#if !UNITY_5_5_OR_NEWER
-            var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
-            window.Show();
-            window.Closing += OnWindowClosing;
-#endif
-
-            await OnStartup();
-
-            if (ViewLocator is null)
+            if (!this.isInitialized)
             {
-                Logger.LogError(
-                    "{ViewLocator1} not found - please register {ViewLocator2} and {NameTransformer} in DI container",
-                    nameof(Noesis.ViewLocator),
-                    nameof(Noesis.ViewLocator),
-                    nameof(NameTransformer));
+                return;
             }
+
+            Logger.LogInformation("Starting...");
+
+            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
 
             if (WindowManager is null)
             {
                 Logger.LogError(
-                    "{IWindowManager1} not found - please register {IWindowManager2} implementation in DI container",
-                    nameof(IWindowManager),
+                    "Window manager not found - please register {IWindowManager} implementation in DI container",
                     nameof(IWindowManager));
-            }
-
-            if (!this.isInitialized)
-            {
-                Logger.LogError("{Bootstrapper} not initialized", this);
 
                 return;
             }
 
 #if UNITY_5_5_OR_NEWER
-            this.noesisView.Content.DataContext = WindowManager;
-            AddImportantResources(this.noesisView.Content.Resources);
+            var dictionary = this.noesisView.Content.Resources;
 #else
-            window.DataContext = WindowManager;
-            AddImportantResources(window.Resources);
+            var shellView = new ShellView();
+            var dictionary = shellView.Resources;
 #endif
 
+            Logger.LogInformation("Registering data templates");
+
+            DataTemplateManager.RegisterDataTemplates(
+                ViewLocator,
+                AssemblySource,
+                dictionary,
+                template => AddImportantResources(template.Resources));
+
+            AddImportantResources(dictionary);
+
+#if UNITY_5_5_OR_NEWER
+            this.noesisView.Content.DataContext = WindowManager;
+#else
+            shellView.DataContext = WindowManager;
+            var window = new Window { Width = 1280, Height = 720 };
+            window.Show();
+            window.Closing += OnWindowClosing;
+            window.Content = shellView;
+#endif
+
+            await OnStartup();
+
             var mainContent = GetService<T>();
+
+            Logger.LogInformation("Showing main content: {MainContent}", mainContent);
+
             await WindowManager.ShowMainContentAsync(mainContent);
+
+            Logger.LogInformation("Start complete");
         }
 
         #endregion
