@@ -1,7 +1,7 @@
 namespace Caliburn.Noesis.Samples.MarkupExtensions.Views
 {
-    using Extensions;
 #if UNITY_5_5_OR_NEWER
+    using Extensions;
     using global::Noesis;
 
 #else
