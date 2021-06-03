@@ -179,7 +179,7 @@
 
             if (IsActive || (IsInitialized && close))
             {
-                Logger.LogDebug("Deactivatin@g {@Screen}...", this);
+                Logger.LogDebug("Deactivating {@Screen}...", this);
                 await RaiseDeactivatingAsync(close, this.deactivateCancellation.Token);
                 await OnDeactivateAsync(close, this.deactivateCancellation.Token);
 
