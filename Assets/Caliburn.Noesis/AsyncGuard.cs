@@ -33,42 +33,41 @@
         /// <value><c>true</c> if any asynchronous operations are still ongoing; otherwise, <c>false</c>.</value>
         public bool IsOngoing => this.asyncCounter != 0;
 
+        #endregion
+
+        #region Public Methods
+
         /// <summary>
         ///     Gets a new token to track an asynchronous operation. Use as the <see cref="IDisposable" />
         ///     with <see cref="Extensions.UniTaskExtensions.Using" />.
         /// </summary>
-        /// <value>A new token to track an asynchronous operation.</value>
-        public IDisposable Token => new AsyncToken(this);
+        /// <returns>A new token to track an asynchronous operation.</returns>
+        public IDisposable GetToken()
+        {
+            IncrementCounter();
+
+            return new DisposableAction(DecrementCounter);
+        }
 
         #endregion
 
         #region Private Methods
 
+        private void DecrementCounter()
+        {
+            Interlocked.Decrement(ref this.asyncCounter);
+            RaiseIsOngoingChanged();
+        }
+
+        private void IncrementCounter()
+        {
+            Interlocked.Increment(ref this.asyncCounter);
+            RaiseIsOngoingChanged();
+        }
+
         private void RaiseIsOngoingChanged()
         {
             IsOngoingChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        #endregion
-
-        #region Nested Types
-
-        private class AsyncToken : IDisposable
-        {
-            private readonly AsyncGuard context;
-
-            public AsyncToken(AsyncGuard context)
-            {
-                this.context = context;
-                Interlocked.Increment(ref this.context.asyncCounter);
-                this.context.RaiseIsOngoingChanged();
-            }
-
-            public void Dispose()
-            {
-                Interlocked.Decrement(ref this.context.asyncCounter);
-                this.context.RaiseIsOngoingChanged();
-            }
         }
 
         #endregion

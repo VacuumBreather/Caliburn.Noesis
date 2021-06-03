@@ -83,7 +83,7 @@
 
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
-            using var guard = new CompletionSourceGuard(out this.activateCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.activateCompletion);
             this.activateCancellation =
                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             this.deactivateCancellation?.Cancel();
@@ -95,7 +95,7 @@
 
             if (!IsInitialized)
             {
-                using var initGuard = new CompletionSourceGuard(out this.initializationCompletion);
+                using var initGuard = TaskCompletion.CreateGuard(out this.initializationCompletion);
 
                 Logger.LogDebug("Initializing {@Screen}...", this);
 
@@ -157,7 +157,7 @@
         {
             using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
-            using var guard = new CompletionSourceGuard(out this.deactivateCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.deactivateCompletion);
             this.deactivateCancellation =
                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
