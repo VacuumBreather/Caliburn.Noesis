@@ -164,7 +164,7 @@
                         return list[toRemoveAt];
                     }
 
-                    return default(T);
+                    return default;
                 }
 
                 /// <inheritdoc />

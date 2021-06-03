@@ -427,7 +427,7 @@
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
-            using var guard = new CompletionSourceGuard(out this.onDisableCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.onDisableCompletion);
 
             this.onEnableCancellation?.Cancel();
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
@@ -442,7 +442,7 @@
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
-            using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
             await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
@@ -456,7 +456,7 @@
         private async UniTask StartAsync()
         {
             using var _ = Logger.GetMethodTracer();
-            using var guard = new CompletionSourceGuard(out this.onStartCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
 
             if (!this.isInitialized)
             {
