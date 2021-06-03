@@ -117,7 +117,7 @@
                                $"  xmlns:vm=\"clr-namespace:{viewModelType.Namespace};assembly={viewModelType.Assembly.GetName().Name}\"\n" +
                                $"  xmlns:cal=\"clr-namespace:{typeof(View).Namespace};assembly={typeof(View).Assembly.GetName().Name}\"\n" +
                                $"  DataType=\"{{x:Type vm:{viewModelType.Name}}}\">\n" +
-                               "    <ContentPresenter cal:View.Model=\"{Binding}\" />\n" +
+                               "    <ContentPresenter cal:View.IsGenerated=\"True\" cal:View.Model=\"{Binding}\" />\n" +
                                "</DataTemplate>";
             }
             else if (viewModelType.IsDerivedFromOrImplements(typeof(DialogScreen)))
