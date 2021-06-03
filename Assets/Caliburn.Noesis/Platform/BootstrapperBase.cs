@@ -9,7 +9,6 @@
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
-    using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
     using UnityEngine;
@@ -246,12 +245,6 @@
         /// <returns><c>true</c> if the custom initialization logic was successful; otherwise, <c>false</c>.</returns>
         protected virtual bool OnInitialize()
         {
-#if UNITY_5_5_OR_NEWER
-            LogManager.SetLoggerFactory(new DebugLoggerFactory(this, LogLevel.Information));
-#else
-            LogManager.SetLoggerFactory(new DebugLoggerFactory(LogLevel.Information));
-#endif
-
             return true;
         }
 
