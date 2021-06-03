@@ -10,7 +10,7 @@ namespace Caliburn.Noesis.Samples.MarkupExtensions
 #if UNITY_5_5_OR_NEWER
     [AddComponentMenu("Bootstrappers/MarkupExtensions Bootstrapper")]
 #endif
-    public class MarkupExtensionsBootstrapper : AutofacBootstrapperBase<MainViewModel>
+    public class MarkupExtensionsBootstrapper : BootstrapperBase<MainViewModel>
     {
     }
 }

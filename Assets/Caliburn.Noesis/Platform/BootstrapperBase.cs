@@ -9,6 +9,7 @@
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
+    using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
     using UnityEngine;
@@ -111,7 +112,7 @@
         {
             try
             {
-                return IoCContainer.GetService(serviceType);
+                return IoCContainer.GetInstance(serviceType);
             }
             catch (Exception)
             {
@@ -217,20 +218,30 @@
         {
             IoCContainer = new Container();
 
-            IoCContainer.Register<IWindowManager>(typeof(ShellViewModel)).AsSingleton();
+            IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
+
+#if UNITY_5_5_OR_NEWER
+            IoCContainer.RegisterInstance(
+                typeof(ILoggerFactory),
+                new DebugLoggerFactory(this, LogLevel.Debug));
+#else
+            IoCContainer.RegisterInstance(
+                typeof(ILoggerFactory),
+                new DebugLoggerFactory(LogLevel.Debug));
+#endif
 
             foreach (var viewType in viewTypes)
             {
-                IoCContainer.Register(viewType, viewType);
+                IoCContainer.RegisterPerRequest(viewType, viewType);
             }
 
             foreach (var type in viewModelTypes)
             {
-                IoCContainer.Register(type, type);
+                IoCContainer.RegisterPerRequest(type, type);
 
                 foreach (var @interface in type.GetInterfaces())
                 {
-                    IoCContainer.Register(@interface, type);
+                    IoCContainer.RegisterPerRequest(@interface, type);
                 }
             }
         }
