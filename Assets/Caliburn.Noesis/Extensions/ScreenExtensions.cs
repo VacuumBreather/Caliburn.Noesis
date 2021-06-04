@@ -18,8 +18,7 @@
         /// <param name="activate">The instance to activate</param>
         /// <param name="cancellationToken">(Optional) The cancellation token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static UniTask ActivateAsync(this IActivate activate,
-                                            CancellationToken cancellationToken = default)
+        public static UniTask ActivateAsync(this IActivate activate, CancellationToken cancellationToken = default)
         {
             return activate.ActivateAsync(cancellationToken);
         }
@@ -31,9 +30,7 @@
         {
             var childReference = new WeakReference(child);
 
-            async UniTask OnParentActivated(object sender,
-                                            ActivationEventArgs e,
-                                            CancellationToken cancellationToken)
+            async UniTask OnParentActivated(object sender, ActivationEventArgs e, CancellationToken cancellationToken)
             {
                 var activate = (IActivate)childReference.Target;
 
@@ -82,9 +79,7 @@
         {
             var childReference = new WeakReference(child);
 
-            async UniTask AsyncEventHandler(object sender,
-                                            DeactivationEventArgs e,
-                                            CancellationToken cancellationToken)
+            async UniTask AsyncEventHandler(object sender, DeactivationEventArgs e, CancellationToken cancellationToken)
             {
                 var deactivate = (IDeactivate)childReference.Target;
 
@@ -105,8 +100,7 @@
         /// <param name="potentialActivate">The potential activate.</param>
         /// <param name="cancellationToken">(Optional) The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static UniTask TryActivateAsync(object potentialActivate,
-                                               CancellationToken cancellationToken = default)
+        public static UniTask TryActivateAsync(object potentialActivate, CancellationToken cancellationToken = default)
         {
             return potentialActivate is IActivate activator
                        ? activator.ActivateAsync(cancellationToken)

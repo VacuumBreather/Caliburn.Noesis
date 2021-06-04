@@ -96,9 +96,7 @@
         /// <param name="nsSource">Namespace of source type.</param>
         /// <param name="nsTarget">Namespace of target type.</param>
         /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public void AddNamespaceMapping(string nsSource,
-                                        string nsTarget,
-                                        string viewSuffix = DefaultViewSuffix)
+        public void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             using var _ = Logger.GetMethodTracer(nsSource, nsTarget, viewSuffix);
 
@@ -149,9 +147,7 @@
             var rxReplace = string.Concat(rxBeforeSrc, rxMid, rxAfterSrc);
 
             // ReSharper disable once PossibleMultipleEnumeration
-            var nsTargetsRegEx = nsTargets
-                                 .Select(t => string.Concat(rxBeforeTgt, t, ".", rxAfterTgt))
-                                 .ToArray();
+            var nsTargetsRegEx = nsTargets.Select(t => string.Concat(rxBeforeTgt, t, ".", rxAfterTgt)).ToArray();
 
             AddTypeMapping(rxReplace, null, nsTargetsRegEx, viewSuffix);
         }
@@ -160,9 +156,7 @@
         /// <param name="nsSource">Sub-namespace of source type.</param>
         /// <param name="nsTarget">Sub-namespace of target type.</param>
         /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public void AddSubNamespaceMapping(string nsSource,
-                                           string nsTarget,
-                                           string viewSuffix = DefaultViewSuffix)
+        public void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             using var _ = Logger.GetMethodTracer(nsSource, nsTarget, viewSuffix);
 
@@ -216,23 +210,16 @@
                                      ? null
                                      : string.Concat(
                                          nsSourceFilterRegEx,
-                                         string.Format(
-                                             this.nameFormat,
-                                             RegExHelper.NameRegEx,
-                                             suffix),
+                                         string.Format(this.nameFormat, RegExHelper.NameRegEx, suffix),
                                          "$");
 
             var rxSuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
-                string.Concat(
-                    nsSourceReplaceRegEx,
-                    string.Format(this.nameFormat, rxBase, rxSuffix),
-                    "$"),
+                string.Concat(nsSourceReplaceRegEx, string.Format(this.nameFormat, rxBase, rxSuffix), "$"),
 
                 // ReSharper disable once PossibleMultipleEnumeration
-                nsTargetsRegEx.Select(t => t + string.Format(this.nameFormat, BaseGroup, repSuffix))
-                              .ToArray(),
+                nsTargetsRegEx.Select(t => t + string.Format(this.nameFormat, BaseGroup, repSuffix)).ToArray(),
                 rxSourceFilter);
         }
 
@@ -246,11 +233,7 @@
                                    string nsTargetRegEx,
                                    string viewSuffix = DefaultViewSuffix)
         {
-            using var _ = Logger.GetMethodTracer(
-                nsSourceReplaceRegEx,
-                nsSourceFilterRegEx,
-                nsTargetRegEx,
-                viewSuffix);
+            using var _ = Logger.GetMethodTracer(nsSourceReplaceRegEx, nsSourceFilterRegEx, nsTargetRegEx, viewSuffix);
 
             AddTypeMapping(
                 nsSourceReplaceRegEx,
@@ -277,14 +260,12 @@
 
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
             {
-                throw new ArgumentException(
-                    $"{config.DefaultSubNamespaceForViews} cannot be blank.");
+                throw new ArgumentException($"{config.DefaultSubNamespaceForViews} cannot be blank.");
             }
 
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
             {
-                throw new ArgumentException(
-                    $"{config.DefaultSubNamespaceForViewModels} cannot be blank.");
+                throw new ArgumentException($"{config.DefaultSubNamespaceForViewModels} cannot be blank.");
             }
 
             if (string.IsNullOrEmpty(config.NameFormat))
@@ -318,9 +299,7 @@
             TextBlock CreatePlaceholderView() =>
                 new TextBlock { Text = $"Cannot create {viewType.FullName}." };
 
-            if (viewType.IsInterface ||
-                viewType.IsAbstract ||
-                !viewType.IsDerivedFromOrImplements(typeof(UIElement)))
+            if (viewType.IsInterface || viewType.IsAbstract || !viewType.IsDerivedFromOrImplements(typeof(UIElement)))
             {
                 return CreatePlaceholderView();
             }
@@ -359,9 +338,7 @@
         ///     Pass the model instance, display location (or null) and the context (or null) as
         ///     parameters and receive a view instance.
         /// </remarks>
-        public UIElement LocateForModel(object model,
-                                        IServiceProvider serviceProvider,
-                                        AssemblySource assemblySource)
+        public UIElement LocateForModel(object model, IServiceProvider serviceProvider, AssemblySource assemblySource)
         {
             return LocateForModelType(model.GetType(), serviceProvider, assemblySource);
         }

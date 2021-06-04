@@ -78,8 +78,7 @@
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
             using var guard = TaskCompletion.CreateGuard(out this.activateCompletion);
-            this.activateCancellation =
-                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            this.activateCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             this.deactivateCancellation?.Cancel();
 
             // Deactivation was cancelled but we will wait for all the synchronous steps to complete.
@@ -152,8 +151,7 @@
             using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
             using var guard = TaskCompletion.CreateGuard(out this.deactivateCompletion);
-            this.deactivateCancellation =
-                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            this.deactivateCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             if (!IsInitialized)
             {
@@ -247,8 +245,7 @@
 
         #region Private Methods
 
-        private async UniTask RaiseActivatedAsync(bool wasInitialized,
-                                                  CancellationToken cancellationToken)
+        private async UniTask RaiseActivatedAsync(bool wasInitialized, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(wasInitialized, cancellationToken);
 
@@ -259,8 +256,7 @@
                    UniTask.FromResult(true));
         }
 
-        private async UniTask RaiseDeactivatedAsync(bool wasClosed,
-                                                    CancellationToken cancellationToken)
+        private async UniTask RaiseDeactivatedAsync(bool wasClosed, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(wasClosed, cancellationToken);
 
@@ -271,8 +267,7 @@
                    UniTask.FromResult(true));
         }
 
-        private async UniTask RaiseDeactivatingAsync(bool wasClosed,
-                                                     CancellationToken cancellationToken)
+        private async UniTask RaiseDeactivatingAsync(bool wasClosed, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(wasClosed, cancellationToken);
 

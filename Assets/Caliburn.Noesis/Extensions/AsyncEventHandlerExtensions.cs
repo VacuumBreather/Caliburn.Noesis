@@ -34,14 +34,11 @@
         public static UniTask InvokeAllAsync<TEventArgs>(this AsyncEventHandler<TEventArgs> handler,
                                                          object sender,
                                                          TEventArgs e,
-                                                         CancellationToken cancellationToken =
-                                                             default)
+                                                         CancellationToken cancellationToken = default)
             where TEventArgs : EventArgs
         {
             return UniTask.WhenAll(
-                Enumerable.Select(
-                    handler.GetHandlers(),
-                    handleAsync => handleAsync(sender, e, cancellationToken)));
+                Enumerable.Select(handler.GetHandlers(), handleAsync => handleAsync(sender, e, cancellationToken)));
         }
 
         #endregion

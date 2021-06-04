@@ -18,12 +18,9 @@
         /// <param name="logger">The logger to trace to.</param>
         /// <param name="callingMethodParamValues">The parameters of the method call.</param>
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
-        public static IDisposable GetMethodTracer(this ILogger logger,
-                                                  params object[] callingMethodParamValues)
+        public static IDisposable GetMethodTracer(this ILogger logger, params object[] callingMethodParamValues)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? TraceMethod(logger, callingMethodParamValues)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, callingMethodParamValues) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -45,9 +42,7 @@
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
         public static IDisposable GetMethodTracer<T1, T2>(this ILogger logger, T1 param1, T2 param2)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? TraceMethod(logger, param1, param2)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, param1, param2) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -59,14 +54,9 @@
         /// <param name="param2">The second parameter of the method call.</param>
         /// <param name="param3">The third parameter of the method call.</param>
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
-        public static IDisposable GetMethodTracer<T1, T2, T3>(this ILogger logger,
-                                                              T1 param1,
-                                                              T2 param2,
-                                                              T3 param3)
+        public static IDisposable GetMethodTracer<T1, T2, T3>(this ILogger logger, T1 param1, T2 param2, T3 param3)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? TraceMethod(logger, param1, param2, param3)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, param1, param2, param3) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -166,9 +156,7 @@
         {
             var index = method.Name.LastIndexOf('.') + 1;
 
-            return (index < 0) || (index >= method.Name.Length)
-                       ? method.Name
-                       : method.Name.Substring(index);
+            return (index < 0) || (index >= method.Name.Length) ? method.Name : method.Name.Substring(index);
         }
 
         private static bool ShouldBeIgnored(this MethodBase method)
@@ -205,11 +193,7 @@
                         return "'" + c + "'";
 
                     case IEnumerable enumerable:
-                        return "[" +
-                               string.Join(
-                                   ", ",
-                                   enumerable.Cast<object>().Select(TransformParameterValue)) +
-                               "]";
+                        return "[" + string.Join(", ", enumerable.Cast<object>().Select(TransformParameterValue)) + "]";
 
                     case null:
                         return "null";
@@ -226,9 +210,7 @@
             if (methodParams.Length == paramValues.Length)
             {
                 var parameters = methodParams.Select(
-                    param => param.IsOut
-                                 ? $"out {param.Name}"
-                                 : $"{param.Name}={paramValues[param.Position]}");
+                    param => param.IsOut ? $"out {param.Name}" : $"{param.Name}={paramValues[param.Position]}");
 
                 parameterList = string.Join(", ", parameters);
             }

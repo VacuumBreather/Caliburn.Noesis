@@ -25,10 +25,9 @@ namespace Caliburn.Noesis.Extensions
 
         private static string GetXamlPath(string callerFilePath)
         {
-            var xamlPath = callerFilePath
-                           ?.Substring(callerFilePath.IndexOf("Assets", StringComparison.Ordinal))
-                           .Replace(".cs", string.Empty)
-                           .Replace('\\', '/');
+            var xamlPath = callerFilePath?.Substring(callerFilePath.IndexOf("Assets", StringComparison.Ordinal))
+                                         .Replace(".cs", string.Empty)
+                                         .Replace('\\', '/');
 
             return xamlPath;
         }

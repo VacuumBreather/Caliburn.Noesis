@@ -65,9 +65,7 @@
         ///     <c>true</c> if the PropertyChanged event has been raised, otherwise, <c>false</c>. The
         ///     event is not raised if the old value is equal to the new value.
         /// </returns>
-        protected virtual bool Set<T>(ref T field,
-                                      T newValue,
-                                      [CallerMemberName] string propertyName = null)
+        protected virtual bool Set<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(field, newValue))
             {
@@ -97,8 +95,7 @@
                 return;
             }
 
-            Execute.OnUIThread(
-                () => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
+            Execute.OnUIThread(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)));
         }
 
         /// <summary>Raises the PropertyChanging event if needed.</summary>
@@ -110,8 +107,7 @@
                 return;
             }
 
-            Execute.OnUIThread(
-                () => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName)));
+            Execute.OnUIThread(() => PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName)));
         }
 
         #endregion

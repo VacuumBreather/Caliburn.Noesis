@@ -48,8 +48,7 @@
         }
 
         /// <inheritdoc />
-        public async UniTask ShowMainContentAsync(Screen rootModel,
-                                                  CancellationToken cancellationToken = default)
+        public async UniTask ShowMainContentAsync(Screen rootModel, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
 
@@ -57,8 +56,7 @@
         }
 
         /// <inheritdoc />
-        public UniTask ShowPopupAsync(BindableObject rootModel,
-                                      CancellationToken cancellationToken = default)
+        public UniTask ShowPopupAsync(BindableObject rootModel, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
 
@@ -66,8 +64,7 @@
         }
 
         /// <inheritdoc />
-        public async UniTask ShowWindowAsync(WindowScreen rootModel,
-                                             CancellationToken cancellationToken = default)
+        public async UniTask ShowWindowAsync(WindowScreen rootModel, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
 

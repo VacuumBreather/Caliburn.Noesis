@@ -48,8 +48,7 @@
         ///     A task that represents the asynchronous save operation. The task result contains the
         ///     dialog result.
         /// </returns>
-        public async UniTask<bool?> ShowDialogAsync(DialogScreen dialog,
-                                                    CancellationToken cancellationToken = default)
+        public async UniTask<bool?> ShowDialogAsync(DialogScreen dialog, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(dialog, cancellationToken);
 
@@ -58,9 +57,7 @@
             Logger.LogDebug("Showing {@Dialog}...", dialog);
             await ActivateItemAsync(dialog, cancellationToken);
 
-            return await (ActiveItem == dialog
-                              ? this.taskCompletionSource.Task
-                              : UniTask.FromResult(default(bool?)));
+            return await (ActiveItem == dialog ? this.taskCompletionSource.Task : UniTask.FromResult(default(bool?)));
         }
 
         #endregion
@@ -68,8 +65,7 @@
         #region Protected Methods
 
         /// <inheritdoc />
-        protected override async UniTask OnDeactivateAsync(bool close,
-                                                           CancellationToken cancellationToken)
+        protected override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(close, cancellationToken);
 

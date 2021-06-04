@@ -69,18 +69,14 @@
         {
             public static string Paragraph(int wordCount, int sentenceCount)
             {
-                return string.Join(
-                    " ",
-                    Enumerable.Range(0, sentenceCount).Select(x => Sentence(wordCount)));
+                return string.Join(" ", Enumerable.Range(0, sentenceCount).Select(x => Sentence(wordCount)));
             }
 
             public static string Paragraphs(int wordCount, int sentenceCount, int paragraphCount)
             {
                 return string.Join(
                     Environment.NewLine + Environment.NewLine,
-                    Enumerable.Range(0, paragraphCount)
-                              .Select(_ => Paragraph(wordCount, sentenceCount))
-                              .ToArray());
+                    Enumerable.Range(0, paragraphCount).Select(_ => Paragraph(wordCount, sentenceCount)).ToArray());
             }
 
             public static string Sentence(int wordCount)
@@ -88,9 +84,7 @@
                 return $"{Words(wordCount, true, true)}.".Replace(",.", ".").Remove("..");
             }
 
-            public static string Words(int wordCount,
-                                       bool uppercaseFirstLetter = true,
-                                       bool includePunctuation = false)
+            public static string Words(int wordCount, bool uppercaseFirstLetter = true, bool includePunctuation = false)
             {
                 var source = string.Join(" ", Source.WordList(includePunctuation).Take(wordCount));
 

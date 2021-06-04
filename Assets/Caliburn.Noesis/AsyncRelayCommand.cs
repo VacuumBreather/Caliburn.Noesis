@@ -13,8 +13,7 @@
         #region Constants and Fields
 
         /// <summary>A command which does nothing and can always be executed.</summary>
-        public static AsyncRelayCommand DoNothing =
-            new AsyncRelayCommand(() => UniTask.CompletedTask);
+        public static AsyncRelayCommand DoNothing = new AsyncRelayCommand(() => UniTask.CompletedTask);
 
         private readonly AsyncGuard asyncGuard = new AsyncGuard();
 
@@ -95,8 +94,7 @@
         #region Constants and Fields
 
         /// <summary>A command which does nothing and can always be executed.</summary>
-        public static AsyncRelayCommand<T> DoNothing =
-            new AsyncRelayCommand<T>(_ => UniTask.CompletedTask);
+        public static AsyncRelayCommand<T> DoNothing = new AsyncRelayCommand<T>(_ => UniTask.CompletedTask);
 
         private readonly AsyncGuard asyncGuard = new AsyncGuard();
 

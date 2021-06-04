@@ -35,8 +35,7 @@
 
         /// <summary>Gets the children nodes.</summary>
         [UsedImplicitly]
-        public BindableCollection<FileSystemNode> Children { get; } =
-            new BindableCollection<FileSystemNode>();
+        public BindableCollection<FileSystemNode> Children { get; } = new BindableCollection<FileSystemNode>();
 
         /// <summary>Gets the the files under this node (if any).</summary>
         [UsedImplicitly]
@@ -110,8 +109,7 @@
         ///     A task that represents the asynchronous operation. The task result contains the child
         ///     nodes.
         /// </returns>
-        protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(
-            DirectoryInfo startingDirectory)
+        protected virtual async UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
         {
             return await UniTask.FromResult(Array.Empty<FileSystemNode>());
         }
