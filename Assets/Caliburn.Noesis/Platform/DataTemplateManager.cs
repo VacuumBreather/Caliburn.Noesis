@@ -67,17 +67,10 @@
                                                  ResourceDictionary resourceDictionary,
                                                  Action<DataTemplate> onRegister)
         {
-            using var _ = Logger.GetMethodTracer(
-                viewLocator,
-                assemblySource,
-                resourceDictionary,
-                onRegister);
+            using var _ = Logger.GetMethodTracer(viewLocator, assemblySource, resourceDictionary, onRegister);
 
             assemblySource.ViewModelTypes
-                          .Select(
-                              vmType =>
-                                  (vmType,
-                                      viewLocator.LocateTypeForModelType(vmType, assemblySource)))
+                          .Select(vmType => (vmType, viewLocator.LocateTypeForModelType(vmType, assemblySource)))
                           .ForEach(
                               ((Type vmType, Type vType) mapping) => RegisterDataTemplate(
                                   mapping.vmType,
@@ -111,9 +104,7 @@
             }
             else if (viewModelType.IsDerivedFromOrImplements(typeof(DialogScreen)))
             {
-                Logger.LogWarning(
-                    "Creating placeholder dialog template for {ViewModel}",
-                    viewModelType);
+                Logger.LogWarning("Creating placeholder dialog template for {ViewModel}", viewModelType);
 
                 xamlTemplate = "<DataTemplate\n" +
                                "    xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n" +
@@ -176,9 +167,7 @@
             }
             else
             {
-                Logger.LogWarning(
-                    "Creating placeholder data template for {ViewModel}",
-                    viewModelType);
+                Logger.LogWarning("Creating placeholder data template for {ViewModel}", viewModelType);
 
                 xamlTemplate = "<DataTemplate\n" +
                                "  xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n" +

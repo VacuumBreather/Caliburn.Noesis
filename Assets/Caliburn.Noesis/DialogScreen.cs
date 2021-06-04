@@ -28,8 +28,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public override sealed UniTask<bool> CanCloseAsync(CancellationToken cancellationToken =
-                                                               default)
+        public override sealed UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             return UniTask.FromResult(true);
         }
@@ -41,8 +40,7 @@
 
             if (!(Parent is DialogConductor dialogConductor))
             {
-                throw new InvalidOperationException(
-                    $"{this} must be conducted by a {nameof(DialogConductor)}.");
+                throw new InvalidOperationException($"{this} must be conducted by a {nameof(DialogConductor)}.");
             }
 
             await dialogConductor.CloseDialogAsync(this, dialogResult, CancellationToken.None);

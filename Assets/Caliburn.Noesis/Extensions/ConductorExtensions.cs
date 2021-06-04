@@ -46,10 +46,8 @@
         public static async UniTask DeactivateItemAsync<T>(this IConductor<T> conductor,
                                                            T item,
                                                            bool close,
-                                                           Func<T, CancellationToken, UniTask>
-                                                               closeItemAsync,
-                                                           CancellationToken cancellationToken =
-                                                               default)
+                                                           Func<T, CancellationToken, UniTask> closeItemAsync,
+                                                           CancellationToken cancellationToken = default)
             where T : class
         {
             if (item == null)

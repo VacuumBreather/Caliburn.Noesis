@@ -259,9 +259,7 @@
         /// <param name="service">The type of the service.</param>
         /// <param name="handler">The handler.</param>
         /// <param name="key">(Optional) The service key.</param>
-        public void RegisterPerRequest(Type service,
-                                       Func<Container, object> handler,
-                                       string key = null)
+        public void RegisterPerRequest(Type service, Func<Container, object> handler, string key = null)
         {
             if (service is null)
             {
@@ -280,8 +278,7 @@
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <param name="handler">The handler.</param>
         /// <param name="key">(Optional) The service key.</param>
-        public void RegisterPerRequest<TService>(Func<Container, TService> handler,
-                                                 string key = null)
+        public void RegisterPerRequest<TService>(Func<Container, TService> handler, string key = null)
         {
             if (handler is null)
             {
@@ -312,8 +309,7 @@
 
             object singleton = null;
 
-            GetOrCreateEntry(service, key)
-                .Add(container => singleton ??= container.BuildInstance(implementation));
+            GetOrCreateEntry(service, key).Add(container => singleton ??= container.BuildInstance(implementation));
         }
 
         /// <summary>
@@ -347,8 +343,7 @@
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <param name="handler">The handler.</param>
         /// <param name="key">(Optional) The key.</param>
-        public void RegisterSingleton<TService>(Func<Container, TService> handler,
-                                                string key = null)
+        public void RegisterSingleton<TService>(Func<Container, TService> handler, string key = null)
         {
             if (handler is null)
             {
@@ -356,8 +351,7 @@
             }
 
             object singleton = null;
-            GetOrCreateEntry(typeof(TService), key)
-                .Add(container => singleton ??= handler(container));
+            GetOrCreateEntry(typeof(TService), key).Add(container => singleton ??= handler(container));
         }
 
         /// <summary>
@@ -375,8 +369,7 @@
             }
 
             var entry = this.entries.Find(
-                containerEntry =>
-                    (containerEntry.Service == service) && (containerEntry.Key == key));
+                containerEntry => (containerEntry.Service == service) && (containerEntry.Key == key));
 
             return entry is { } && this.entries.Remove(entry);
         }
@@ -403,9 +396,7 @@
         /// <returns>The created service instance.</returns>
         protected virtual object ActivateInstance(Type type, object[] args)
         {
-            return args.Length > 0
-                       ? Activator.CreateInstance(type, args)
-                       : Activator.CreateInstance(type);
+            return args.Length > 0 ? Activator.CreateInstance(type, args) : Activator.CreateInstance(type);
         }
 
         /// <summary>
@@ -425,9 +416,7 @@
                 throw new InvalidOperationException($"Type '{type}' has no public constructor.");
             }
 
-            var args = constructor.GetParameters()
-                                  .Select(info => GetInstance(info.ParameterType))
-                                  .ToArray();
+            var args = constructor.GetParameters().Select(info => GetInstance(info.ParameterType)).ToArray();
 
             return ActivateInstance(type, args);
         }

@@ -36,11 +36,9 @@
             FileDialog = fileDialog;
             CreateSampleWindow = createSampleWindow;
 
-            OpenDialogCommand =
-                new AsyncRelayCommand(OpenDialogAsync, () => IsActive).RaiseWith(this);
+            OpenDialogCommand = new AsyncRelayCommand(OpenDialogAsync, () => IsActive).RaiseWith(this);
             CancelCommand =
-                new RelayCommand(CancelReadingFile, () => this.asyncGuard.IsOngoing).RaiseWith(
-                    this.asyncGuard);
+                new RelayCommand(CancelReadingFile, () => this.asyncGuard.IsOngoing).RaiseWith(this.asyncGuard);
             AddWindowCommand = new AsyncRelayCommand(AddWindow, () => IsActive).RaiseWith(this);
         }
 
@@ -82,8 +80,7 @@
         #region Protected Methods
 
         /// <inheritdoc />
-        protected override UniTask OnDeactivateAsync(bool close,
-                                                     CancellationToken cancellationToken)
+        protected override UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             if (this.cancellationTokenSource is { IsDisposed: false })
             {
@@ -140,8 +137,7 @@
         private async Task<bool> ReadFileAsync(FileInfo file)
         {
             using var _ = this.asyncGuard.GetToken();
-            using var tokenSource =
-                this.cancellationTokenSource = new SafeCancellationTokenSource();
+            using var tokenSource = this.cancellationTokenSource = new SafeCancellationTokenSource();
 
             var cancellationToken = this.cancellationTokenSource.Token;
             var cancelled = cancellationToken.IsCancellationRequested;
@@ -157,8 +153,7 @@
                 stringBuilder.AppendLine(await streamReader.ReadLineAsync());
                 FileContent = stringBuilder.ToString();
 
-                cancelled = await UniTask.Delay(10, cancellationToken: cancellationToken)
-                                         .SuppressCancellationThrow();
+                cancelled = await UniTask.Delay(10, cancellationToken: cancellationToken).SuppressCancellationThrow();
                 cancelled = cancelled || cancellationToken.IsCancellationRequested;
             }
 #else

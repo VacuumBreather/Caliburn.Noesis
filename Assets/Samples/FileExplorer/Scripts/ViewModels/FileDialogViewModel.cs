@@ -35,8 +35,7 @@
 
         /// <summary>Gets the root node collection.</summary>
         [UsedImplicitly]
-        public ObservableCollection<FileSystemNode> Root { get; } =
-            new ObservableCollection<FileSystemNode>();
+        public ObservableCollection<FileSystemNode> Root { get; } = new ObservableCollection<FileSystemNode>();
 
         /// <summary>Gets the selected file.</summary>
         [UsedImplicitly]
@@ -78,8 +77,7 @@
         }
 
         /// <inheritdoc />
-        protected override UniTask OnDeactivateAsync(bool close,
-                                                     CancellationToken cancellationToken)
+        protected override UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             this.isClosing = true;
             Root.Clear();
@@ -106,8 +104,7 @@
             }
 
             /// <inheritdoc />
-            protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(
-                DirectoryInfo startingDirectory)
+            protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
             {
                 IEnumerable<FileSystemNode> driveNodes;
 
@@ -115,10 +112,7 @@
                 {
                     driveNodes = DriveInfo.GetDrives()
                                           .Where(drive => drive.IsReady)
-                                          .Select(
-                                              drive => new DirectoryNode(
-                                                  drive.RootDirectory,
-                                                  StartingDirectory))
+                                          .Select(drive => new DirectoryNode(drive.RootDirectory, StartingDirectory))
                                           .ToList();
                 }
                 catch (SecurityException)

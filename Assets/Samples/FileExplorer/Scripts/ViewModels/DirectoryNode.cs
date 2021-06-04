@@ -33,8 +33,7 @@
         #region Protected Methods
 
         /// <inheritdoc />
-        protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(
-            DirectoryInfo startingDirectory)
+        protected override UniTask<IEnumerable<FileSystemNode>> GetChildrenAsync(DirectoryInfo startingDirectory)
         {
             IEnumerable<FileSystemNode> children;
 
@@ -48,10 +47,7 @@
                                                   FileAttributes.System |
                                                   FileAttributes.Hidden)) ==
                                                 0)
-                                        .Select(
-                                            directory => new DirectoryNode(
-                                                directory,
-                                                startingDirectory))
+                                        .Select(directory => new DirectoryNode(directory, startingDirectory))
                                         .ToList();
             }
             catch (SecurityException)

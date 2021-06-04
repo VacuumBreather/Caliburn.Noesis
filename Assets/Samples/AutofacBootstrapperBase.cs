@@ -42,8 +42,7 @@
         #region Protected Methods
 
         /// <inheritdoc />
-        protected override void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes,
-                                                      IEnumerable<Type> viewTypes)
+        protected override void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
         {
             var builder = new ContainerBuilder();
 
@@ -65,10 +64,7 @@
 
             foreach (var type in viewModelTypes)
             {
-                builder.RegisterType(type)
-                       .AsSelf()
-                       .AsImplementedInterfaces()
-                       .InstancePerDependency();
+                builder.RegisterType(type).AsSelf().AsImplementedInterfaces().InstancePerDependency();
             }
 
             Container = builder.Build();
