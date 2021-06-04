@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:noesis="clr-namespace:Caliburn.Noesis">
+                    xmlns:cal="clr-namespace:Caliburn.Noesis.MarkupExtensions">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="TextBlockResources.xaml" />
@@ -92,8 +92,8 @@
     <Style x:Key="ScrollBarThumb"
            TargetType="{x:Type Thumb}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Background" Value="{noesis:SolidBrush {StaticResource BackgroundLightColor}}" />
-        <Setter Property="BorderBrush" Value="{noesis:SolidBrush {StaticResource BorderMediumColor}}" />
+        <Setter Property="Background" Value="{cal:BrushFromColor Color={StaticResource BackgroundLightColor}}" />
+        <Setter Property="BorderBrush" Value="{cal:BrushFromColor Color={StaticResource BorderMediumColor}}" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="IsTabStop" Value="false" />
         <Setter Property="Focusable" Value="false" />
@@ -116,7 +116,7 @@
                      TargetType="{x:Type ScrollBar}">
         <Grid>
             <Border Width="5"
-                    Background="{noesis:SolidBrush {StaticResource BackgroundDarkColor}}" />
+                    Background="{cal:BrushFromColor Color={StaticResource BackgroundDarkColor}}" />
             <Track x:Name="PART_Track"
                    IsDirectionReversed="true"
                    ViewportSize="NaN">
@@ -133,7 +133,7 @@
                      TargetType="{x:Type ScrollBar}">
         <Grid>
             <Border Height="5"
-                    Background="{noesis:SolidBrush {StaticResource BackgroundDarkColor}}" />
+                    Background="{cal:BrushFromColor Color={StaticResource BackgroundDarkColor}}" />
             <Track x:Name="PART_Track"
                    IsDirectionReversed="False"
                    ViewportSize="NaN">

@@ -1,8 +1,8 @@
 namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
 {
     /// <summary>The database containing information about all NPCs.</summary>
-    /// <seealso cref="PropertyChangedBase" />
-    public class CharacterDatabase : PropertyChangedBase
+    /// <seealso cref="BindableObject" />
+    public class CharacterDatabase : BindableObject
     {
         #region Constructors and Destructors
 
@@ -27,7 +27,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                             {
                                 Text =
                                     "Eskel and the White Wolf were like brothers. Side by side they grew up, enjoyed pastime " +
-                                    "activities and endured the Trials. A good friend of younger Lambert and Coën of Poviss, " +
+                                    "activities and endured the Trials. A good friend of younger Lambert and CoÃ«n of Poviss, " +
                                     "Eskel saw Vesemir as both a mentor and a father figure. He returned to Kaer Morhen each " +
                                     "winter to swap tales and rejuvenate for The Path.",
                                 HasBeenRead = true,
@@ -46,7 +46,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                             {
                                 Text =
                                     "Eskel and the White Wolf were like brothers. Side by side they grew up, enjoyed pastime " +
-                                    "activities and endured the Trials. A good friend of younger Lambert and Coën of Poviss, " +
+                                    "activities and endured the Trials. A good friend of younger Lambert and CoÃ«n of Poviss, " +
                                     "Eskel saw Vesemir as both a mentor and a father figure. He returned to Kaer Morhen each " +
                                     "winter to swap tales and rejuvenate for The Path.",
                                 HasBeenRead = true,
@@ -65,7 +65,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                             {
                                 Text =
                                     "Eskel and the White Wolf were like brothers. Side by side they grew up, enjoyed pastime " +
-                                    "activities and endured the Trials. A good friend of younger Lambert and Coën of Poviss, " +
+                                    "activities and endured the Trials. A good friend of younger Lambert and CoÃ«n of Poviss, " +
                                     "Eskel saw Vesemir as both a mentor and a father figure. He returned to Kaer Morhen each " +
                                     "winter to swap tales and rejuvenate for The Path.",
                                 HasBeenRead = true,
@@ -84,7 +84,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                             {
                                 Text =
                                     "Eskel and the White Wolf were like brothers. Side by side they grew up, enjoyed pastime " +
-                                    "activities and endured the Trials. A good friend of younger Lambert and Coën of Poviss, " +
+                                    "activities and endured the Trials. A good friend of younger Lambert and CoÃ«n of Poviss, " +
                                     "Eskel saw Vesemir as both a mentor and a father figure. He returned to Kaer Morhen each " +
                                     "winter to swap tales and rejuvenate for The Path.",
                                 HasBeenRead = false,
@@ -110,7 +110,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                                 Text =
                                     "He does not have much use for politics, a trait common to most witchers due to their code of " +
                                     "neutrality. He helped train Ciri in the art of combat. He was described as being at the same " +
-                                    "age as Coën. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
+                                    "age as CoÃ«n. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
                                 HasBeenRead = true,
                             },
                         new DescriptionParagraph
@@ -126,7 +126,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                                 Text =
                                     "He does not have much use for politics, a trait common to most witchers due to their code of " +
                                     "neutrality. He helped train Ciri in the art of combat. He was described as being at the same " +
-                                    "age as Coën. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
+                                    "age as CoÃ«n. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
                                 HasBeenRead = true,
                             },
                         new DescriptionParagraph
@@ -142,7 +142,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                                 Text =
                                     "He does not have much use for politics, a trait common to most witchers due to their code of " +
                                     "neutrality. He helped train Ciri in the art of combat. He was described as being at the same " +
-                                    "age as Coën. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
+                                    "age as CoÃ«n. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
                                 HasBeenRead = false,
                             },
                         new DescriptionParagraph
@@ -158,7 +158,7 @@ namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
                                 Text =
                                     "He does not have much use for politics, a trait common to most witchers due to their code of " +
                                     "neutrality. He helped train Ciri in the art of combat. He was described as being at the same " +
-                                    "age as Coën. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
+                                    "age as CoÃ«n. He is one of the last witchers to be trained within the walls of Kaer Morhen.",
                                 HasBeenRead = false,
                             },
                     });

@@ -1,9 +1,9 @@
 namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
 {
     /// <summary>Represents information about an NPC.</summary>
-    /// <seealso cref="PropertyChangedBase" />
+    /// <seealso cref="BindableObject" />
     /// <seealso cref="IHaveDisplayName" />
-    public class Character : PropertyChangedBase, IHaveDisplayName
+    public class Character : BindableObject, IHaveDisplayName
     {
         #region Public Properties
 

@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:cal="clr-namespace:Caliburn.Noesis.MarkupExtensions"
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:noesis="clr-namespace:Caliburn.Noesis"
                     xmlns:views="clr-namespace:Caliburn.Noesis.Samples.Conductors.Views">
 
     <ResourceDictionary.MergedDictionaries>
@@ -43,10 +43,10 @@
                                         TargetProperty="BorderBrush">
                                 <views:SolidColorBrushAnimation AutoReverse="True"
                                                                 RepeatBehavior="Forever"
-                                                                From="{noesis:SolidBrush {StaticResource Color.Foreground.Highlight.Normal},
-                                                                                         Opacity=0.5}"
-                                                                To="{noesis:SolidBrush Color={StaticResource Color.Foreground.Highlight.Normal},
-                                                                                       Opacity=1.0}"
+                                                                From="{cal:BrushFromColor Color={StaticResource Color.Foreground.Highlight.Normal},
+                                                                                          Opacity=0.5}"
+                                                                To="{cal:BrushFromColor Color={StaticResource Color.Foreground.Highlight.Normal},
+                                                                                        Opacity=1.0}"
                                                                 Duration="0:0:0.75" />
                             </Storyboard>
                         </views:DecorativeBorder.Resources>
@@ -110,7 +110,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <views:DecorativeBorder x:Name="HeaderPresenter"
-                                                        BorderBrush="{noesis:SolidBrush {StaticResource BorderMediumColor}}"
+                                                        BorderBrush="{cal:BrushFromColor Color={StaticResource BorderMediumColor}}"
                                                         BorderThickness="2">
                                     <ContentPresenter HorizontalAlignment="Center"
                                                       Content="{TemplateBinding views:ListBoxExtensions.Header}"

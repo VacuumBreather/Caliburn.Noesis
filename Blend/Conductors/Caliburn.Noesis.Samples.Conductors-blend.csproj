@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <LangVersion>8</LangVersion>
+    <TargetFramework>net472</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <EnableDefaultPageItems>false</EnableDefaultPageItems>
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+    <EnableDefaultNoneItems>false</EnableDefaultNoneItems>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>Caliburn.Noesis</RootNamespace>
+    <AssemblyName>Caliburn.Noesis.Samples.Conductors</AssemblyName>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2021.1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0.0" />
+    <PackageReference Include="Noesis.GUI.Extensions" Version="3.0.6" />
+    <PackageReference Include="UniTask" Version="2.2.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Assets\Caliburn.Noesis\**\*.cs" LinkBase="Assets\Caliburn.Noesis" />
+    <Page Include="..\..\Assets\Caliburn.Noesis\**\*.xaml" LinkBase="Assets\Caliburn.Noesis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Assets\Samples\Conductors\**\*.cs" LinkBase="Assets\Samples\Conductors" />
+    <Page Include="..\..\Assets\Samples\Conductors\**\*.xaml" LinkBase="Assets\Samples\Conductors" />
+    <Resource Include="..\..\Assets\Samples\Conductors\**\*.ttf" LinkBase="Assets\Samples\Conductors" />
+    <Resource Include="..\..\Assets\Samples\Conductors\**\*.png" LinkBase="Assets\Samples\Conductors" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs" />
+  </ItemGroup>
+</Project>

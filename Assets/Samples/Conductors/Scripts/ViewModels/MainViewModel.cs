@@ -26,7 +26,7 @@
         {
             await base.OnInitializeAsync(cancellationToken);
 
-            await ActivateItemAsync(Items.FirstOrDefault(), cancellationToken);
+            await ActivateItemAsync(Items.FirstOrDefault(vm => vm is CharactersViewModel), cancellationToken);
         }
 
         #endregion

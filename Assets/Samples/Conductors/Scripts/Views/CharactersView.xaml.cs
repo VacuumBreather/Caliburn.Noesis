@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors.Views
 {
 #if UNITY_5_5_OR_NEWER
+    using Extensions;
     using global::Noesis;
 #else
     using System.Windows.Controls;
@@ -15,7 +16,7 @@
         /// <summary>Initializes a new instance of the <see cref="CharactersView" /> class.</summary>
         public CharactersView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         #endregion

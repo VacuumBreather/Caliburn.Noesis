@@ -1,27 +1,31 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors.Views
 {
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
     using System.Windows;
     using System.Windows.Controls;
+#endif
 
     /// <summary>Provides attached properties used to display header content in a <see cref="ListBox" />.</summary>
     public static class ListBoxExtensions
     {
         #region Constants and Fields
 
-        /// <summary>The header property.</summary>
-        public static readonly DependencyProperty HeaderProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(HeaderProperty)),
-                typeof(object),
-                typeof(ListBoxExtensions),
-                new PropertyMetadata(default(object)));
+        /// <summary>The Header property.</summary>
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(HeaderProperty)),
+            typeof(object),
+            typeof(ListBoxExtensions),
+            new PropertyMetadata(default(object)));
 
-        public static readonly DependencyProperty HeaderTemplateProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(HeaderTemplateProperty)),
-                typeof(DataTemplate),
-                typeof(ListBoxExtensions),
-                new PropertyMetadata(default(DataTemplate)));
+        /// <summary>The HeaderTemplate property.</summary>
+        public static readonly DependencyProperty HeaderTemplateProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(HeaderTemplateProperty)),
+            typeof(DataTemplate),
+            typeof(ListBoxExtensions),
+            new PropertyMetadata(default(DataTemplate)));
 
         #endregion
 

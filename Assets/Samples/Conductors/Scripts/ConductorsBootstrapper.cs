@@ -1,10 +1,6 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors
 {
-    using System;
-    using System.Linq;
-    using Extensions;
     using ViewModels;
-
 #if UNITY_5_5_OR_NEWER
     using UnityEngine;
 
@@ -16,20 +12,5 @@
 #endif
     public class ConductorsBootstrapper : BootstrapperBase<MainViewModel>
     {
-        #region Protected Methods
-
-        /// <inheritdoc />
-        protected override MainViewModel GetMainContentViewModel()
-        {
-            var subScreens = GetConfiguration()
-                             .AssemblySource.ViewModelTypes.Where(
-                                 type => type.IsDerivedFromOrImplements(typeof(ISubScreen)))
-                             .Select(Activator.CreateInstance)
-                             .Cast<ISubScreen>();
-
-            return new MainViewModel(subScreens);
-        }
-
-        #endregion
     }
 }

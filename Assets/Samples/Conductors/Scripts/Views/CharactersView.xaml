@@ -4,6 +4,7 @@
              xmlns:characters="clr-namespace:Caliburn.Noesis.Samples.Conductors.Model.Characters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:me="clr-namespace:Caliburn.Noesis.MarkupExtensions"
              xmlns:noesis="clr-namespace:Caliburn.Noesis"
              xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.Conductors.ViewModels"
              xmlns:views="clr-namespace:Caliburn.Noesis.Samples.Conductors.Views"
@@ -13,56 +14,64 @@
              d:DesignWidth="800"
              mc:Ignorable="d">
     <UserControl.Resources>
-        <views:ImageSourceDictionary x:Key="CharacterImageDictionary">
-            <ImageSource x:Key="Eskel">../../Images/characters_eskel.png</ImageSource>
-            <ImageSource x:Key="Lambert">../../Images/characters_lambert.png</ImageSource>
-            <ImageSource x:Key="Vesemir">../../Images/characters_vesemir.png</ImageSource>
-        </views:ImageSourceDictionary>
 
-        <views:ImageSourceDictionary x:Key="CharacterFaceDictionary">
-            <ImageSource x:Key="Eskel">../../Images/face_eskel.png</ImageSource>
-            <ImageSource x:Key="Lambert">../../Images/face_lambert.png</ImageSource>
-            <ImageSource x:Key="Vesemir">../../Images/face_vesemir.png</ImageSource>
-        </views:ImageSourceDictionary>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/AllResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <views:DictionaryLookupConverter x:Key="DictionaryLookupConverter" />
+            <views:ImageSourceDictionary x:Key="CharacterImageDictionary">
+                <ImageSource x:Key="Eskel">../../Images/characters_eskel.png</ImageSource>
+                <ImageSource x:Key="Lambert">../../Images/characters_lambert.png</ImageSource>
+                <ImageSource x:Key="Vesemir">../../Images/characters_vesemir.png</ImageSource>
+            </views:ImageSourceDictionary>
 
-        <DataTemplate DataType="{x:Type characters:Character}">
-            <DockPanel Height="75">
-                <Image DockPanel.Dock="Left"
-                       Source="{Binding DisplayName, Mode=OneWay, Converter={StaticResource DictionaryLookupConverter}, ConverterParameter={StaticResource CharacterFaceDictionary}}"
-                       Stretch="Uniform" />
-                <TextBlock Margin="30,0,0,0"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource Style.TextBlock.Large}"
-                           Text="{Binding DisplayName, Mode=OneWay}" />
-            </DockPanel>
-        </DataTemplate>
+            <views:ImageSourceDictionary x:Key="CharacterFaceDictionary">
+                <ImageSource x:Key="Eskel">../../Images/face_eskel.png</ImageSource>
+                <ImageSource x:Key="Lambert">../../Images/face_lambert.png</ImageSource>
+                <ImageSource x:Key="Vesemir">../../Images/face_vesemir.png</ImageSource>
+            </views:ImageSourceDictionary>
 
-        <DataTemplate DataType="{x:Type characters:DescriptionParagraph}">
-            <TextBlock Name="TextBlock"
-                       Text="{Binding Text, Mode=OneWay}"
-                       TextWrapping="Wrap" />
-            <DataTemplate.Triggers>
-                <DataTrigger Value="False"
-                             Binding="{Binding HasBeenRead, Mode=OneWay}">
-                    <Setter TargetName="TextBlock" Property="Foreground" Value="{noesis:SolidBrush {StaticResource Color.Foreground.Highlight.Darker}}" />
-                </DataTrigger>
-            </DataTemplate.Triggers>
-        </DataTemplate>
+            <views:DictionaryLookupConverter x:Key="DictionaryLookupConverter" />
 
-        <Style x:Key="DescriptionContainerStyle"
-               TargetType="ListBoxItem">
-            <Setter Property="Focusable" Value="False" />
-            <Setter Property="Margin" Value="20,20,20,20" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListBoxItem">
-                        <ContentPresenter />
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+            <DataTemplate DataType="{x:Type characters:Character}">
+                <DockPanel Height="75">
+                    <Image DockPanel.Dock="Left"
+                           Source="{Binding DisplayName, Mode=OneWay, Converter={StaticResource DictionaryLookupConverter}, ConverterParameter={StaticResource CharacterFaceDictionary}}"
+                           Stretch="Uniform" />
+                    <TextBlock Margin="30,0,0,0"
+                               VerticalAlignment="Center"
+                               Style="{StaticResource Style.TextBlock.Large}"
+                               Text="{Binding DisplayName, Mode=OneWay}" />
+                </DockPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type characters:DescriptionParagraph}">
+                <TextBlock Name="TextBlock"
+                           Text="{Binding Text, Mode=OneWay}"
+                           TextWrapping="Wrap" />
+                <DataTemplate.Triggers>
+                    <DataTrigger Value="False"
+                                 Binding="{Binding HasBeenRead, Mode=OneWay}">
+                        <Setter TargetName="TextBlock" Property="Foreground" Value="{me:BrushFromColor Color={StaticResource Color.Foreground.Highlight.Darker}}" />
+                    </DataTrigger>
+                </DataTemplate.Triggers>
+            </DataTemplate>
+
+            <Style x:Key="DescriptionContainerStyle"
+                   TargetType="ListBoxItem">
+                <Setter Property="Focusable" Value="False" />
+                <Setter Property="Margin" Value="20,20,20,20" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ListBoxItem">
+                            <ContentPresenter />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+
     </UserControl.Resources>
 
     <UniformGrid Margin="0,20"

@@ -4,12 +4,22 @@
              xmlns:controls="clr-namespace:Caliburn.Noesis.Controls"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:noesis="clr-namespace:Caliburn.Noesis"
              xmlns:viewModels="clr-namespace:Caliburn.Noesis.Samples.Conductors.ViewModels"
              d:DataContext="{d:DesignInstance viewModels:MainViewModel,
                                               IsDesignTimeCreatable=False}"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Resources/AllResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
     <UserControl.Background>
         <ImageBrush ImageSource="{StaticResource Background}" />
     </UserControl.Background>
@@ -30,7 +40,7 @@
                                Text="{Binding ActiveItem.DisplayName, Mode=OneWay}" />
                 </controls:FlipView.Header>
                 <controls:FlipView.PreviewItemTemplate>
-                    <DataTemplate DataType="{x:Type viewModels:ISubScreen}">
+                    <DataTemplate DataType="{x:Type noesis:Screen}">
                         <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Center"
                                    Style="{StaticResource Style.TextBlock.HeaderSmall}"

@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:cal="clr-namespace:Caliburn.Noesis">
+                    xmlns:cal="clr-namespace:Caliburn.Noesis.MarkupExtensions">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ImageResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -9,7 +9,7 @@
            TargetType="TextBlock">
         <Setter Property="FontFamily" Value="{StaticResource FontFamily.Default}" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.Normal}" />
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Normal}}" />
+        <Setter Property="Foreground" Value="{cal:BrushFromColor Color={StaticResource Color.Foreground.Normal}}" />
     </Style>
 
     <Style x:Key="Style.TextBlock.Small"
@@ -29,20 +29,20 @@
            TargetType="TextBlock">
         <Setter Property="TextAlignment" Value="Center" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.Large}" />
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Highlight.Normal}}" />
+        <Setter Property="Foreground" Value="{cal:BrushFromColor Color={StaticResource Color.Foreground.Highlight.Normal}}" />
     </Style>
 
     <Style x:Key="Style.TextBlock.HeaderSmall"
            BasedOn="{StaticResource Style.TextBlock.Header}"
            TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource FontSize.Normal}" />
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Darker}}" />
+        <Setter Property="Foreground" Value="{cal:BrushFromColor Color={StaticResource Color.Foreground.Darker}}" />
     </Style>
 
     <Style x:Key="Style.TextBlock.HeaderLarge"
            BasedOn="{StaticResource Style.TextBlock.Header}"
            TargetType="TextBlock">
-        <Setter Property="Foreground" Value="{cal:SolidBrush {StaticResource Color.Foreground.Highlight.Light}}" />
+        <Setter Property="Foreground" Value="{cal:BrushFromColor Color={StaticResource Color.Foreground.Highlight.Light}}" />
         <Setter Property="FontSize" Value="{StaticResource FontSize.ExtraLarge}" />
     </Style>
 

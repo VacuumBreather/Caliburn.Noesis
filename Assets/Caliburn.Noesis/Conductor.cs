@@ -17,9 +17,7 @@
         #region Public Methods
 
         /// <inheritdoc />
-        public override async UniTask ActivateItemAsync(T item,
-                                                        CancellationToken cancellationToken =
-                                                            default)
+        public override async UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(item, cancellationToken);
 
@@ -54,8 +52,7 @@
         /// <summary>Called to check whether or not this instance can close.</summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken =
-                                                              default)
+        public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
@@ -76,8 +73,7 @@
         /// <returns>A task that represents the asynchronous operation.</returns>
         public override async UniTask DeactivateItemAsync(T item,
                                                           bool close,
-                                                          CancellationToken cancellationToken =
-                                                              default)
+                                                          CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
 
@@ -126,8 +122,7 @@
         /// <param name="close">Indicates whether this instance will be closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected override UniTask OnDeactivateAsync(bool close,
-                                                     CancellationToken cancellationToken)
+        protected override UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
 

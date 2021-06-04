@@ -1,8 +1,8 @@
 namespace Caliburn.Noesis.Samples.Conductors.Model.Characters
 {
     /// <summary>Represents a paragraph of information in a character description.</summary>
-    /// <seealso cref="PropertyChangedBase" />
-    public class DescriptionParagraph : PropertyChangedBase
+    /// <seealso cref="BindableObject" />
+    public class DescriptionParagraph : BindableObject
     {
         #region Constants and Fields
 

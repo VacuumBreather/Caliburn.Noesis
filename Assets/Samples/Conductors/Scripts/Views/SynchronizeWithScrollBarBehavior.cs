@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Noesis.Samples.Conductors.Views
 {
 #if UNITY_5_5_OR_NEWER
+    using NoesisApp;
     using global::Noesis;
 #else
     using System.Windows;
