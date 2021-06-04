@@ -13,9 +13,7 @@
         /// <param name="dictionary">The dictionary to call this method on.</param>
         /// <param name="key">The key to look up.</param>
         /// <returns>The value if the key exists in the dictionary; default(TValue) otherwise.</returns>
-        public static TValue GetValueOrDefault<TKey, TValue>(
-            this IDictionary<TKey, TValue> dictionary,
-            TKey key)
+        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             return dictionary.TryGetValue(key, out var result) ? result : default;
         }

@@ -208,17 +208,14 @@
         ///     The view-model implementing <see cref="IWindowManager" /> will not be part of the
         ///     <paramref name="viewModelTypes" /> sequence.
         /// </remarks>
-        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes,
-                                                     IEnumerable<Type> viewTypes)
+        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
         {
             IoCContainer = new Container();
 
             IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
 
 #if UNITY_5_5_OR_NEWER
-            IoCContainer.RegisterInstance(
-                typeof(ILoggerFactory),
-                new DebugLoggerFactory(this, LogLevel.Information));
+            IoCContainer.RegisterInstance(typeof(ILoggerFactory), new DebugLoggerFactory(this, LogLevel.Information));
 #else
             IoCContainer.RegisterInstance(
                 typeof(ILoggerFactory),
@@ -321,10 +318,7 @@
 
             if (!this.noesisView)
             {
-                Logger.LogError(
-                    "{Bootstrapper} must be on same game object as {NoesisView}",
-                    this,
-                    nameof(NoesisView));
+                Logger.LogError("{Bootstrapper} must be on same game object as {NoesisView}", this, nameof(NoesisView));
             }
         }
 

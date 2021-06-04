@@ -70,9 +70,7 @@
                 #region Public Methods
 
                 /// <inheritdoc />
-                public override async UniTask ActivateItemAsync(
-                    T item,
-                    CancellationToken cancellationToken = default)
+                public override async UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(item, cancellationToken);
 
@@ -92,14 +90,11 @@
                 }
 
                 /// <inheritdoc />
-                public override async UniTask<bool> CanCloseAsync(
-                    CancellationToken cancellationToken = default)
+                public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(cancellationToken);
 
-                    var closeResult = await CloseStrategy.ExecuteAsync(
-                                          this.items.ToList(),
-                                          cancellationToken);
+                    var closeResult = await CloseStrategy.ExecuteAsync(this.items.ToList(), cancellationToken);
 
                     if (!closeResult.CloseCanOccur && closeResult.Children.Any())
                     {
@@ -115,18 +110,13 @@
                 }
 
                 /// <inheritdoc />
-                public override async UniTask DeactivateItemAsync(
-                    T item,
-                    bool close,
-                    CancellationToken cancellationToken = default)
+                public override async UniTask DeactivateItemAsync(T item,
+                                                                  bool close,
+                                                                  CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
 
-                    await this.DeactivateItemAsync(
-                        item,
-                        close,
-                        CloseItemCoreAsync,
-                        cancellationToken);
+                    await this.DeactivateItemAsync(item, close, CloseItemCoreAsync, cancellationToken);
                 }
 
                 /// <inheritdoc />
@@ -159,8 +149,7 @@
                 }
 
                 /// <inheritdoc />
-                protected override async UniTask OnActivateAsync(
-                    CancellationToken cancellationToken)
+                protected override async UniTask OnActivateAsync(CancellationToken cancellationToken)
                 {
                     using var _ = Logger.GetMethodTracer(cancellationToken);
 
@@ -171,9 +160,7 @@
                 }
 
                 /// <inheritdoc />
-                protected override async UniTask OnDeactivateAsync(
-                    bool close,
-                    CancellationToken cancellationToken)
+                protected override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
                 {
                     using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
@@ -189,8 +176,7 @@
                 }
 
                 /// <inheritdoc />
-                protected override async UniTask OnInitializeAsync(
-                    CancellationToken cancellationToken)
+                protected override async UniTask OnInitializeAsync(CancellationToken cancellationToken)
                 {
                     using var _ = Logger.GetMethodTracer(cancellationToken);
 
@@ -203,9 +189,7 @@
                                               propertyInfo =>
                                                   (propertyInfo.Name != nameof(Parent)) &&
                                                   typeof(T).GetTypeInfo()
-                                                           .IsAssignableFrom(
-                                                               propertyInfo.PropertyType
-                                                                   .GetTypeInfo()))
+                                                           .IsAssignableFrom(propertyInfo.PropertyType.GetTypeInfo()))
                                           .Select(propertyInfo => propertyInfo.GetValue(this, null))
                                           .Cast<T>()
                                           .ToList();
@@ -215,8 +199,7 @@
                             Logger.LogDebug("{@Conductor} will conduct {Item}", this, item);
                         }
 
-                        await UniTask.WhenAll(
-                            publicItems.Select(item => ActivateItemAsync(item, cancellationToken)));
+                        await UniTask.WhenAll(publicItems.Select(item => ActivateItemAsync(item, cancellationToken)));
                     }
                 }
 
@@ -224,9 +207,7 @@
 
                 #region Private Methods
 
-                private async UniTask CloseItemCoreAsync(T item,
-                                                         CancellationToken cancellationToken =
-                                                             default)
+                private async UniTask CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(item, cancellationToken);
 

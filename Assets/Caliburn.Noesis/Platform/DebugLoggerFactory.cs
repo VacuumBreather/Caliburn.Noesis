@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
-    using System.Collections.Generic;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -16,9 +15,6 @@
     public class DebugLoggerFactory : ILoggerFactory
     {
         #region Constants and Fields
-
-        private readonly List<WeakReference<DebugLogger>> loggers =
-            new List<WeakReference<DebugLogger>>();
 
 #if UNITY_5_5_OR_NEWER
         private readonly Object context;
@@ -83,7 +79,6 @@
 #else
             var logger = new DebugLogger(categoryName, this.logLevel);
 #endif
-            this.loggers.Add(new WeakReference<DebugLogger>(logger));
 
             return logger;
         }
@@ -105,16 +100,12 @@
             public DebugLogger(string categoryName, LogLevel minimumLogLevel = LogLevel.Information)
             {
                 this.minimumLogLevel = minimumLogLevel;
-                this.categoryName = string.IsNullOrEmpty(categoryName)
-                                        ? nameof(DebugLogger)
-                                        : categoryName;
+                this.categoryName = string.IsNullOrEmpty(categoryName) ? nameof(DebugLogger) : categoryName;
                 this.filter = Filter;
             }
 
 #if UNITY_5_5_OR_NEWER
-            public DebugLogger(string categoryName,
-                               Object context,
-                               LogLevel minimumLogLevel = LogLevel.Information)
+            public DebugLogger(string categoryName, Object context, LogLevel minimumLogLevel = LogLevel.Information)
                 : this(categoryName, minimumLogLevel)
             {
                 this.context = context;
@@ -167,8 +158,7 @@
 #if UNITY_5_5_OR_NEWER
                 var color = GetLogColor(logLevel);
 
-                message =
-                    $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
+                message = $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
 
                 switch (logLevel)
                 {

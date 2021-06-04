@@ -20,12 +20,11 @@
         ///     Result property. This is an attached property. CloseDialog defines the Result, so that it
         ///     can be set on any <see cref="Button" /> that is used to close a dialog with that result.
         /// </summary>
-        public static readonly DependencyProperty ResultProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(ResultProperty)),
-                typeof(DialogResult),
-                typeof(CloseDialog),
-                new PropertyMetadata(default(DialogResult), OnResultChanged));
+        public static readonly DependencyProperty ResultProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(ResultProperty)),
+            typeof(DialogResult),
+            typeof(CloseDialog),
+            new PropertyMetadata(default(DialogResult), OnResultChanged));
 
         #endregion
 
@@ -51,8 +50,7 @@
 
         #region Private Methods
 
-        private static void OnResultChanged(DependencyObject d,
-                                            DependencyPropertyChangedEventArgs e)
+        private static void OnResultChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (!(d is Button button))
             {
@@ -68,8 +66,7 @@
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
-            var commandBinding =
-                new Binding(nameof(DialogScreen.CloseDialogCommand)) { Mode = BindingMode.OneWay };
+            var commandBinding = new Binding(nameof(DialogScreen.CloseDialogCommand)) { Mode = BindingMode.OneWay };
             button.SetBinding(ButtonBase.CommandProperty, commandBinding);
         }
 

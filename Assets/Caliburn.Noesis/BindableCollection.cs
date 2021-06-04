@@ -8,9 +8,7 @@
 
     /// <summary>A base collection class that supports automatic UI thread marshalling.</summary>
     /// <typeparam name="T">The type of elements contained in the collection.</typeparam>
-    public class BindableCollection<T> : ObservableCollection<T>,
-                                         IBindableCollection<T>,
-                                         IReadOnlyBindableCollection<T>
+    public class BindableCollection<T> : ObservableCollection<T>, IBindableCollection<T>, IReadOnlyBindableCollection<T>
     {
         #region Constants and Fields
 
@@ -162,8 +160,7 @@
 
             OnPropertyChanged(new PropertyChangedEventArgs("Count"));
             OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-            OnCollectionChanged(
-                new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
         /// <summary>Exposes the base implementation of the <see cref="RemoveItem" /> function.</summary>

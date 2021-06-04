@@ -32,9 +32,7 @@
         }
 
         /// <inheritdoc />
-        UniTask IConductor.DeactivateItemAsync(object item,
-                                               bool close,
-                                               CancellationToken cancellationToken)
+        UniTask IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken)
         {
             return DeactivateItemAsync((T)item, close, cancellationToken);
         }
@@ -52,13 +50,10 @@
         }
 
         /// <inheritdoc />
-        public abstract UniTask ActivateItemAsync(T item,
-                                                  CancellationToken cancellationToken = default);
+        public abstract UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default);
 
         /// <inheritdoc />
-        public abstract UniTask DeactivateItemAsync(T item,
-                                                    bool close,
-                                                    CancellationToken cancellationToken = default);
+        public abstract UniTask DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default);
 
         #endregion
 
@@ -108,9 +103,7 @@
                 return;
             }
 
-            ActivationProcessed?.Invoke(
-                this,
-                new ActivationProcessedEventArgs { Item = item, Success = success });
+            ActivationProcessed?.Invoke(this, new ActivationProcessedEventArgs { Item = item, Success = success });
         }
 
         #endregion

@@ -23,19 +23,17 @@
         #region Constants and Fields
 
         /// <summary>A dependency property for marking an element as framework generated.</summary>
-        public static readonly DependencyProperty IsGeneratedProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(IsGeneratedProperty)),
-                typeof(bool),
-                typeof(View),
-                new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty IsGeneratedProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(IsGeneratedProperty)),
+            typeof(bool),
+            typeof(View),
+            new PropertyMetadata(default(bool)));
 
-        private static readonly DependencyProperty ContextProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(ContextProperty)),
-                typeof(Guid),
-                typeof(View),
-                new PropertyMetadata(default(Guid)));
+        private static readonly DependencyProperty ContextProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(ContextProperty)),
+            typeof(Guid),
+            typeof(View),
+            new PropertyMetadata(default(Guid)));
 
         private static readonly ContentPropertyAttribute DefaultContentProperty =
             new ContentPropertyAttribute(nameof(ContentControl.Content));
@@ -93,8 +91,7 @@
 
         #region Private Methods
 
-        private static UIElement GetCachedViewFor(object viewModel,
-                                                  DependencyObject contextLocation)
+        private static UIElement GetCachedViewFor(object viewModel, DependencyObject contextLocation)
         {
             var context = GetContext(contextLocation);
 
@@ -111,8 +108,7 @@
             return (Guid)element.GetValue(ContextProperty);
         }
 
-        private static void OnModelChanged(DependencyObject targetLocation,
-                                           DependencyPropertyChangedEventArgs args)
+        private static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args)
         {
             using var _ = Logger.GetMethodTracer(targetLocation, args);
 
@@ -196,10 +192,7 @@
                         nameof(ViewLocator.LocateForModel),
                         nameof(ViewLocator.LocateForModelType));
 
-                    view = viewLocator.LocateForModelType(
-                        viewModel.GetType(),
-                        serviceProvider,
-                        assemblySource);
+                    view = viewLocator.LocateForModelType(viewModel.GetType(), serviceProvider, assemblySource);
 
                     SetContentProperty(targetLocation, view);
                 }
@@ -231,8 +224,7 @@
                         .FirstOrDefault() ??
                     DefaultContentProperty;
 
-                var propertyInfo =
-                    type.GetProperty(contentProperty?.Name ?? DefaultContentProperty.Name);
+                var propertyInfo = type.GetProperty(contentProperty?.Name ?? DefaultContentProperty.Name);
 
                 if (propertyInfo == null)
                 {
@@ -262,10 +254,8 @@
             using var _ = Logger.GetMethodTracer(dependencyObject, null, null, null);
 
             var frameworkElement = dependencyObject.FindVisualAncestor<FrameworkElement>();
-            serviceProvider =
-                frameworkElement?.TryFindResource(nameof(IServiceProvider)) as IServiceProvider;
-            assemblySource =
-                frameworkElement?.TryFindResource(nameof(AssemblySource)) as AssemblySource;
+            serviceProvider = frameworkElement?.TryFindResource(nameof(IServiceProvider)) as IServiceProvider;
+            assemblySource = frameworkElement?.TryFindResource(nameof(AssemblySource)) as AssemblySource;
             viewLocator = frameworkElement?.TryFindResource(nameof(ViewLocator)) as ViewLocator;
 
             return (serviceProvider != null) && (assemblySource != null) && (viewLocator != null);
