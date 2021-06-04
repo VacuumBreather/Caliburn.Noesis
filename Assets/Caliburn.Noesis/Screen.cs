@@ -12,8 +12,6 @@
     {
         #region Constants and Fields
 
-        private static ILogger logger;
-
         private UniTaskCompletionSource initializationCompletion;
         private UniTaskCompletionSource activateCompletion;
         private UniTaskCompletionSource deactivateCompletion;
@@ -52,12 +50,8 @@
 
         #region Protected Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            private set => logger = value;
-        }
+        /// <summary>Gets or sets the <see cref="ILogger" /> for this class.</summary>
+        protected static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -83,7 +77,7 @@
 
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
-            using var guard = new CompletionSourceGuard(out this.activateCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.activateCompletion);
             this.activateCancellation =
                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             this.deactivateCancellation?.Cancel();
@@ -95,7 +89,7 @@
 
             if (!IsInitialized)
             {
-                using var initGuard = new CompletionSourceGuard(out this.initializationCompletion);
+                using var initGuard = TaskCompletion.CreateGuard(out this.initializationCompletion);
 
                 Logger.LogDebug("Initializing {@Screen}...", this);
 
@@ -157,7 +151,7 @@
         {
             using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
-            using var guard = new CompletionSourceGuard(out this.deactivateCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.deactivateCompletion);
             this.deactivateCancellation =
                 CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
@@ -179,7 +173,7 @@
 
             if (IsActive || (IsInitialized && close))
             {
-                Logger.LogDebug("Deactivatin@g {@Screen}...", this);
+                Logger.LogDebug("Deactivating {@Screen}...", this);
                 await RaiseDeactivatingAsync(close, this.deactivateCancellation.Token);
                 await OnDeactivateAsync(close, this.deactivateCancellation.Token);
 
@@ -218,17 +212,6 @@
         {
             get => this.displayName;
             set => Set(ref this.displayName, value);
-        }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
         }
 
         #endregion

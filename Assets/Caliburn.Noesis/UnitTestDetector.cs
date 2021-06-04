@@ -2,8 +2,10 @@
 {
     using System;
     using System.Linq;
+    using JetBrains.Annotations;
 
     /// <summary>Responsible for checking if the code is framework is executing inside a unit test.</summary>
+    [PublicAPI]
     public static class UnitTestDetector
     {
         #region Constants and Fields

@@ -8,7 +8,7 @@
     using JetBrains.Annotations;
 
     /// <summary>Base class for nodes representing parts of a file system.</summary>
-    public abstract class FileSystemNode : PropertyChangedBase
+    public abstract class FileSystemNode : BindableObject
     {
         #region Constants and Fields
 

@@ -32,7 +32,6 @@
         #region Constants and Fields
 
         private bool isInitialized;
-        private ILogger logger;
 
 #if UNITY_5_5_OR_NEWER
         private NoesisView noesisView;
@@ -83,12 +82,8 @@
 
         #region Protected Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger
-        {
-            get => this.logger ??= LogManager.FrameworkLogger;
-            set => this.logger = value;
-        }
+        /// <summary>Gets or sets the <see cref="Microsoft.Extensions.Logging.ILogger" /> for this instance.</summary>
+        protected ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -112,7 +107,7 @@
         {
             try
             {
-                return IoCContainer.GetService(serviceType);
+                return IoCContainer.GetInstance(serviceType);
             }
             catch (Exception)
             {
@@ -218,20 +213,30 @@
         {
             IoCContainer = new Container();
 
-            IoCContainer.Register<IWindowManager>(typeof(ShellViewModel)).AsSingleton();
+            IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
+
+#if UNITY_5_5_OR_NEWER
+            IoCContainer.RegisterInstance(
+                typeof(ILoggerFactory),
+                new DebugLoggerFactory(this, LogLevel.Information));
+#else
+            IoCContainer.RegisterInstance(
+                typeof(ILoggerFactory),
+                new DebugLoggerFactory(LogLevel.Information));
+#endif
 
             foreach (var viewType in viewTypes)
             {
-                IoCContainer.Register(viewType, viewType);
+                IoCContainer.RegisterPerRequest(viewType, viewType);
             }
 
             foreach (var type in viewModelTypes)
             {
-                IoCContainer.Register(type, type);
+                IoCContainer.RegisterPerRequest(type, type);
 
                 foreach (var @interface in type.GetInterfaces())
                 {
-                    IoCContainer.Register(@interface, type);
+                    IoCContainer.RegisterPerRequest(@interface, type);
                 }
             }
         }
@@ -246,12 +251,6 @@
         /// <returns><c>true</c> if the custom initialization logic was successful; otherwise, <c>false</c>.</returns>
         protected virtual bool OnInitialize()
         {
-#if UNITY_5_5_OR_NEWER
-            LogManager.SetLoggerFactory(new DebugLoggerFactory(this, LogLevel.Information));
-#else
-            LogManager.SetLoggerFactory(new DebugLoggerFactory(LogLevel.Information));
-#endif
-
             return true;
         }
 
@@ -434,7 +433,7 @@
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
-            using var guard = new CompletionSourceGuard(out this.onDisableCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.onDisableCompletion);
 
             this.onEnableCancellation?.Cancel();
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
@@ -449,7 +448,7 @@
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
-            using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
             await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
@@ -463,7 +462,7 @@
         private async UniTask StartAsync()
         {
             using var _ = Logger.GetMethodTracer();
-            using var guard = new CompletionSourceGuard(out this.onStartCompletion);
+            using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
 
             if (!this.isInitialized)
             {

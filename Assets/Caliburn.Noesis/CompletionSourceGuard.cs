@@ -4,45 +4,36 @@
     using Cysharp.Threading.Tasks;
 
     /// <summary>
-    ///     Automatically handles the setting of a status on a <see cref="UniTaskCompletionSource" />
-    ///     after it goes out of scope. Intended for use in a using block or statement.
+    ///     Provides a helper method to automatically handle the setting of a status on a
+    ///     <see cref="UniTaskCompletionSource" /> after a provided guard goes out of scope.
     /// </summary>
-    /// <example>
-    ///     <code>
-    /// using var guard = new CompletionSourceGuard(out this.tcs);
-    /// </code>
-    /// </example>
-    /// <seealso cref="System.IDisposable" />
-    public class CompletionSourceGuard : IDisposable
+    public static class TaskCompletion
     {
-        #region Constants and Fields
+        #region Public Methods
 
-        private readonly UniTaskCompletionSource source;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>Initializes a new instance of the <see cref="CompletionSourceGuard" /> class.</summary>
-        /// <param name="source">
-        ///     A reference to the <see cref="UniTaskCompletionSource" /> to initialize and
-        ///     handle.
-        /// </param>
-        /// <exception cref="ArgumentNullException"><paramref name="source" /> is <c>null</c>.</exception>
-        public CompletionSourceGuard(out UniTaskCompletionSource source)
+        /// <summary>Creates a guarded <see cref="UniTaskCompletionSource" />.</summary>
+        /// A reference to the
+        /// <see cref="UniTaskCompletionSource" />
+        /// to initialize and
+        /// handle. Intended for
+        /// use in a using block or statement.
+        /// <returns>
+        ///     An <see cref="IDisposable" /> which will set the result of the
+        ///     <see cref="UniTaskCompletionSource" /> when disposed.
+        /// </returns>
+        /// <example>
+        ///     <code>
+        ///         using var _ = TaskCompletion.CreateGuard(out var completionSource);
+        ///     </code>
+        /// </example>
+        /// <seealso cref="System.IDisposable" />
+        public static IDisposable CreateGuard(out UniTaskCompletionSource completionSource)
         {
-            source = new UniTaskCompletionSource();
-            this.source = source;
-        }
+            var source = new UniTaskCompletionSource();
 
-        #endregion
+            completionSource = source;
 
-        #region IDisposable Implementation
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            this.source.TrySetResult();
+            return new DisposableAction(() => source.TrySetResult());
         }
 
         #endregion

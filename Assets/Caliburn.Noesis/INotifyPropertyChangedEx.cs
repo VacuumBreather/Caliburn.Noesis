@@ -1,21 +1,20 @@
 ﻿namespace Caliburn.Noesis
 {
+    using System;
     using System.ComponentModel;
+    using JetBrains.Annotations;
 
     /// <summary>
-    ///     Extends <see cref="INotifyPropertyChanged" /> such that the change event can be raised by
-    ///     external parties.
+    ///     Extends <see cref="INotifyPropertyChanged" />  such that the change event can be
+    ///     suspended.
     /// </summary>
-    public interface INotifyPropertyChangedEx : INotifyPropertyChanged
+    [PublicAPI]
+    public interface IBindableObject : INotifyPropertyChanged
     {
-        /// <summary>Enables/Disables property change notification.</summary>
-        bool IsNotifying { get; set; }
-
-        /// <summary>Notifies subscribers of the property change.</summary>
-        /// <param name="propertyName">Name of the property.</param>
-        void NotifyOfPropertyChange(string propertyName);
-
         /// <summary>Raises a change notification indicating that all bindings should be refreshed.</summary>
         void Refresh();
+
+        /// <summary>Suspends property change notifications.</summary>
+        IDisposable SuspendNotifications();
     }
 }

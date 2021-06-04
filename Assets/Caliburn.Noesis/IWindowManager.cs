@@ -31,7 +31,7 @@
         ///     (Optional) A cancellation token that can be used by other objects
         ///     or threads to receive notice of cancellation.
         /// </param>
-        UniTask ShowPopupAsync(PropertyChangedBase rootModel,
+        UniTask ShowPopupAsync(BindableObject rootModel,
                                CancellationToken cancellationToken = default);
 
         /// <summary>Shows a non-modal window for the specified model.</summary>
