@@ -5,13 +5,15 @@
 
 #else
     using System.Windows.Controls;
-#endif
     using System.Windows.Input;
+
+#endif
 
     /// <summary>A <see cref="ContentControl" /> used as a container for window content.</summary>
     /// <seealso cref="ContentControl" />
     public class Window : ContentControl
     {
+#if !UNITY_5_5_OR_NEWER
         #region Constants and Fields
 
         private readonly WindowCanvas parentCanvas;
@@ -38,5 +40,6 @@
         }
 
         #endregion
+#endif
     }
 }

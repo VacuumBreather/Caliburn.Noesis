@@ -2,7 +2,9 @@
 {
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
+
 #else
+    using Extensions;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Markup;
@@ -29,8 +31,7 @@
 
         private static ItemsPanelTemplate GetDefaultItemsPanelTemplate()
         {
-            var xaml =
-                $@"<ItemsPanelTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+            var xaml = $@"<ItemsPanelTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
                                        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
                                        xmlns:cal='clr-namespace:{typeof(WindowCanvas).Namespace};assembly={typeof(WindowCanvas).Assembly.GetName().Name}'>
                      <cal:{nameof(WindowCanvas)} />
@@ -45,7 +46,6 @@
         #endregion
 
 #if !UNITY_5_5_OR_NEWER
-
         #region Protected Methods
 
         /// <inheritdoc />

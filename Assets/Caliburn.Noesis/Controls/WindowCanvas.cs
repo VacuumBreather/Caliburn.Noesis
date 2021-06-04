@@ -1,12 +1,12 @@
 ﻿namespace Caliburn.Noesis.Controls
 {
+    using System.Linq;
+    using Extensions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 #else
     using System.Windows.Controls;
 #endif
-    using System.Linq;
-    using Extensions;
 
     /// <summary>Used to host windows.</summary>
     /// <seealso cref="Canvas" />
@@ -23,8 +23,7 @@
                 return;
             }
 
-            var maxZIndex = Children.Cast<Window>()
-                                    .Max(child => (int)child.GetValue(ZIndexProperty));
+            var maxZIndex = Children.Cast<Window>().Max(child => (int)child.GetValue(ZIndexProperty));
 
             if (maxZIndex != int.MaxValue)
             {
@@ -35,9 +34,7 @@
                 // The zIndex is probably never going to get this high but let's make sure.
                 var zIndex = 0;
 
-                Children.Cast<Window>()
-                        .OrderBy(GetZIndex)
-                        .ForEach(child => SetZIndex(child, zIndex++));
+                Children.Cast<Window>().OrderBy(GetZIndex).ForEach(child => SetZIndex(child, zIndex++));
 
                 window.SetValue(ZIndexProperty, zIndex);
             }

@@ -33,8 +33,7 @@
 
         #region IHaveActiveItem Implementation
 
-        /// <summary>The currently active item.</summary>
-        /// <value></value>
+        /// <inheritdoc />
         object IHaveActiveItem.ActiveItem
         {
             get => ActiveItem;
@@ -50,23 +49,19 @@
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual async UniTask ChangeActiveItemAsync(
-            T newItem,
-            bool closePrevious,
-            CancellationToken cancellationToken)
+        protected virtual async UniTask ChangeActiveItemAsync(T newItem,
+                                                              bool closePrevious,
+                                                              CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(newItem, closePrevious, cancellationToken);
 
-            await ScreenExtensions.TryDeactivateAsync(
-                this.activeItem,
-                closePrevious,
-                cancellationToken);
+            await ScreenExtensions.TryDeactivateAsync(this.activeItem, closePrevious, cancellationToken);
 
             newItem = EnsureItem(newItem);
 
             this.activeItem = newItem;
 
-            NotifyOfPropertyChange(nameof(ActiveItem));
+            RaisePropertyChanged(nameof(ActiveItem));
 
             if (IsActive)
             {

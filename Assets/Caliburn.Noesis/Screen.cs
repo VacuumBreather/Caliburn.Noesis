@@ -8,11 +8,9 @@
 
     /// <summary>A base implementation of <see cref="IScreen" />.</summary>
     [PublicAPI]
-    public abstract class Screen : PropertyChangedBase, IScreen, IChild
+    public abstract class Screen : ViewAware, IScreen, IChild
     {
         #region Constants and Fields
-
-        private static ILogger logger;
 
         private UniTaskCompletionSource initializationCompletion;
         private UniTaskCompletionSource activateCompletion;
@@ -52,12 +50,8 @@
 
         #region Protected Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            private set => logger = value;
-        }
+        /// <summary>Gets or sets the <see cref="ILogger" /> for this class.</summary>
+        protected static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -83,9 +77,8 @@
 
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
-            using var guard = new CompletionSourceGuard(out this.activateCompletion);
-            this.activateCancellation =
-                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            using var guard = TaskCompletion.CreateGuard(out this.activateCompletion);
+            this.activateCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             this.deactivateCancellation?.Cancel();
 
             // Deactivation was cancelled but we will wait for all the synchronous steps to complete.
@@ -95,9 +88,9 @@
 
             if (!IsInitialized)
             {
-                using var initGuard = new CompletionSourceGuard(out this.initializationCompletion);
+                using var initGuard = TaskCompletion.CreateGuard(out this.initializationCompletion);
 
-                Logger.LogDebug("Initializing {Screen}...", this);
+                Logger.LogDebug("Initializing {@Screen}...", this);
 
                 // Deactivation is not allowed to cancel initialization, so we are only
                 // passing the token that was passed to us.
@@ -105,7 +98,7 @@
                 IsInitialized = initialized = true;
             }
 
-            Logger.LogDebug("Activating {Screen}...", this);
+            Logger.LogDebug("Activating {@Screen}...", this);
             await OnActivateAsync(this.activateCancellation.Token);
 
             IsActive = true;
@@ -114,7 +107,7 @@
 
             if (this.activateCancellation?.IsCancellationRequested == true)
             {
-                Logger.LogDebug("Activation of {Screen} cancelled", this);
+                Logger.LogDebug("Activation of {@Screen} cancelled", this);
             }
         }
 
@@ -122,7 +115,7 @@
 
         #region IChild Implementation
 
-        /// <summary>Gets or sets the parent <see cref="IConductor" />.</summary>
+        /// <inheritdoc />
         public object Parent
         {
             get => this.parent;
@@ -157,9 +150,8 @@
         {
             using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
-            using var guard = new CompletionSourceGuard(out this.deactivateCompletion);
-            this.deactivateCancellation =
-                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            using var guard = TaskCompletion.CreateGuard(out this.deactivateCompletion);
+            this.deactivateCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
             if (!IsInitialized)
             {
@@ -179,7 +171,7 @@
 
             if (IsActive || (IsInitialized && close))
             {
-                Logger.LogDebug("Deactivating {Screen}...", this);
+                Logger.LogDebug("Deactivating {@Screen}...", this);
                 await RaiseDeactivatingAsync(close, this.deactivateCancellation.Token);
                 await OnDeactivateAsync(close, this.deactivateCancellation.Token);
 
@@ -189,13 +181,13 @@
 
                 if (close)
                 {
-                    Logger.LogDebug("Closed {Screen}", this);
+                    Logger.LogDebug("Closed {@Screen}", this);
                 }
             }
 
             if (this.deactivateCancellation?.IsCancellationRequested == true)
             {
-                Logger.LogDebug("Deactivation of {Screen} cancelled", this);
+                Logger.LogDebug("Deactivation of {@Screen} cancelled", this);
             }
         }
 
@@ -222,30 +214,11 @@
 
         #endregion
 
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
-
-        #endregion
-
-        #region Public Methods
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return DisplayName;
-        }
-
-        #endregion
-
         #region Protected Methods
 
         /// <summary>Called when activating.</summary>
+        /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual UniTask OnActivateAsync(CancellationToken cancellationToken)
         {
             return UniTask.CompletedTask;
@@ -272,8 +245,7 @@
 
         #region Private Methods
 
-        private async UniTask RaiseActivatedAsync(bool wasInitialized,
-                                                  CancellationToken cancellationToken)
+        private async UniTask RaiseActivatedAsync(bool wasInitialized, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(wasInitialized, cancellationToken);
 
@@ -284,8 +256,7 @@
                    UniTask.FromResult(true));
         }
 
-        private async UniTask RaiseDeactivatedAsync(bool wasClosed,
-                                                    CancellationToken cancellationToken)
+        private async UniTask RaiseDeactivatedAsync(bool wasClosed, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(wasClosed, cancellationToken);
 
@@ -296,8 +267,7 @@
                    UniTask.FromResult(true));
         }
 
-        private async UniTask RaiseDeactivatingAsync(bool wasClosed,
-                                                     CancellationToken cancellationToken)
+        private async UniTask RaiseDeactivatingAsync(bool wasClosed, CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(wasClosed, cancellationToken);
 

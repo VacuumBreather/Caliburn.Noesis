@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Noesis.Extensions
 {
     using System;
+    using System.Collections;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
@@ -17,12 +18,9 @@
         /// <param name="logger">The logger to trace to.</param>
         /// <param name="callingMethodParamValues">The parameters of the method call.</param>
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
-        public static IDisposable GetMethodTracer(this ILogger logger,
-                                                  params object[] callingMethodParamValues)
+        public static IDisposable GetMethodTracer(this ILogger logger, params object[] callingMethodParamValues)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? new MethodTracer(logger, callingMethodParamValues)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, callingMethodParamValues) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -32,9 +30,7 @@
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
         public static IDisposable GetMethodTracer<T>(this ILogger logger, T param)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? new MethodTracer(logger, param)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, param) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -46,9 +42,7 @@
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
         public static IDisposable GetMethodTracer<T1, T2>(this ILogger logger, T1 param1, T2 param2)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? new MethodTracer(logger, param1, param2)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, param1, param2) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -60,14 +54,9 @@
         /// <param name="param2">The second parameter of the method call.</param>
         /// <param name="param3">The third parameter of the method call.</param>
         /// <returns>An <see cref="IDisposable" /> to be used in a using statement.</returns>
-        public static IDisposable GetMethodTracer<T1, T2, T3>(this ILogger logger,
-                                                              T1 param1,
-                                                              T2 param2,
-                                                              T3 param3)
+        public static IDisposable GetMethodTracer<T1, T2, T3>(this ILogger logger, T1 param1, T2 param2, T3 param3)
         {
-            return logger.IsEnabled(LogLevel.Trace)
-                       ? new MethodTracer(logger, param1, param2, param3)
-                       : Disposable.Empty;
+            return logger.IsEnabled(LogLevel.Trace) ? TraceMethod(logger, param1, param2, param3) : Disposable.Empty;
         }
 
         /// <summary>Gets a method call tracer which can be used in a using statement.</summary>
@@ -88,7 +77,7 @@
                                                                   T4 param4)
         {
             return logger.IsEnabled(LogLevel.Trace)
-                       ? new MethodTracer(
+                       ? TraceMethod(
                            logger,
                            param1,
                            param2,
@@ -118,7 +107,7 @@
                                                                       T5 param5)
         {
             return logger.IsEnabled(LogLevel.Trace)
-                       ? new MethodTracer(
+                       ? TraceMethod(
                            logger,
                            param1,
                            param2,
@@ -128,33 +117,14 @@
                        : Disposable.Empty;
         }
 
-        /// <summary>Traces a method call entry.</summary>
-        /// <param name="logger">The logger.</param>
-        /// <param name="callingMethodParamValues">The parameters of the method call.</param>
-        public static void TraceMethodCall(this ILogger logger,
-                                           params object[] callingMethodParamValues)
-        {
-            ExtractCallerInfo(
-                out var method,
-                out var methodParams,
-                out var callingMethod,
-                out var callingType);
-            TraceCallerInfo(
-                logger,
-                method,
-                methodParams,
-                callingMethodParamValues,
-                callingMethod,
-                callingType);
-        }
-
         #endregion
 
         #region Private Methods
 
         private static void ExtractCallerInfo(out string methodName,
                                               out ParameterInfo[] methodParams,
-                                              out string callingMethod,
+                                              out string calledType,
+                                              out string callingMethodName,
                                               out string callingType)
         {
             var stackIndex = 1;
@@ -168,6 +138,7 @@
 
             methodName = method?.GetTrimmedName();
             methodParams = method?.GetParameters();
+            calledType = method?.ReflectedType?.Name ?? "<unknown type>";
 
             MethodBase methodCalledBy;
 
@@ -177,7 +148,7 @@
             }
             while ((methodCalledBy != null) && ShouldBeIgnored(methodCalledBy));
 
-            callingMethod = methodCalledBy?.GetTrimmedName();
+            callingMethodName = methodCalledBy?.GetTrimmedName();
             callingType = methodCalledBy?.ReflectedType?.Name ?? "<unknown type>";
         }
 
@@ -185,16 +156,14 @@
         {
             var index = method.Name.LastIndexOf('.') + 1;
 
-            return (index < 0) || (index >= method.Name.Length)
-                       ? method.Name
-                       : method.Name.Substring(index);
+            return (index < 0) || (index >= method.Name.Length) ? method.Name : method.Name.Substring(index);
         }
 
         private static bool ShouldBeIgnored(this MethodBase method)
         {
             return method.Name.Contains("MoveNext") ||
                    method.Name.Contains(nameof(ExtractCallerInfo)) ||
-                   (method.DeclaringType?.Name.Contains(nameof(MethodTracer)) ?? false) ||
+                   (method.DeclaringType?.Name.Contains(nameof(GetMethodTracer)) ?? false) ||
                    (method.DeclaringType?.Name.Contains(nameof(LoggerExtensions)) ?? false) ||
                    (method.DeclaringType?.Name.Contains("Logger") ?? false) ||
                    (method.DeclaringType?.Name.Contains("MethodBuilder") ?? false);
@@ -203,6 +172,7 @@
         private static void TraceCallerInfo(ILogger logger,
                                             string methodName,
                                             ParameterInfo[] methodParams,
+                                            string calledType,
                                             object[] methodParamValues,
                                             string callingMethod,
                                             string callingType)
@@ -212,12 +182,35 @@
                 return;
             }
 
+            static string TransformParameterValue(object parameterValue)
+            {
+                switch (parameterValue)
+                {
+                    case string str:
+                        return "\"" + str + "\"";
+
+                    case char c:
+                        return "'" + c + "'";
+
+                    case IEnumerable enumerable:
+                        return "[" + string.Join(", ", enumerable.Cast<object>().Select(TransformParameterValue)) + "]";
+
+                    case null:
+                        return "null";
+
+                    default:
+                        return parameterValue.ToString();
+                }
+            }
+
+            var paramValues = methodParamValues.Select(TransformParameterValue).ToArray();
+
             string parameterList;
 
-            if (methodParams.Length == methodParamValues.Length)
+            if (methodParams.Length == paramValues.Length)
             {
                 var parameters = methodParams.Select(
-                    param => $"{param.Name}={methodParamValues[param.Position]}");
+                    param => param.IsOut ? $"out {param.Name}" : $"{param.Name}={paramValues[param.Position]}");
 
                 parameterList = string.Join(", ", parameters);
             }
@@ -227,55 +220,42 @@
             }
 
             logger.LogTrace(
-                "{CallingType}.{CallingMethod}() -> {Method}({Parameters})",
+                "{CallingType}.{CallingMethod}() -> {CalledType}.{Method}({Parameters})",
                 callingType,
                 callingMethod,
+                calledType,
                 methodName,
                 parameterList);
         }
 
-        #endregion
-
-        #region Nested Types
-
-        private class MethodTracer : IDisposable
+        private static IDisposable TraceMethod(ILogger logger, params object[] paramValues)
         {
-            private readonly string call;
-            private readonly string callType;
-            private readonly string name;
+            ExtractCallerInfo(
+                out var methodName,
+                out var @params,
+                out var calledType,
+                out var callingMethod,
+                out var callingType);
 
-            public MethodTracer(ILogger logger, params object[] paramValues)
-            {
-                Logger = logger;
-                ExtractCallerInfo(
-                    out var methodName,
-                    out var @params,
-                    out var callingMethod,
-                    out var callingType);
+            TraceCallerInfo(
+                logger,
+                methodName,
+                @params,
+                calledType,
+                paramValues,
+                callingMethod,
+                callingType);
 
-                this.name = methodName;
-                this.call = callingMethod;
-                this.callType = callingType;
-
-                TraceCallerInfo(
-                    logger,
-                    methodName,
-                    @params,
-                    paramValues,
-                    callingMethod,
-                    callingType);
-            }
-
-            private ILogger Logger { get; }
-
-            void IDisposable.Dispose()
-            {
-                Logger.LogTrace(
-                    "{CallingType}.{CallingMethod}() <- {Method}()",
-                    this.callType,
-                    this.call,
-                    this.name);
-            }
+            return new DisposableAction(
+                () =>
+                    {
+                        logger.LogTrace(
+                            "{CallingType}.{CallingMethod}() <- {CalledType}.{Method}()",
+                            callingType,
+                            callingMethod,
+                            calledType,
+                            methodName);
+                    });
         }
 
         #endregion
