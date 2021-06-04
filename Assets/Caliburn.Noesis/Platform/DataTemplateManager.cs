@@ -17,20 +17,9 @@
     [PublicAPI]
     public static class DataTemplateManager
     {
-        #region Constants and Fields
+        #region Private Properties
 
-        private static ILogger logger;
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this type.</summary>
-        public static ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            set => logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 

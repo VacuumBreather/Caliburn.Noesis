@@ -37,7 +37,7 @@
                 /// </summary>
                 public OneActive()
                 {
-                    this.AssignParentOnCollectionChanged(this.items);
+                    this.items.AreChildrenOf(this);
                 }
 
                 #endregion

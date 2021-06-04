@@ -12,8 +12,6 @@
     {
         #region Constants and Fields
 
-        private static ILogger logger;
-
         private UniTaskCompletionSource initializationCompletion;
         private UniTaskCompletionSource activateCompletion;
         private UniTaskCompletionSource deactivateCompletion;
@@ -52,12 +50,8 @@
 
         #region Protected Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            private set => logger = value;
-        }
+        /// <summary>Gets or sets the <see cref="ILogger" /> for this class.</summary>
+        protected static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -218,17 +212,6 @@
         {
             get => this.displayName;
             set => Set(ref this.displayName, value);
-        }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
         }
 
         #endregion
