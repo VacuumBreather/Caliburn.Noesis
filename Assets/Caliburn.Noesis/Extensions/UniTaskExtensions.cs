@@ -13,7 +13,7 @@
         /// <returns>A task that represents the asynchronous operation.</returns>
         public static async UniTask Using(this UniTask task, AsyncGuard asyncGuard)
         {
-            using (asyncGuard.Token)
+            using (asyncGuard.GetToken())
             {
                 await task;
             }

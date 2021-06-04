@@ -363,13 +363,6 @@
                                         IServiceProvider serviceProvider,
                                         AssemblySource assemblySource)
         {
-            if (model is IViewAware { View: UIElement view })
-            {
-                Logger.LogDebug("Using cached view for {ViewModel}", model);
-
-                return view;
-            }
-
             return LocateForModelType(model.GetType(), serviceProvider, assemblySource);
         }
 

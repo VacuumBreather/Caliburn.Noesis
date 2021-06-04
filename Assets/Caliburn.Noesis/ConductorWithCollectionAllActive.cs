@@ -55,7 +55,7 @@
                 /// </summary>
                 public AllActive()
                 {
-                    this.AssignParentOnCollectionChanged(this.items);
+                    this.items.AreChildrenOf(this);
                 }
 
                 #endregion
@@ -130,7 +130,7 @@
                 }
 
                 /// <inheritdoc />
-                public override IEnumerable<T> GetChildren()
+                public override sealed IEnumerable<T> GetChildren()
                 {
                     return this.items;
                 }

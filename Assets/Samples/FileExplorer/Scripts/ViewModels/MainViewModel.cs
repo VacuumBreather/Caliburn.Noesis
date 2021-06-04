@@ -139,7 +139,7 @@
 
         private async Task<bool> ReadFileAsync(FileInfo file)
         {
-            using var token = this.asyncGuard.Token;
+            using var _ = this.asyncGuard.GetToken();
             using var tokenSource =
                 this.cancellationTokenSource = new SafeCancellationTokenSource();
 

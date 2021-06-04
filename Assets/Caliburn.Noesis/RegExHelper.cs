@@ -1,9 +1,11 @@
 ﻿namespace Caliburn.Noesis
 {
     using Extensions;
+    using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
 
     /// <summary>Helper class for encoding strings to regular expression patterns.</summary>
+    [PublicAPI]
     public static class RegExHelper
     {
         #region Constants and Fields
@@ -18,18 +20,11 @@
         /// <summary>The regular expression pattern for a sub-namespace (including the dot).</summary>
         public const string SubNamespaceRegEx = NameRegEx + @"\.";
 
-        private static ILogger logger;
-
         #endregion
 
-        #region Public Properties
+        #region Private Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this type.</summary>
-        public static ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            set => logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 

@@ -14,7 +14,6 @@
     <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.2.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2021.1.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0.0" />
     <PackageReference Include="Noesis.GUI.Extensions" Version="3.0.6" />
@@ -28,9 +27,6 @@
     <Compile Include="..\..\Assets\Samples\MarkupExtensions\**\*.cs" LinkBase="MarkupExtensions" />
     <Page Include="..\..\Assets\Samples\MarkupExtensions\**\*.xaml" LinkBase="MarkupExtensions" />
     <Resource Include="..\..\Assets\Samples\MarkupExtensions\**\*.ttf" LinkBase="MarkupExtensions" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\Assets\Samples\AutofacBootstrapperBase.cs" LinkBase="MarkupExtensions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs" />

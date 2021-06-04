@@ -1,4 +1,4 @@
-﻿<Page
+﻿<UserControl
     x:Class="Caliburn.Noesis.ShellView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -63,4 +63,4 @@
             <ContentControl Content="{Binding DialogConductor.ActiveItem, Mode=OneWay}" />
         </Grid>
     </Grid>
-</Page>
+</UserControl>

@@ -17,20 +17,9 @@
     [PublicAPI]
     public static class DataTemplateManager
     {
-        #region Constants and Fields
+        #region Private Properties
 
-        private static ILogger logger;
-
-        #endregion
-
-        #region Public Properties
-
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this type.</summary>
-        public static ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            set => logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -117,7 +106,7 @@
                                $"  xmlns:vm=\"clr-namespace:{viewModelType.Namespace};assembly={viewModelType.Assembly.GetName().Name}\"\n" +
                                $"  xmlns:cal=\"clr-namespace:{typeof(View).Namespace};assembly={typeof(View).Assembly.GetName().Name}\"\n" +
                                $"  DataType=\"{{x:Type vm:{viewModelType.Name}}}\">\n" +
-                               "    <ContentPresenter cal:View.Model=\"{Binding}\" />\n" +
+                               "    <ContentPresenter cal:View.IsGenerated=\"True\" cal:View.Model=\"{Binding}\" />\n" +
                                "</DataTemplate>";
             }
             else if (viewModelType.IsDerivedFromOrImplements(typeof(DialogScreen)))
