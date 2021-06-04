@@ -9,8 +9,9 @@
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
+    using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
-    using GUI = global::Noesis.GUI;
+    using global::Noesis;
     using UnityEngine;
 
 #else
@@ -31,7 +32,6 @@
         #region Constants and Fields
 
         private bool isInitialized;
-        private ILogger logger;
 
 #if UNITY_5_5_OR_NEWER
         private NoesisView noesisView;
@@ -60,6 +60,7 @@
         {
             Application.Current.Startup += async (_, __) =>
                 {
+                    Initialize();
                     this.onEnableCancellation = new CancellationTokenSource();
                     await OnEnableAsync(this.onEnableCancellation.Token);
                     await StartAsync();
@@ -81,12 +82,8 @@
 
         #region Protected Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger
-        {
-            get => this.logger ??= LogManager.FrameworkLogger;
-            set => this.logger = value;
-        }
+        /// <summary>Gets or sets the <see cref="Microsoft.Extensions.Logging.ILogger" /> for this instance.</summary>
+        protected ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -96,16 +93,26 @@
 
         private IWindowManager WindowManager { get; set; }
 
-        private ViewLocator ViewLocator { get; set; }
+        private ViewLocator ViewLocator { get; } = new ViewLocator();
+
+        private AssemblySource AssemblySource { get; } = new AssemblySource();
 
         #endregion
 
         #region IServiceProvider Implementation
 
         /// <inheritdoc />
+        /// <remarks>This method must not throw exceptions.</remarks>
         public virtual object GetService(Type serviceType)
         {
-            return IoCContainer.GetService(serviceType);
+            try
+            {
+                return IoCContainer.GetInstance(serviceType);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #endregion
@@ -136,16 +143,16 @@
         /// </remarks>
         public async UniTask ShutdownAsync()
         {
+            using var _ = Logger.GetMethodTracer();
+
             if (!this.isInitialized)
             {
                 return;
             }
 
-            using var _ = Logger.GetMethodTracer();
-
             try
             {
-                Logger.LogInformation("{Bootstrapper} shutting down", this);
+                Logger.LogInformation("Shutting down...");
 
                 await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
                 await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
@@ -158,6 +165,8 @@
                 {
                     await deactivate.DeactivateAsync(true);
                 }
+
+                Logger.LogInformation("Shutdown complete");
             }
             finally
             {
@@ -177,37 +186,54 @@
         ///     All relevant view-model types exported by the configured assemblies,
         ///     excluding any view-model implementing <see cref="IWindowManager" />.
         /// </param>
+        /// <param name="viewTypes">
+        ///     All relevant view types exported by the configured assemblies, excluding
+        ///     <see cref="ShellView" />.
+        /// </param>
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
-        ///     <see cref="GetService" /> to let the framework use it. The following types need to be
+        ///     <see cref="GetService" /> to let the framework use it. <br /> The following types need to be
         ///     registered here at a minimum:
         ///     <list type="bullet">
         ///         <item>
         ///             An <see cref="IWindowManager" /> implementation, using singleton lifetime in this
         ///             scope
         ///         </item>
-        ///         <item>The <see cref="Noesis.ViewLocator" />, using singleton lifetime in this scope</item>
-        ///         <item>The <see cref="NameTransformer" />, using singleton lifetime in this scope</item>
-        ///         <item>All relevant view-models and services</item>
+        ///         <item>
+        ///             Optionally a <see cref="ILoggerFactory" />, using singleton lifetime in this scope,
+        ///             if you want to provide your own to the framework
+        ///         </item>
+        ///         <item>All relevant view, view-models and services</item>
         ///     </list>
         ///     The view-model implementing <see cref="IWindowManager" /> will not be part of the
         ///     <paramref name="viewModelTypes" /> sequence.
         /// </remarks>
-        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes)
+        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
         {
             IoCContainer = new Container();
 
-            IoCContainer.Register<IWindowManager>(typeof(ShellViewModel)).AsSingleton();
-            IoCContainer.Register<ViewLocator>().AsSingleton();
-            IoCContainer.Register<NameTransformer>().AsSingleton();
+            IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
+
+#if UNITY_5_5_OR_NEWER
+            IoCContainer.RegisterInstance(typeof(ILoggerFactory), new DebugLoggerFactory(this, LogLevel.Information));
+#else
+            IoCContainer.RegisterInstance(
+                typeof(ILoggerFactory),
+                new DebugLoggerFactory(LogLevel.Information));
+#endif
+
+            foreach (var viewType in viewTypes)
+            {
+                IoCContainer.RegisterPerRequest(viewType, viewType);
+            }
 
             foreach (var type in viewModelTypes)
             {
-                IoCContainer.Register(type, type);
+                IoCContainer.RegisterPerRequest(type, type);
 
                 foreach (var @interface in type.GetInterfaces())
                 {
-                    IoCContainer.Register(@interface, type);
+                    IoCContainer.RegisterPerRequest(@interface, type);
                 }
             }
         }
@@ -222,12 +248,6 @@
         /// <returns><c>true</c> if the custom initialization logic was successful; otherwise, <c>false</c>.</returns>
         protected virtual bool OnInitialize()
         {
-#if UNITY_5_5_OR_NEWER
-            LogManager.SetLoggerFactory(new DebugLoggerFactory(this, LogLevel.Information));
-#else
-            LogManager.SetLoggerFactory(new DebugLoggerFactory(LogLevel.Information));
-#endif
-
             return true;
         }
 
@@ -250,11 +270,7 @@
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-            return new[]
-                       {
-                           Assembly.GetExecutingAssembly(),
-                           GetType().Assembly
-                       };
+            return new[] { Assembly.GetExecutingAssembly(), GetType().Assembly };
         }
 
         #endregion
@@ -298,10 +314,7 @@
 
             if (!this.noesisView)
             {
-                Logger.LogError(
-                    "{Bootstrapper} must be on same game object as {NoesisView}",
-                    this,
-                    nameof(NoesisView));
+                Logger.LogError("{Bootstrapper} must be on same game object as {NoesisView}", this, nameof(NoesisView));
             }
         }
 
@@ -312,8 +325,8 @@
             if (this.isInitialized)
             {
                 Logger.LogWarning(
-                    "{Bootstrapper} not shut down correctly - call {ShutdownAsync}() before destroying",
-                    this,
+                    "Async shutdown logic not guaranteed to complete before {@GameObject} destruction - call and await {ShutdownAsync}() before destroying",
+                    gameObject,
                     nameof(ShutdownAsync));
 
                 await ShutdownAsync();
@@ -332,6 +345,7 @@
         [UsedImplicitly]
         private async UniTaskVoid OnEnable()
         {
+            Initialize();
             this.onEnableCancellation = new CancellationTokenSource();
             await OnEnableAsync(this.onEnableCancellation.Token);
         }
@@ -349,6 +363,13 @@
 
         #region Private Methods
 
+        private void AddImportantResources(ResourceDictionary resourceDictionary)
+        {
+            resourceDictionary[nameof(IServiceProvider)] = this;
+            resourceDictionary[nameof(AssemblySource)] = AssemblySource;
+            resourceDictionary[nameof(ViewLocator)] = ViewLocator;
+        }
+
         private void Initialize()
         {
             if (this.isInitialized)
@@ -356,57 +377,54 @@
                 return;
             }
 
-            var assemblySource = new AssemblySource();
-            assemblySource.AddRange(SelectAssemblies());
+            AssemblySource.AddRange(SelectAssemblies());
 
-            ConfigureIoCContainer(assemblySource.ViewModelTypes);
+            ConfigureIoCContainer(AssemblySource.ViewModelTypes, AssemblySource.ViewTypes);
 
-            try
+            if (GetService<ILoggerFactory>() is { } loggerFactory)
             {
-                ViewLocator = GetService<ViewLocator>();
-            }
-            catch
-            {
-                ViewLocator = null;
+                LogManager.SetLoggerFactory(loggerFactory);
             }
 
-            if (ViewLocator != null)
-            {
-                ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
-                ConfigureViewLocator(ViewLocator);
+            using var _ = Logger.GetMethodTracer();
 
-#if UNITY_5_5_OR_NEWER
-                var dictionary = GUI.GetApplicationResources();
-#else
-                var dictionary = Application.Current.Resources;
-#endif
+            Logger.LogInformation("Initializing...");
 
-                DataTemplateManager.RegisterDataTemplates(ViewLocator, assemblySource, dictionary);
-            }
+            Logger.LogInformation("Configuring type mappings");
+            ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
+            ConfigureViewLocator(ViewLocator);
 
-            try
+            Logger.LogInformation("Resolving window manager");
+            WindowManager = GetService<IWindowManager>();
+
+            if (WindowManager is null)
             {
-                WindowManager = GetService<IWindowManager>();
-            }
-            catch
-            {
-                WindowManager = null;
+                Logger.LogError(
+                    "Window manager not found - please register {IWindowManager} implementation in DI container",
+                    nameof(IWindowManager));
+                Logger.LogError("Initialization failed");
+
+                return;
             }
 
             var wasOnInitializeSuccessful = OnInitialize();
 
-            if (wasOnInitializeSuccessful && (ViewLocator != null) && (WindowManager != null))
+            if (!wasOnInitializeSuccessful)
             {
-                this.isInitialized = true;
-                Logger.LogInformation("{Bootstrapper} initialized", this);
+                Logger.LogError("Initialization failed");
+
+                return;
             }
+
+            this.isInitialized = true;
+            Logger.LogInformation("Initialization complete");
         }
 
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
+            using var guard = TaskCompletion.CreateGuard(out this.onDisableCompletion);
 
-            using var guard = new CompletionSourceGuard(out this.onDisableCompletion);
             this.onEnableCancellation?.Cancel();
             await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
             await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
@@ -419,14 +437,11 @@
 
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
-            using var guard = new CompletionSourceGuard(out this.onEnableCompletion);
+            using var _ = Logger.GetMethodTracer(cancellationToken);
+            using var guard = TaskCompletion.CreateGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
             await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
-
-            Initialize();
-
-            using var _ = Logger.GetMethodTracer(cancellationToken);
 
             if (WindowManager is IActivate activate)
             {
@@ -437,51 +452,53 @@
         private async UniTask StartAsync()
         {
             using var _ = Logger.GetMethodTracer();
-
-            using var guard = new CompletionSourceGuard(out this.onStartCompletion);
-
-            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
-
-#if !UNITY_5_5_OR_NEWER
-            var window = new Window { Content = new ShellView(), Width = 1280, Height = 720 };
-            window.Show();
-            window.Closing += OnWindowClosing;
-#endif
-
-            await OnStartup();
-
-            if (ViewLocator is null)
-            {
-                Logger.LogError(
-                    "{ViewLocator1} not found - please register {ViewLocator2} and {NameTransformer} in DI container",
-                    nameof(Noesis.ViewLocator),
-                    nameof(Noesis.ViewLocator),
-                    nameof(NameTransformer));
-            }
-
-            if (WindowManager is null)
-            {
-                Logger.LogError(
-                    "{IWindowManager1} not found - please register {IWindowManager2} implementation in DI container",
-                    nameof(IWindowManager),
-                    nameof(IWindowManager));
-            }
+            using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
 
             if (!this.isInitialized)
             {
-                Logger.LogError("{Bootstrapper} not initialized", this);
-
                 return;
             }
+
+            Logger.LogInformation("Starting...");
+
+            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
+
+#if UNITY_5_5_OR_NEWER
+            var dictionary = this.noesisView.Content.Resources;
+#else
+            var shellView = new ShellView();
+            var dictionary = shellView.Resources;
+#endif
+
+            Logger.LogInformation("Registering data templates");
+
+            DataTemplateManager.RegisterDataTemplates(
+                ViewLocator,
+                AssemblySource,
+                dictionary,
+                template => AddImportantResources(template.Resources));
+
+            AddImportantResources(dictionary);
 
 #if UNITY_5_5_OR_NEWER
             this.noesisView.Content.DataContext = WindowManager;
 #else
-            window.DataContext = WindowManager;
+            shellView.DataContext = WindowManager;
+            var window = new Window { Width = 1280, Height = 720 };
+            window.Show();
+            window.Closing += OnWindowClosing;
+            window.Content = shellView;
 #endif
 
+            await OnStartup();
+
             var mainContent = GetService<T>();
+
+            Logger.LogInformation("Showing main content: {MainContent}", mainContent);
+
             await WindowManager.ShowMainContentAsync(mainContent);
+
+            Logger.LogInformation("Start complete");
         }
 
         #endregion

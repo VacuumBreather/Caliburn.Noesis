@@ -3,6 +3,7 @@ namespace Caliburn.Noesis.Samples.Converters
     using ViewModels;
 #if UNITY_5_5_OR_NEWER
     using UnityEngine;
+
 #endif
 
     /// <summary>The bootstrapper for the Converters sample.</summary>

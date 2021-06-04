@@ -1,16 +1,16 @@
 ﻿namespace Caliburn.Noesis.Converters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using Jace;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
 #else
     using System.Windows;
     using System.Windows.Data;
 #endif
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Jace;
 
     /// <summary>Converts a mathematical expression into its result.</summary>
     /// <seealso cref="IValueConverter" />
@@ -20,27 +20,22 @@
     {
         #region Constants and Fields
 
-        private static readonly IDictionary<string, Func<IDictionary<string, double>, double>>
-            CachedFormulas = new Dictionary<string, Func<IDictionary<string, double>, double>>();
+        private static readonly IDictionary<string, Func<IDictionary<string, double>, double>> CachedFormulas =
+            new Dictionary<string, Func<IDictionary<string, double>, double>>();
 
         private static readonly CalculationEngine CalculationEngine =
             new CalculationEngine(CultureInfo.InvariantCulture);
 
-        private static readonly Dictionary<string, double> Parameters =
-            new Dictionary<string, double>();
+        private static readonly Dictionary<string, double> Parameters = new Dictionary<string, double>();
 
         #endregion
 
         #region IMultiValueConverter Implementation
 
         /// <inheritdoc />
-        public object Convert(object[] values,
-                              Type targetType,
-                              object parameter,
-                              CultureInfo culture)
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(parameter is string expression) || string.IsNullOrEmpty(expression) ||
-                values is null)
+            if (!(parameter is string expression) || string.IsNullOrEmpty(expression) || values is null)
             {
                 return DependencyProperty.UnsetValue;
             }
@@ -56,10 +51,7 @@
         }
 
         /// <inheritdoc />
-        public object[] ConvertBack(object value,
-                                    Type[] targetTypes,
-                                    object parameter,
-                                    CultureInfo culture)
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
@@ -87,10 +79,7 @@
         }
 
         /// <inheritdoc />
-        public object ConvertBack(object value,
-                                  Type targetType,
-                                  object parameter,
-                                  CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }
@@ -130,8 +119,7 @@
             return result;
         }
 
-        private static string CreateVariableExpression(IEnumerable<object> values,
-                                                       string expression)
+        private static string CreateVariableExpression(IEnumerable<object> values, string expression)
         {
             var variableExpression = string.Format(
                 CultureInfo.InvariantCulture,
@@ -164,11 +152,7 @@
                 return d1;
             }
 
-            return double.TryParse(
-                       value.ToString(),
-                       NumberStyles.Any,
-                       CultureInfo.InvariantCulture,
-                       out var d2)
+            return double.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var d2)
                        ? d2
                        : double.NaN;
         }

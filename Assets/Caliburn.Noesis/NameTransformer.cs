@@ -10,12 +10,11 @@
     ///     Class for managing the list of rules for transforming view-model type names into view type
     ///     names.
     /// </summary>
-    public class NameTransformer : BindableCollection<NameTransformer.Rule>, IHaveLogger
+    public class NameTransformer : BindableCollection<NameTransformer.Rule>
     {
         #region Constants and Fields
 
         private const RegexOptions Options = RegexOptions.Compiled;
-        private static ILogger logger;
 
         private bool useEagerRuleSelection = true;
 
@@ -37,22 +36,7 @@
 
         #region Private Properties
 
-        private static ILogger Logger
-        {
-            get => logger ??= LogManager.FrameworkLogger;
-            set => logger = value;
-        }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -80,19 +64,11 @@
         ///     For examples of the use of the global filter pattern check the defaults used in
         ///     <see cref="ViewLocator" />.
         /// </example>
-        public void AddRule(string replacePattern,
-                            string replaceValue,
-                            string globalFilterPattern = null)
+        public void AddRule(string replacePattern, string replaceValue, string globalFilterPattern = null)
         {
             using var _ = Logger.GetMethodTracer(replacePattern, replaceValue, globalFilterPattern);
 
-            AddRule(
-                replacePattern,
-                new[]
-                    {
-                        replaceValue
-                    },
-                globalFilterPattern);
+            AddRule(replacePattern, new[] { replaceValue }, globalFilterPattern);
         }
 
         /// <summary>Adds a transform using a list of replacement values and a global filter pattern.</summary>
@@ -122,10 +98,7 @@
                             string globalFilterPattern = null)
         {
             // ReSharper disable once PossibleMultipleEnumeration
-            using var _ = Logger.GetMethodTracer(
-                replacePattern,
-                replaceValueList,
-                globalFilterPattern);
+            using var _ = Logger.GetMethodTracer(replacePattern, replaceValueList, globalFilterPattern);
 
             Add(
                 new Rule
@@ -150,8 +123,7 @@
 
             foreach (var rule in rules)
             {
-                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) &&
-                    !rule.GlobalFilterPatternRegex.IsMatch(source))
+                if (!string.IsNullOrEmpty(rule.GlobalFilterPattern) && !rule.GlobalFilterPatternRegex.IsMatch(source))
                 {
                     continue;
                 }
@@ -162,8 +134,7 @@
                 }
 
                 nameList.AddRange(
-                    rule.ReplacementValues.Select(
-                        repString => rule.ReplacePatternRegex.Replace(source, repString)));
+                    rule.ReplacementValues.Select(repString => rule.ReplacePatternRegex.Replace(source, repString)));
 
                 if (!this.useEagerRuleSelection)
                 {
@@ -207,9 +178,7 @@
 
             /// <summary>Regular expression for replacing text.</summary>
             public Regex ReplacePatternRegex => this.replacePatternRegex ??
-                                                (this.replacePatternRegex = new Regex(
-                                                     this.ReplacePattern,
-                                                     Options));
+                                                (this.replacePatternRegex = new Regex(this.ReplacePattern, Options));
 
             #endregion
         }

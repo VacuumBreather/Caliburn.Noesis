@@ -27,13 +27,11 @@
         UniTask ActivateItemAsync(object item, CancellationToken cancellationToken = default);
 
         /// <summary>Deactivates the specified item.</summary>
-        /// <param name="item">The item to close.</param>
+        /// <param name="item">The item to deactivate.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        UniTask DeactivateItemAsync(object item,
-                                    bool close,
-                                    CancellationToken cancellationToken = default);
+        UniTask DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -45,8 +43,12 @@
     ///     <see cref="IActivate" />, <see cref="IDeactivate" />, <see cref="IGuardClose" />.
     /// </remarks>
     /// <typeparam name="T">The type of item to conduct.</typeparam>
-    public interface IConductor<in T> : IConductor
+    public interface IConductor<T> : IConductor
     {
+        /// <summary>Gets or sets the close strategy.</summary>
+        /// <value>The close strategy.</value>
+        ICloseStrategy<T> CloseStrategy { get; set; }
+
         /// <summary>Activates the specified item.</summary>
         /// <param name="item">The item to activate.</param>
         /// <param name="cancellationToken">
@@ -56,12 +58,10 @@
         UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default);
 
         /// <summary>Deactivates the specified item.</summary>
-        /// <param name="item">The item to close.</param>
+        /// <param name="item">The item to deactivate.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        UniTask DeactivateItemAsync(T item,
-                                    bool close,
-                                    CancellationToken cancellationToken = default);
+        UniTask DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default);
     }
 }

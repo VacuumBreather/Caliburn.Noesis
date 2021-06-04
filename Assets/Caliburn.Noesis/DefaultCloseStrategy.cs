@@ -26,8 +26,7 @@
         /// </param>
         public DefaultCloseStrategy(bool closeConductedItemsWhenConductorCannotClose = false)
         {
-            this.closeConductedItemsWhenConductorCannotClose =
-                closeConductedItemsWhenConductorCannotClose;
+            this.closeConductedItemsWhenConductorCannotClose = closeConductedItemsWhenConductorCannotClose;
         }
 
         #endregion
@@ -36,8 +35,7 @@
 
         /// <inheritdoc />
         public async UniTask<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose,
-                                                           CancellationToken cancellationToken =
-                                                               default)
+                                                           CancellationToken cancellationToken = default)
         {
             var closeableChildren = new List<T>();
             var closeCanOccur = true;

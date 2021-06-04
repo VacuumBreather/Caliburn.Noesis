@@ -20,8 +20,7 @@
         public static IRaisingCommand RaiseWith(this IRaisingCommand command, AsyncGuard asyncGuard)
         {
             var weakReference = new WeakReference(command);
-            asyncGuard.IsOngoingChanged += (_, __) =>
-                ((IRaisingCommand)weakReference.Target)?.RaiseCanExecuteChanged();
+            asyncGuard.IsOngoingChanged += (_, __) => ((IRaisingCommand)weakReference.Target)?.RaiseCanExecuteChanged();
 
             return command;
         }
@@ -34,12 +33,10 @@
         /// <param name="command">The command.</param>
         /// <param name="notify">The <see cref="INotifyPropertyChanged" /> instance to watch.</param>
         /// <returns>The command.</returns>
-        public static IRaisingCommand RaiseWith(this IRaisingCommand command,
-                                                INotifyPropertyChanged notify)
+        public static IRaisingCommand RaiseWith(this IRaisingCommand command, INotifyPropertyChanged notify)
         {
             var weakReference = new WeakReference(command);
-            notify.PropertyChanged += (_, __) =>
-                ((IRaisingCommand)weakReference.Target)?.RaiseCanExecuteChanged();
+            notify.PropertyChanged += (_, __) => ((IRaisingCommand)weakReference.Target)?.RaiseCanExecuteChanged();
 
             return command;
         }

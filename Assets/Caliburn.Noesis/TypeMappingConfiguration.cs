@@ -47,12 +47,7 @@
         ///     List of View suffixes for which default type mappings should be created. Applies only when
         ///     UseNameSuffixesInMappings = true. Default values are "View", "Page"
         /// </summary>
-        public List<string> ViewSuffixList { get; } = new List<string>(
-            new[]
-                {
-                    "View",
-                    "Page"
-                });
+        public List<string> ViewSuffixList { get; } = new List<string>(new[] { "View", "Page" });
 
         #endregion
     }
