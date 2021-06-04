@@ -15,7 +15,7 @@
     ///     context.
     /// </summary>
     [PublicAPI]
-    public class ViewAware : PropertyChangedBase, IViewAware
+    public class ViewAware : BindableObject, IViewAware
     {
         #region Constants and Fields
 

@@ -32,7 +32,6 @@
         #region Constants and Fields
 
         private bool isInitialized;
-        private ILogger logger;
 
 #if UNITY_5_5_OR_NEWER
         private NoesisView noesisView;
@@ -83,12 +82,8 @@
 
         #region Protected Properties
 
-        /// <summary>Gets or sets the <see cref="ILogger" /> for this instance.</summary>
-        protected ILogger Logger
-        {
-            get => this.logger ??= LogManager.FrameworkLogger;
-            set => this.logger = value;
-        }
+        /// <summary>Gets or sets the <see cref="Microsoft.Extensions.Logging.ILogger" /> for this instance.</summary>
+        protected ILogger Logger => LogManager.FrameworkLogger;
 
         #endregion
 
@@ -223,11 +218,11 @@
 #if UNITY_5_5_OR_NEWER
             IoCContainer.RegisterInstance(
                 typeof(ILoggerFactory),
-                new DebugLoggerFactory(this, LogLevel.Debug));
+                new DebugLoggerFactory(this, LogLevel.Information));
 #else
             IoCContainer.RegisterInstance(
                 typeof(ILoggerFactory),
-                new DebugLoggerFactory(LogLevel.Debug));
+                new DebugLoggerFactory(LogLevel.Information));
 #endif
 
             foreach (var viewType in viewTypes)

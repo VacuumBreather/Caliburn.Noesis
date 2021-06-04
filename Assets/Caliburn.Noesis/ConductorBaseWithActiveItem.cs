@@ -65,7 +65,7 @@
 
             this.activeItem = newItem;
 
-            NotifyOfPropertyChange(nameof(ActiveItem));
+            RaisePropertyChanged(nameof(ActiveItem));
 
             if (IsActive)
             {

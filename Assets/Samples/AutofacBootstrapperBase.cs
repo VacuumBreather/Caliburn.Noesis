@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using Autofac;
-    using Autofac.Core.Resolving.Pipeline;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
@@ -16,12 +15,6 @@
     public abstract class AutofacBootstrapperBase<T> : BootstrapperBase<T>
         where T : Screen
     {
-        #region Constants and Fields
-
-        private static IResolveMiddleware attachLoggerMiddleware = new AttachLoggerMiddleware();
-
-        #endregion
-
         #region Protected Properties
 
         /// <summary>Gets the DI container.</summary>
@@ -62,14 +55,6 @@
                    .As<ILoggerFactory>()
                    .SingleInstance();
 
-            builder.ComponentRegistryBuilder.Registered += (_, args) =>
-                {
-                    args.ComponentRegistration.PipelineBuilding += (_, pipeline) =>
-                        {
-                            pipeline.Use(attachLoggerMiddleware);
-                        };
-                };
-
             builder.RegisterInstance(this).As<IServiceProvider>().SingleInstance();
             builder.RegisterType<ShellViewModel>().As<IWindowManager>().SingleInstance();
 
@@ -95,28 +80,6 @@
             Container.Dispose();
 
             return base.OnShutdown();
-        }
-
-        #endregion
-
-        #region Nested Types
-
-        private class AttachLoggerMiddleware : IResolveMiddleware
-        {
-            public PipelinePhase Phase => PipelinePhase.RegistrationPipelineStart;
-
-            public void Execute(ResolveRequestContext context, Action<ResolveRequestContext> next)
-            {
-                // Call the next middleware in the pipeline.
-                next(context);
-
-                if (context.Instance is IHaveLogger hasLogger)
-                {
-                    // Resolve and attach the logger.
-                    hasLogger.Logger = context.Resolve<ILoggerFactory>()
-                                              .CreateLogger(LogManager.FrameworkCategoryName);
-                }
-            }
         }
 
         #endregion
