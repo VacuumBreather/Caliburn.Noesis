@@ -6,7 +6,7 @@
     using JetBrains.Annotations;
 
     /// <summary>The root view model of the UI.</summary>
-    [UsedImplicitly]
+    [PublicAPI]
     public class ShellViewModel : Conductor<IConductor>.Collection.AllActive, IWindowManager
     {
         #region Constructors and Destructors
@@ -48,8 +48,7 @@
         }
 
         /// <inheritdoc />
-        public async UniTask ShowMainContentAsync(Screen rootModel,
-                                                  CancellationToken cancellationToken = default)
+        public async UniTask ShowMainContentAsync(Screen rootModel, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
 
@@ -57,8 +56,7 @@
         }
 
         /// <inheritdoc />
-        public UniTask ShowPopupAsync(PropertyChangedBase rootModel,
-                                      CancellationToken cancellationToken = default)
+        public UniTask ShowPopupAsync(BindableObject rootModel, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
 
@@ -66,8 +64,7 @@
         }
 
         /// <inheritdoc />
-        public async UniTask ShowWindowAsync(WindowScreen rootModel,
-                                             CancellationToken cancellationToken = default)
+        public async UniTask ShowWindowAsync(WindowScreen rootModel, CancellationToken cancellationToken = default)
         {
             using var _ = Logger.GetMethodTracer(rootModel, cancellationToken);
 

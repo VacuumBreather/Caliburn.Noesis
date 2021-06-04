@@ -15,7 +15,9 @@
     {
         #region Constants and Fields
 
-        private const string FrameworkCategoryName = nameof(Caliburn);
+        /// <summary>The category name for logs created by the framework itself.</summary>
+        public const string FrameworkCategoryName = nameof(Caliburn);
+
         private static ILoggerFactory loggerFactory = NullLoggerFactory.Instance;
 
         #endregion

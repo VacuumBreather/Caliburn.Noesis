@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -56,29 +55,7 @@
                 /// </summary>
                 public AllActive()
                 {
-                    this.items.CollectionChanged += (s, e) =>
-                        {
-                            switch (e.Action)
-                            {
-                                case NotifyCollectionChangedAction.Add:
-                                    e.NewItems.OfType<IChild>().ForEach(x => x.Parent = this);
-
-                                    break;
-                                case NotifyCollectionChangedAction.Remove:
-                                    e.OldItems.OfType<IChild>().ForEach(x => x.Parent = null);
-
-                                    break;
-                                case NotifyCollectionChangedAction.Replace:
-                                    e.NewItems.OfType<IChild>().ForEach(x => x.Parent = this);
-                                    e.OldItems.OfType<IChild>().ForEach(x => x.Parent = null);
-
-                                    break;
-                                case NotifyCollectionChangedAction.Reset:
-                                    this.items.OfType<IChild>().ForEach(x => x.Parent = this);
-
-                                    break;
-                            }
-                        };
+                    this.items.AreChildrenOf(this);
                 }
 
                 #endregion
@@ -92,13 +69,8 @@
 
                 #region Public Methods
 
-                /// <summary>Activates the specified item.</summary>
-                /// <param name="item">The item to activate.</param>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async UniTask ActivateItemAsync(
-                    T item,
-                    CancellationToken cancellationToken = default)
+                /// <inheritdoc />
+                public override async UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(item, cancellationToken);
 
@@ -117,17 +89,12 @@
                     OnActivationProcessed(item, true);
                 }
 
-                /// <summary>Called to check whether or not this instance can close.</summary>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async UniTask<bool> CanCloseAsync(
-                    CancellationToken cancellationToken = default)
+                /// <inheritdoc />
+                public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(cancellationToken);
 
-                    var closeResult = await CloseStrategy.ExecuteAsync(
-                                          this.items.ToList(),
-                                          cancellationToken);
+                    var closeResult = await CloseStrategy.ExecuteAsync(this.items.ToList(), cancellationToken);
 
                     if (!closeResult.CloseCanOccur && closeResult.Children.Any())
                     {
@@ -142,46 +109,18 @@
                     return closeResult.CloseCanOccur;
                 }
 
-                /// <summary>Deactivates the specified item.</summary>
-                /// <param name="item">The item to close.</param>
-                /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async UniTask DeactivateItemAsync(
-                    T item,
-                    bool close,
-                    CancellationToken cancellationToken = default)
+                /// <inheritdoc />
+                public override async UniTask DeactivateItemAsync(T item,
+                                                                  bool close,
+                                                                  CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(item, close, cancellationToken);
 
-                    if (item == null)
-                    {
-                        return;
-                    }
-
-                    if (close)
-                    {
-                        var closeResult = await CloseStrategy.ExecuteAsync(
-                                              new[]
-                                                  {
-                                                      item
-                                                  },
-                                              CancellationToken.None);
-
-                        if (closeResult.CloseCanOccur)
-                        {
-                            await CloseItemCoreAsync(item, cancellationToken);
-                        }
-                    }
-                    else
-                    {
-                        await ScreenExtensions.TryDeactivateAsync(item, false, cancellationToken);
-                    }
+                    await this.DeactivateItemAsync(item, close, CloseItemCoreAsync, cancellationToken);
                 }
 
-                /// <summary>Gets the children.</summary>
-                /// <returns>The collection of children.</returns>
-                public override IEnumerable<T> GetChildren()
+                /// <inheritdoc />
+                public override sealed IEnumerable<T> GetChildren()
                 {
                     return this.items;
                 }
@@ -190,9 +129,7 @@
 
                 #region Protected Methods
 
-                /// <summary>Ensures that an item is ready to be activated.</summary>
-                /// <param name="newItem">The item that is about to be activated.</param>
-                /// <returns>The item to be activated.</returns>
+                /// <inheritdoc />
                 protected override T EnsureItem(T newItem)
                 {
                     using var _ = Logger.GetMethodTracer(newItem);
@@ -211,9 +148,8 @@
                     return base.EnsureItem(newItem);
                 }
 
-                /// <summary>Called when activating.</summary>
-                protected override async UniTask OnActivateAsync(
-                    CancellationToken cancellationToken)
+                /// <inheritdoc />
+                protected override async UniTask OnActivateAsync(CancellationToken cancellationToken)
                 {
                     using var _ = Logger.GetMethodTracer(cancellationToken);
 
@@ -223,13 +159,8 @@
                     }
                 }
 
-                /// <summary>Called when deactivating.</summary>
-                /// <param name="close">Indicates whether this instance will be closed.</param>
-                /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-                /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override async UniTask OnDeactivateAsync(
-                    bool close,
-                    CancellationToken cancellationToken)
+                /// <inheritdoc />
+                protected override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
                 {
                     using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
@@ -244,9 +175,8 @@
                     }
                 }
 
-                /// <summary>Called when initializing.</summary>
-                protected override async UniTask OnInitializeAsync(
-                    CancellationToken cancellationToken)
+                /// <inheritdoc />
+                protected override async UniTask OnInitializeAsync(CancellationToken cancellationToken)
                 {
                     using var _ = Logger.GetMethodTracer(cancellationToken);
 
@@ -259,9 +189,7 @@
                                               propertyInfo =>
                                                   (propertyInfo.Name != nameof(Parent)) &&
                                                   typeof(T).GetTypeInfo()
-                                                           .IsAssignableFrom(
-                                                               propertyInfo.PropertyType
-                                                                   .GetTypeInfo()))
+                                                           .IsAssignableFrom(propertyInfo.PropertyType.GetTypeInfo()))
                                           .Select(propertyInfo => propertyInfo.GetValue(this, null))
                                           .Cast<T>()
                                           .ToList();
@@ -271,8 +199,7 @@
                             Logger.LogDebug("{@Conductor} will conduct {Item}", this, item);
                         }
 
-                        await UniTask.WhenAll(
-                            publicItems.Select(item => ActivateItemAsync(item, cancellationToken)));
+                        await UniTask.WhenAll(publicItems.Select(item => ActivateItemAsync(item, cancellationToken)));
                     }
                 }
 
@@ -280,9 +207,7 @@
 
                 #region Private Methods
 
-                private async UniTask CloseItemCoreAsync(T item,
-                                                         CancellationToken cancellationToken =
-                                                             default)
+                private async UniTask CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
                 {
                     using var _ = Logger.GetMethodTracer(item, cancellationToken);
 

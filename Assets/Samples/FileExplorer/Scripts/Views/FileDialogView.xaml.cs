@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.Noesis.Samples.FileExplorer.Views
 {
     using System;
-    using Extensions;
 #if UNITY_5_5_OR_NEWER
+    using Extensions;
     using global::Noesis;
 
 #else
@@ -44,9 +44,7 @@
 #else
             var treeView = TreeView;
 #endif
-            treeView.AddHandler(
-                TreeViewItem.SelectedEvent,
-                new RoutedEventHandler(OnTreeViewItemSelected));
+            treeView.AddHandler(TreeViewItem.SelectedEvent, new RoutedEventHandler(OnTreeViewItemSelected));
         }
 
         #endregion

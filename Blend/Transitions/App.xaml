@@ -9,7 +9,7 @@
                 <ResourceDictionary>
                     <sample:TransitionsBootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
-                <ResourceDictionary Source="../../Assets/Samples/Transitions/Scripts/Resources/AllResources.xaml" />
+                <ResourceDictionary Source="Transitions/Scripts/Resources/AllResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
