@@ -13,6 +13,7 @@
 
 #else
     using System.Windows;
+    using System.Windows.Controls;
 #endif
 
     /// <summary>A source of assemblies that contain view and view-model types relevant to the framework.</summary>
@@ -21,8 +22,7 @@
     {
         #region Constants and Fields
 
-        private readonly IBindableCollection<Assembly> typeAssemblies =
-            new BindableCollection<Assembly>();
+        private readonly IBindableCollection<Assembly> typeAssemblies = new BindableCollection<Assembly>();
 
         private readonly IDictionary<string, Type> typeNameCache = new Dictionary<string, Type>();
 
@@ -43,7 +43,13 @@
         /// <summary>Gets all extracted view-model types.</summary>
         public IEnumerable<Type> ViewModelTypes => this.typeNameCache.Values.Where(
             type => type.IsDerivedFromOrImplements(typeof(INotifyPropertyChanged)) &&
+                    !type.IsDerivedFromOrImplements(typeof(DialogConductor)) &&
+                    !type.IsDerivedFromOrImplements(typeof(WindowConductor)) &&
                     !type.IsDerivedFromOrImplements(typeof(IWindowManager)));
+
+        /// <summary>Gets all extracted view types.</summary>
+        public IEnumerable<Type> ViewTypes => this.typeNameCache.Values.Where(
+            type => type.IsDerivedFromOrImplements(typeof(UserControl)) && (type != typeof(ShellView)));
 
         #endregion
 
@@ -63,8 +69,7 @@
         /// <param name="assemblies">The range of assemblies to add.</param>
         public void AddRange(IEnumerable<Assembly> assemblies)
         {
-            this.typeAssemblies.AddRange(
-                assemblies.Where(assembly => !this.typeAssemblies.Contains(assembly)));
+            this.typeAssemblies.AddRange(assemblies.Where(assembly => !this.typeAssemblies.Contains(assembly)));
         }
 
         /// <summary>Removes all assemblies from the <see cref="AssemblySource" />.</summary>
@@ -88,17 +93,14 @@
         /// <param name="names">A sequence of names to search for.</param>
         public Type FindTypeByNames(IEnumerable<string> names)
         {
-            return names?.Select(n => this.typeNameCache.GetValueOrDefault(n))
-                        .NotNull()
-                        .FirstOrDefault();
+            return names?.Select(n => this.typeNameCache.GetValueOrDefault(n)).NotNull().FirstOrDefault();
         }
 
         #endregion
 
         #region Event Handlers
 
-        private void OnTypeAssembliesCollectionChanged(object s,
-                                                       NotifyCollectionChangedEventArgs eventArgs)
+        private void OnTypeAssembliesCollectionChanged(object s, NotifyCollectionChangedEventArgs eventArgs)
         {
             switch (eventArgs.Action)
             {

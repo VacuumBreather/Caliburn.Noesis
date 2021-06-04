@@ -9,9 +9,8 @@
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">An object that contains the event data.</param>
     /// <param name="cancellationToken">(Optional) The cancellation token to cancel operation.</param>
-    public delegate UniTask AsyncEventHandler<in TEventArgs>(
-        object sender,
-        TEventArgs e,
-        CancellationToken cancellationToken = default)
+    public delegate UniTask AsyncEventHandler<in TEventArgs>(object sender,
+                                                             TEventArgs e,
+                                                             CancellationToken cancellationToken = default)
         where TEventArgs : EventArgs;
 }

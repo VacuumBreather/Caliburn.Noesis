@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
-    using System.Collections.Generic;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
@@ -16,9 +15,6 @@
     public class DebugLoggerFactory : ILoggerFactory
     {
         #region Constants and Fields
-
-        private readonly List<WeakReference<DebugLogger>> loggers =
-            new List<WeakReference<DebugLogger>>();
 
 #if UNITY_5_5_OR_NEWER
         private readonly Object context;
@@ -59,36 +55,6 @@
 
         #endregion
 
-        #region Public Properties
-
-        /// <summary>
-        ///     Gets or sets the minimal <see cref="LogLevel" /> the loggers created by this factory will
-        ///     handle.
-        /// </summary>
-        public LogLevel LogLevel
-        {
-            get => this.logLevel;
-            set
-            {
-                if (this.logLevel == value)
-                {
-                    return;
-                }
-
-                this.logLevel = value;
-
-                foreach (var reference in this.loggers)
-                {
-                    if (reference.TryGetTarget(out var logger))
-                    {
-                        logger.MinimalLogLevel = this.logLevel;
-                    }
-                }
-            }
-        }
-
-        #endregion
-
         #region IDisposable Implementation
 
         /// <inheritdoc />
@@ -109,11 +75,10 @@
         public ILogger CreateLogger(string categoryName)
         {
 #if UNITY_5_5_OR_NEWER
-            var logger = new DebugLogger(categoryName, this.context, LogLevel);
+            var logger = new DebugLogger(categoryName, this.context, this.logLevel);
 #else
-            var logger = new DebugLogger(categoryName, LogLevel);
+            var logger = new DebugLogger(categoryName, this.logLevel);
 #endif
-            this.loggers.Add(new WeakReference<DebugLogger>(logger));
 
             return logger;
         }
@@ -130,27 +95,22 @@
             private readonly Object context;
 #endif
             private readonly Func<string, LogLevel, bool> filter;
+            private readonly LogLevel minimumLogLevel;
 
             public DebugLogger(string categoryName, LogLevel minimumLogLevel = LogLevel.Information)
             {
-                this.categoryName = string.IsNullOrEmpty(categoryName)
-                                        ? nameof(DebugLogger)
-                                        : categoryName;
-                MinimalLogLevel = minimumLogLevel;
+                this.minimumLogLevel = minimumLogLevel;
+                this.categoryName = string.IsNullOrEmpty(categoryName) ? nameof(DebugLogger) : categoryName;
                 this.filter = Filter;
             }
 
 #if UNITY_5_5_OR_NEWER
-            public DebugLogger(string categoryName,
-                               Object context,
-                               LogLevel minimumLogLevel = LogLevel.Information)
+            public DebugLogger(string categoryName, Object context, LogLevel minimumLogLevel = LogLevel.Information)
                 : this(categoryName, minimumLogLevel)
             {
                 this.context = context;
             }
 #endif
-
-            public LogLevel MinimalLogLevel { get; set; }
 
             public IDisposable BeginScope<TState>(TState state)
             {
@@ -198,8 +158,7 @@
 #if UNITY_5_5_OR_NEWER
                 var color = GetLogColor(logLevel);
 
-                message =
-                    $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
+                message = $"<color={color}><b>[{this.categoryName}] [{logLevel}]</b> {message}</color>";
 
                 switch (logLevel)
                 {
@@ -278,7 +237,7 @@
 
             private bool Filter(string _, LogLevel level)
             {
-                return level >= MinimalLogLevel;
+                return level >= this.minimumLogLevel;
             }
         }
 

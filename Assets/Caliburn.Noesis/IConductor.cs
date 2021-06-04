@@ -31,9 +31,7 @@
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        UniTask DeactivateItemAsync(object item,
-                                    bool close,
-                                    CancellationToken cancellationToken = default);
+        UniTask DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -64,8 +62,6 @@
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        UniTask DeactivateItemAsync(T item,
-                                    bool close,
-                                    CancellationToken cancellationToken = default);
+        UniTask DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default);
     }
 }

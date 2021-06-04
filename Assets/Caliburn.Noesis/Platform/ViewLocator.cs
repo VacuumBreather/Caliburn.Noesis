@@ -6,17 +6,23 @@
     using Extensions;
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
+#if UNITY_5_5_OR_NEWER
+    using global::Noesis;
+
+#else
+    using System.Windows;
+    using System.Windows.Controls;
+#endif
 
     /// <summary>Responsible for mapping view-model types to their corresponding view types.</summary>
     [PublicAPI]
-    public class ViewLocator : IHaveLogger
+    public class ViewLocator
     {
         #region Constants and Fields
 
         private const string DefaultViewSuffix = "View";
 
         private readonly List<string> viewSuffixList = new List<string>();
-        private ILogger logger;
 
         private string defaultSubNsViewModels;
         private string defaultSubNsViews;
@@ -28,37 +34,11 @@
 
         #endregion
 
-        #region Constructors and Destructors
-
-        /// <summary>Initializes a new instance of the <see cref="ViewLocator" /> class.</summary>
-        /// <param name="nameTransformer">The <see cref="NameTransformer" /> used for type name resolution.</param>
-        public ViewLocator(NameTransformer nameTransformer)
-        {
-            NameTransformer = nameTransformer;
-        }
-
-        #endregion
-
         #region Private Properties
 
-        private ILogger Logger
-        {
-            get => this.logger ??= LogManager.FrameworkLogger;
-            set => this.logger = value;
-        }
+        private static ILogger Logger => LogManager.FrameworkLogger;
 
-        private NameTransformer NameTransformer { get; }
-
-        #endregion
-
-        #region IHaveLogger Implementation
-
-        /// <inheritdoc />
-        ILogger IHaveLogger.Logger
-        {
-            get => Logger;
-            set => Logger = value;
-        }
+        private NameTransformer NameTransformer { get; } = new NameTransformer();
 
         #endregion
 
@@ -116,9 +96,7 @@
         /// <param name="nsSource">Namespace of source type.</param>
         /// <param name="nsTarget">Namespace of target type.</param>
         /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public void AddNamespaceMapping(string nsSource,
-                                        string nsTarget,
-                                        string viewSuffix = DefaultViewSuffix)
+        public void AddNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             using var _ = Logger.GetMethodTracer(nsSource, nsTarget, viewSuffix);
 
@@ -169,9 +147,7 @@
             var rxReplace = string.Concat(rxBeforeSrc, rxMid, rxAfterSrc);
 
             // ReSharper disable once PossibleMultipleEnumeration
-            var nsTargetsRegEx = nsTargets
-                                 .Select(t => string.Concat(rxBeforeTgt, t, ".", rxAfterTgt))
-                                 .ToArray();
+            var nsTargetsRegEx = nsTargets.Select(t => string.Concat(rxBeforeTgt, t, ".", rxAfterTgt)).ToArray();
 
             AddTypeMapping(rxReplace, null, nsTargetsRegEx, viewSuffix);
         }
@@ -180,9 +156,7 @@
         /// <param name="nsSource">Sub-namespace of source type.</param>
         /// <param name="nsTarget">Sub-namespace of target type.</param>
         /// <param name="viewSuffix">(Optional) Suffix for type name. Should  be "View" or synonym of "View".</param>
-        public void AddSubNamespaceMapping(string nsSource,
-                                           string nsTarget,
-                                           string viewSuffix = DefaultViewSuffix)
+        public void AddSubNamespaceMapping(string nsSource, string nsTarget, string viewSuffix = DefaultViewSuffix)
         {
             using var _ = Logger.GetMethodTracer(nsSource, nsTarget, viewSuffix);
 
@@ -236,23 +210,16 @@
                                      ? null
                                      : string.Concat(
                                          nsSourceFilterRegEx,
-                                         string.Format(
-                                             this.nameFormat,
-                                             RegExHelper.NameRegEx,
-                                             suffix),
+                                         string.Format(this.nameFormat, RegExHelper.NameRegEx, suffix),
                                          "$");
 
             var rxSuffix = RegExHelper.GetCaptureGroup("suffix", suffix);
 
             NameTransformer.AddRule(
-                string.Concat(
-                    nsSourceReplaceRegEx,
-                    string.Format(this.nameFormat, rxBase, rxSuffix),
-                    "$"),
+                string.Concat(nsSourceReplaceRegEx, string.Format(this.nameFormat, rxBase, rxSuffix), "$"),
 
                 // ReSharper disable once PossibleMultipleEnumeration
-                nsTargetsRegEx.Select(t => t + string.Format(this.nameFormat, BaseGroup, repSuffix))
-                              .ToArray(),
+                nsTargetsRegEx.Select(t => t + string.Format(this.nameFormat, BaseGroup, repSuffix)).ToArray(),
                 rxSourceFilter);
         }
 
@@ -266,11 +233,7 @@
                                    string nsTargetRegEx,
                                    string viewSuffix = DefaultViewSuffix)
         {
-            using var _ = Logger.GetMethodTracer(
-                nsSourceReplaceRegEx,
-                nsSourceFilterRegEx,
-                nsTargetRegEx,
-                viewSuffix);
+            using var _ = Logger.GetMethodTracer(nsSourceReplaceRegEx, nsSourceFilterRegEx, nsTargetRegEx, viewSuffix);
 
             AddTypeMapping(
                 nsSourceReplaceRegEx,
@@ -297,14 +260,12 @@
 
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViews))
             {
-                throw new ArgumentException(
-                    $"{config.DefaultSubNamespaceForViews} cannot be blank.");
+                throw new ArgumentException($"{config.DefaultSubNamespaceForViews} cannot be blank.");
             }
 
             if (string.IsNullOrEmpty(config.DefaultSubNamespaceForViewModels))
             {
-                throw new ArgumentException(
-                    $"{config.DefaultSubNamespaceForViewModels} cannot be blank.");
+                throw new ArgumentException($"{config.DefaultSubNamespaceForViewModels} cannot be blank.");
             }
 
             if (string.IsNullOrEmpty(config.NameFormat))
@@ -326,9 +287,94 @@
             SetAllDefaults();
         }
 
+        /// <summary>Retrieves the view from the IoC container or tries to create it if not found.</summary>
+        /// <param name="viewType">The type of view to create.</param>
+        /// <param name="serviceProvider">
+        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
+        ///     IoC container.
+        /// </param>
+        /// <remarks>Pass the type of view as a parameter and receive an instance of the view.</remarks>
+        public UIElement GetOrCreateViewType(Type viewType, IServiceProvider serviceProvider)
+        {
+            TextBlock CreatePlaceholderView() =>
+                new TextBlock { Text = $"Cannot create {viewType.FullName}." };
+
+            if (viewType.IsInterface || viewType.IsAbstract || !viewType.IsDerivedFromOrImplements(typeof(UIElement)))
+            {
+                return CreatePlaceholderView();
+            }
+
+            var view = serviceProvider.GetService(viewType) as UIElement;
+
+            if (view != null)
+            {
+                return view;
+            }
+
+            try
+            {
+                view = (UIElement)Activator.CreateInstance(viewType);
+            }
+            catch (Exception)
+            {
+                return CreatePlaceholderView();
+            }
+
+            return view;
+        }
+
+        /// <summary>Locates the view for the specified model instance.</summary>
+        /// <param name="model">The model.</param>
+        /// <param name="serviceProvider">
+        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
+        ///     IoC container.
+        /// </param>
+        /// <param name="assemblySource">
+        ///     A source of assemblies that contain view and view-model types relevant
+        ///     to the framework.
+        /// </param>
+        /// <returns>The view.</returns>
+        /// <remarks>
+        ///     Pass the model instance, display location (or null) and the context (or null) as
+        ///     parameters and receive a view instance.
+        /// </remarks>
+        public UIElement LocateForModel(object model, IServiceProvider serviceProvider, AssemblySource assemblySource)
+        {
+            return LocateForModelType(model.GetType(), serviceProvider, assemblySource);
+        }
+
+        /// <summary>Locates the view for the specified model type.</summary>
+        /// <param name="modelType">The type of the model.</param>
+        /// <param name="serviceProvider">
+        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
+        ///     IoC container.
+        /// </param>
+        /// <param name="assemblySource">
+        ///     A source of assemblies that contain view and view-model types relevant
+        ///     to the framework.
+        /// </param>
+        /// <returns>The view.</returns>
+        /// <remarks>
+        ///     Pass the model type, display location (or null) and the context instance (or null) as
+        ///     parameters and receive a view instance.
+        /// </remarks>
+        public UIElement LocateForModelType(Type modelType,
+                                            IServiceProvider serviceProvider,
+                                            AssemblySource assemblySource)
+        {
+            var viewType = LocateTypeForModelType(modelType, assemblySource);
+
+            return viewType == null
+                       ? new TextBlock { Text = $"Cannot find view for {modelType}." }
+                       : GetOrCreateViewType(viewType, serviceProvider);
+        }
+
         /// <summary>Locates the view type based on the specified model type.</summary>
         /// <param name="modelType">The model type.</param>
-        /// <param name="assemblySource">The <see cref="AssemblySource" /> containing the relevant types.</param>
+        /// <param name="assemblySource">
+        ///     A source of assemblies that contain view and view-model types relevant
+        ///     to the framework.
+        /// </param>
         /// <returns>The located view type or <c>null</c> if no such type could be found.</returns>
         public Type LocateTypeForModelType(Type modelType, AssemblySource assemblySource)
         {
@@ -398,7 +444,7 @@
 
             if (this.useNameSuffixesInMappings)
             {
-                // Add support for all view suffixes
+                // Add support for all view suffixes.
                 this.viewSuffixList.ForEach(AddDefaultTypeMapping);
             }
             else

@@ -1,6 +1,11 @@
 ﻿namespace Caliburn.Noesis
 {
+    using Extensions;
+    using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
+
     /// <summary>Helper class for encoding strings to regular expression patterns.</summary>
+    [PublicAPI]
     public static class RegExHelper
     {
         #region Constants and Fields
@@ -17,6 +22,12 @@
 
         #endregion
 
+        #region Private Properties
+
+        private static ILogger Logger => LogManager.FrameworkLogger;
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>Creates a named capture group with the specified regular expression.</summary>
@@ -25,6 +36,8 @@
         /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetCaptureGroup(string groupName, string regEx)
         {
+            using var _ = Logger.GetMethodTracer(groupName, regEx);
+
             return string.Concat(
                 @"(?<",
                 groupName,
@@ -38,6 +51,8 @@
         /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetNameCaptureGroup(string groupName)
         {
+            using var _ = Logger.GetMethodTracer(groupName);
+
             return GetCaptureGroup(groupName, NameRegEx);
         }
 
@@ -46,6 +61,8 @@
         /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetNamespaceCaptureGroup(string groupName)
         {
+            using var _ = Logger.GetMethodTracer(groupName);
+
             return GetCaptureGroup(groupName, NamespaceRegEx);
         }
 
@@ -54,6 +71,8 @@
         /// <returns>A namespace converted to a regular expression.</returns>
         public static string NamespaceToRegEx(string sourceNamespace)
         {
+            using var _ = Logger.GetMethodTracer(sourceNamespace);
+
             // We need to escape the "." as it's a special character in regular expression syntax.
             var encodedNamespace = sourceNamespace.Replace(".", @"\.");
 
