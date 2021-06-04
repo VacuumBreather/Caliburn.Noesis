@@ -50,9 +50,7 @@
         /// <param name="context">The ID of the context in which the view appears.</param>
         protected virtual void OnViewAttached(UIElement view, Guid context)
         {
-            ViewAttached?.Invoke(
-                this,
-                new ViewAttachedEventArgs { View = view, Context = context });
+            ViewAttached?.Invoke(this, new ViewAttachedEventArgs { View = view, Context = context });
         }
 
         #endregion

@@ -23,31 +23,28 @@
         ///     that it can be set on any <see cref="FrameworkElement" /> that is supposed to be the handle of
         ///     a draggable <see cref="FrameworkElement" /> hosted inside a canvas.
         /// </summary>
-        public static readonly DependencyProperty IsDragHandleProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(IsDragHandleProperty)),
-                typeof(bool),
-                typeof(Draggable),
-                new PropertyMetadata(default(bool), OnPropertyChanged));
+        public static readonly DependencyProperty IsDragHandleProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(IsDragHandleProperty)),
+            typeof(bool),
+            typeof(Draggable),
+            new PropertyMetadata(default(bool), OnPropertyChanged));
 
         /// <summary>
         ///     BringToFrontOnClick property. This is an attached property. Draggable defines the
         ///     property, so that it can be set on any <see cref="FrameworkElement" /> that is supposed to be
         ///     brought to the front of a canvas whenever it is left-clicked.
         /// </summary>
-        public static readonly DependencyProperty BringToFrontOnClickProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(BringToFrontOnClickProperty)),
-                typeof(bool),
-                typeof(Draggable),
-                new PropertyMetadata(default(bool), OnPropertyChanged));
+        public static readonly DependencyProperty BringToFrontOnClickProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(BringToFrontOnClickProperty)),
+            typeof(bool),
+            typeof(Draggable),
+            new PropertyMetadata(default(bool), OnPropertyChanged));
 
-        private static readonly DependencyProperty AttachedElementProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(AttachedElementProperty)),
-                typeof(FrameworkElement),
-                typeof(Draggable),
-                new PropertyMetadata(default(FrameworkElement)));
+        private static readonly DependencyProperty AttachedElementProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(AttachedElementProperty)),
+            typeof(FrameworkElement),
+            typeof(Draggable),
+            new PropertyMetadata(default(FrameworkElement)));
 
         private static readonly DependencyProperty InitialDragMousePositionProperty =
             DependencyProperty.RegisterAttached(
@@ -56,12 +53,11 @@
                 typeof(Draggable),
                 new PropertyMetadata(default(Point)));
 
-        private static readonly DependencyProperty ParentCanvasProperty =
-            DependencyProperty.RegisterAttached(
-                PropertyNameHelper.GetName(nameof(ParentCanvasProperty)),
-                typeof(Canvas),
-                typeof(Draggable),
-                new PropertyMetadata(default(Canvas)));
+        private static readonly DependencyProperty ParentCanvasProperty = DependencyProperty.RegisterAttached(
+            PropertyNameHelper.GetName(nameof(ParentCanvasProperty)),
+            typeof(Canvas),
+            typeof(Draggable),
+            new PropertyMetadata(default(Canvas)));
 
         #endregion
 
@@ -195,8 +191,7 @@
 
         #region Private Methods
 
-        private static (Canvas canvas, FrameworkElement draggableElement) FindRelevantElements(
-            FrameworkElement element)
+        private static (Canvas canvas, FrameworkElement draggableElement) FindRelevantElements(FrameworkElement element)
         {
             var parent = VisualTreeHelper.GetParent(element) as FrameworkElement;
 
@@ -229,8 +224,7 @@
             return (Canvas)element.GetValue(ParentCanvasProperty);
         }
 
-        private static void OnPropertyChanged(DependencyObject d,
-                                              DependencyPropertyChangedEventArgs e)
+        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (!(d is FrameworkElement element) || (e.NewValue == e.OldValue))
             {

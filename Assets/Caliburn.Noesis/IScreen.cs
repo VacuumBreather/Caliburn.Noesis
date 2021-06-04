@@ -5,11 +5,7 @@
     ///     <see cref="IActivate" />, <see cref="IDeactivate" />, <see cref="IGuardClose" /> and
     ///     <see cref="IBindableObject" />
     /// </summary>
-    public interface IScreen : IHaveDisplayName,
-                               IActivate,
-                               IDeactivate,
-                               IGuardClose,
-                               IBindableObject
+    public interface IScreen : IHaveDisplayName, IActivate, IDeactivate, IGuardClose, IBindableObject
     {
     }
 }

@@ -44,9 +44,7 @@
 #else
             var treeView = TreeView;
 #endif
-            treeView.AddHandler(
-                TreeViewItem.SelectedEvent,
-                new RoutedEventHandler(OnTreeViewItemSelected));
+            treeView.AddHandler(TreeViewItem.SelectedEvent, new RoutedEventHandler(OnTreeViewItemSelected));
         }
 
         #endregion
