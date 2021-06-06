@@ -56,27 +56,25 @@
         ///     <see cref="AssemblySource" />.
         /// </summary>
         /// <param name="viewLocator">The view locator used to map view-model to view types.</param>
-        /// <param name="assemblySource">The assembly source containing relevant types.</param>
         /// <param name="resourceDictionary">
         ///     The <see cref="ResourceDictionary" /> to register the data
         ///     templates in.
         /// </param>
         /// <param name="onRegister">A callback to execute whenever a data template was registered.</param>
         public static void RegisterDataTemplates(ViewLocator viewLocator,
-                                                 AssemblySource assemblySource,
                                                  ResourceDictionary resourceDictionary,
                                                  Action<DataTemplate> onRegister)
         {
-            using var _ = Logger.GetMethodTracer(viewLocator, assemblySource, resourceDictionary, onRegister);
+            using var _ = Logger.GetMethodTracer(viewLocator, resourceDictionary, onRegister);
 
-            assemblySource.ViewModelTypes
-                          .Select(vmType => (vmType, viewLocator.LocateTypeForModelType(vmType, assemblySource)))
-                          .ForEach(
-                              ((Type vmType, Type vType) mapping) => RegisterDataTemplate(
-                                  mapping.vmType,
-                                  mapping.vType,
-                                  resourceDictionary,
-                                  onRegister));
+            viewLocator.AssemblySource.ViewModelTypes
+                       .Select(vmType => (vmType, viewLocator.LocateTypeForModelType(vmType)))
+                       .ForEach(
+                           ((Type vmType, Type vType) mapping) => RegisterDataTemplate(
+                               mapping.vmType,
+                               mapping.vType,
+                               resourceDictionary,
+                               onRegister));
         }
 
         #endregion
