@@ -60,7 +60,6 @@
         {
             Application.Current.Startup += async (_, __) =>
                 {
-                    Initialize();
                     this.onEnableCancellation = new CancellationTokenSource();
                     await OnEnableAsync(this.onEnableCancellation.Token);
                     await StartAsync();
@@ -349,7 +348,6 @@
         [UsedImplicitly]
         private async UniTaskVoid OnEnable()
         {
-            Initialize();
             this.onEnableCancellation = new CancellationTokenSource();
             await OnEnableAsync(this.onEnableCancellation.Token);
         }
@@ -457,6 +455,8 @@
         {
             using var _ = Logger.GetMethodTracer();
             using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
+
+            Initialize();
 
             if (!this.isInitialized)
             {
