@@ -39,6 +39,7 @@
         private UniTaskCompletionSource onStartCompletion;
         private UniTaskCompletionSource onEnableCompletion;
         private UniTaskCompletionSource onDisableCompletion;
+        private UniTaskCompletionSource shutdownCompletion;
 
         private CancellationTokenSource onEnableCancellation;
         private CancellationTokenSource onDisableCancellation;
@@ -144,7 +145,7 @@
         {
             using var _ = Logger.GetMethodTracer();
 
-            if (!this.isInitialized)
+            if (!this.isInitialized || this.shutdownCompletion != null)
             {
                 return;
             }
@@ -152,6 +153,8 @@
             try
             {
                 Logger.LogInformation("Shutting down...");
+
+                using var guard = TaskCompletion.CreateGuard(out this.shutdownCompletion);
 
                 await (this.onStartCompletion?.Task ?? UniTask.CompletedTask);
                 await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
@@ -419,6 +422,8 @@
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
+            
+            await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
             using var guard = TaskCompletion.CreateGuard(out this.onDisableCompletion);
 
             this.onEnableCancellation?.Cancel();
@@ -434,6 +439,8 @@
         private async UniTask OnEnableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
+
+            await (this.onEnableCompletion?.Task ?? UniTask.CompletedTask);
             using var guard = TaskCompletion.CreateGuard(out this.onEnableCompletion);
 
             this.onDisableCancellation?.Cancel();
@@ -448,6 +455,12 @@
         private async UniTask StartAsync()
         {
             using var _ = Logger.GetMethodTracer();
+
+            if (this.onStartCompletion != null)
+            {
+                return;
+            }
+            
             using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
 
             Initialize();
