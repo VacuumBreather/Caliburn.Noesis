@@ -40,14 +40,20 @@
 
         #region Public Properties
 
-        /// <summary>Gets all extracted view-model types.</summary>
+        /// <summary>
+        ///     Gets all relevant view-model types exported by the configured assemblies, excluding any
+        ///     view-model implementing <see cref="IWindowManager" />.
+        /// </summary>
         public IEnumerable<Type> ViewModelTypes => this.typeNameCache.Values.Where(
             type => type.IsDerivedFromOrImplements(typeof(INotifyPropertyChanged)) &&
                     !type.IsDerivedFromOrImplements(typeof(DialogConductor)) &&
                     !type.IsDerivedFromOrImplements(typeof(WindowConductor)) &&
                     !type.IsDerivedFromOrImplements(typeof(IWindowManager)));
 
-        /// <summary>Gets all extracted view types.</summary>
+        /// <summary>
+        ///     Gets all relevant view types exported by the configured assemblies, excluding
+        ///     <see cref="ShellView" />.
+        /// </summary>
         public IEnumerable<Type> ViewTypes => this.typeNameCache.Values.Where(
             type => type.IsDerivedFromOrImplements(typeof(UserControl)) && (type != typeof(ShellView)));
 
