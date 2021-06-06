@@ -77,6 +77,7 @@
 
             using var _ = Logger.GetMethodTracer(cancellationToken);
 
+            await (this.activateCompletion?.Task ?? UniTask.CompletedTask);
             using var guard = TaskCompletion.CreateGuard(out this.activateCompletion);
             this.activateCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             this.deactivateCancellation?.Cancel();
@@ -150,6 +151,7 @@
         {
             using var _ = Logger.GetMethodTracer(close, cancellationToken);
 
+            await (this.deactivateCompletion?.Task ?? UniTask.CompletedTask);
             using var guard = TaskCompletion.CreateGuard(out this.deactivateCompletion);
             this.deactivateCancellation = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
 
