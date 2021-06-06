@@ -8,7 +8,6 @@
     using Microsoft.Extensions.Logging;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
-
 #else
     using System.Windows;
     using System.Windows.Controls;
@@ -34,11 +33,40 @@
 
         #endregion
 
+        #region Constructors and Destructors
+
+        /// <summary>Initializes a new instance of the <see cref="ViewLocator" /> class.</summary>
+        /// <param name="assemblySource">
+        ///     The source of assemblies that contain view and view-model types
+        ///     relevant to this instance.
+        /// </param>
+        /// <param name="serviceProvider">The service provider used to resolve views.</param>
+        public ViewLocator(AssemblySource assemblySource, IServiceProvider serviceProvider)
+        {
+            AssemblySource = assemblySource;
+            ServiceProvider = serviceProvider;
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        ///     Gets the source of assemblies that contain view and view-model types relevant to this
+        ///     instance.
+        /// </summary>
+        /// <value>The source of assemblies that contain view and view-model types relevant to this instance.</value>
+        public AssemblySource AssemblySource { get; }
+
+        #endregion
+
         #region Private Properties
 
         private static ILogger Logger => LogManager.FrameworkLogger;
 
         private NameTransformer NameTransformer { get; } = new NameTransformer();
+
+        private IServiceProvider ServiceProvider { get; }
 
         #endregion
 
@@ -289,12 +317,8 @@
 
         /// <summary>Retrieves the view from the IoC container or tries to create it if not found.</summary>
         /// <param name="viewType">The type of view to create.</param>
-        /// <param name="serviceProvider">
-        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
-        ///     IoC container.
-        /// </param>
         /// <remarks>Pass the type of view as a parameter and receive an instance of the view.</remarks>
-        public UIElement GetOrCreateViewType(Type viewType, IServiceProvider serviceProvider)
+        public UIElement GetOrCreateViewType(Type viewType)
         {
             TextBlock CreatePlaceholderView() =>
                 new TextBlock { Text = $"Cannot create {viewType.FullName}." };
@@ -304,7 +328,7 @@
                 return CreatePlaceholderView();
             }
 
-            var view = serviceProvider.GetService(viewType) as UIElement;
+            var view = ServiceProvider.GetService(viewType) as UIElement;
 
             if (view != null)
             {
@@ -325,60 +349,38 @@
 
         /// <summary>Locates the view for the specified model instance.</summary>
         /// <param name="model">The model.</param>
-        /// <param name="serviceProvider">
-        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
-        ///     IoC container.
-        /// </param>
-        /// <param name="assemblySource">
-        ///     A source of assemblies that contain view and view-model types relevant
-        ///     to the framework.
-        /// </param>
         /// <returns>The view.</returns>
         /// <remarks>
         ///     Pass the model instance, display location (or null) and the context (or null) as
         ///     parameters and receive a view instance.
         /// </remarks>
-        public UIElement LocateForModel(object model, IServiceProvider serviceProvider, AssemblySource assemblySource)
+        public UIElement LocateForModel(object model)
         {
-            return LocateForModelType(model.GetType(), serviceProvider, assemblySource);
+            return LocateForModelType(model.GetType());
         }
 
         /// <summary>Locates the view for the specified model type.</summary>
         /// <param name="modelType">The type of the model.</param>
-        /// <param name="serviceProvider">
-        ///     A <see cref="IServiceProvider" /> used to retrieve the view from the
-        ///     IoC container.
-        /// </param>
-        /// <param name="assemblySource">
-        ///     A source of assemblies that contain view and view-model types relevant
-        ///     to the framework.
-        /// </param>
         /// <returns>The view.</returns>
         /// <remarks>
         ///     Pass the model type, display location (or null) and the context instance (or null) as
         ///     parameters and receive a view instance.
         /// </remarks>
-        public UIElement LocateForModelType(Type modelType,
-                                            IServiceProvider serviceProvider,
-                                            AssemblySource assemblySource)
+        public UIElement LocateForModelType(Type modelType)
         {
-            var viewType = LocateTypeForModelType(modelType, assemblySource);
+            var viewType = LocateTypeForModelType(modelType);
 
             return viewType == null
                        ? new TextBlock { Text = $"Cannot find view for {modelType}." }
-                       : GetOrCreateViewType(viewType, serviceProvider);
+                       : GetOrCreateViewType(viewType);
         }
 
         /// <summary>Locates the view type based on the specified model type.</summary>
         /// <param name="modelType">The model type.</param>
-        /// <param name="assemblySource">
-        ///     A source of assemblies that contain view and view-model types relevant
-        ///     to the framework.
-        /// </param>
         /// <returns>The located view type or <c>null</c> if no such type could be found.</returns>
-        public Type LocateTypeForModelType(Type modelType, AssemblySource assemblySource)
+        public Type LocateTypeForModelType(Type modelType)
         {
-            using var _ = Logger.GetMethodTracer(modelType, assemblySource);
+            using var _ = Logger.GetMethodTracer(modelType);
 
             var modelTypeName = modelType.FullName;
 
@@ -387,7 +389,7 @@
                 modelTypeName.IndexOf('`') < 0 ? modelTypeName.Length : modelTypeName.IndexOf('`'));
 
             var viewTypes = TransformName(modelTypeName).ToList();
-            var viewType = assemblySource.FindTypeByNames(viewTypes);
+            var viewType = AssemblySource.FindTypeByNames(viewTypes);
 
             if (viewType == null)
             {

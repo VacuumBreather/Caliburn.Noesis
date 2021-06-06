@@ -108,6 +108,16 @@
             return (Guid)element.GetValue(ContextProperty);
         }
 
+        private static ViewLocator GetViewLocator(DependencyObject dependencyObject)
+        {
+            using var _ = Logger.GetMethodTracer(dependencyObject, null, null, null);
+
+            var frameworkElement = dependencyObject.FindVisualAncestor<FrameworkElement>();
+            var serviceProvider = frameworkElement?.TryFindResource(nameof(IServiceProvider)) as IServiceProvider;
+
+            return serviceProvider?.GetService(typeof(ViewLocator)) as ViewLocator;
+        }
+
         private static void OnModelChanged(DependencyObject targetLocation, DependencyPropertyChangedEventArgs args)
         {
             using var _ = Logger.GetMethodTracer(targetLocation, args);
@@ -148,15 +158,11 @@
                 return;
             }
 
-            var foundServices = TryGetServices(
-                targetLocation,
-                out var serviceProvider,
-                out var assemblySource,
-                out var viewLocator);
+            var viewLocator = GetViewLocator(targetLocation);
 
-            if (foundServices)
+            if (viewLocator != null)
             {
-                var view = viewLocator.LocateForModel(viewModel, serviceProvider, assemblySource);
+                var view = viewLocator.LocateForModel(viewModel);
 
                 if (viewModel is IViewAware viewAware &&
                     !ReferenceEquals(GetCachedViewFor(viewModel, contextLocation), view))
@@ -192,7 +198,7 @@
                         nameof(ViewLocator.LocateForModel),
                         nameof(ViewLocator.LocateForModelType));
 
-                    view = viewLocator.LocateForModelType(viewModel.GetType(), serviceProvider, assemblySource);
+                    view = viewLocator.LocateForModelType(viewModel.GetType());
 
                     SetContentProperty(targetLocation, view);
                 }
@@ -244,21 +250,6 @@
         private static void SetContext(DependencyObject element, Guid context)
         {
             element.SetValue(ContextProperty, context);
-        }
-
-        private static bool TryGetServices(DependencyObject dependencyObject,
-                                           out IServiceProvider serviceProvider,
-                                           out AssemblySource assemblySource,
-                                           out ViewLocator viewLocator)
-        {
-            using var _ = Logger.GetMethodTracer(dependencyObject, null, null, null);
-
-            var frameworkElement = dependencyObject.FindVisualAncestor<FrameworkElement>();
-            serviceProvider = frameworkElement?.TryFindResource(nameof(IServiceProvider)) as IServiceProvider;
-            assemblySource = frameworkElement?.TryFindResource(nameof(AssemblySource)) as AssemblySource;
-            viewLocator = frameworkElement?.TryFindResource(nameof(ViewLocator)) as ViewLocator;
-
-            return (serviceProvider != null) && (assemblySource != null) && (viewLocator != null);
         }
 
         #endregion

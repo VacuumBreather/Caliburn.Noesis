@@ -1,8 +1,6 @@
 ﻿namespace Caliburn.Noesis
 {
     using System;
-    using System.Collections.Generic;
-    using System.Reflection;
     using System.Threading;
     using Cysharp.Threading.Tasks;
     using Extensions;
@@ -11,6 +9,7 @@
     using ILogger = Microsoft.Extensions.Logging.ILogger;
     using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
+    using System.Collections.Generic;
     using global::Noesis;
     using UnityEngine;
 
@@ -60,7 +59,6 @@
         {
             Application.Current.Startup += async (_, __) =>
                 {
-                    Initialize();
                     this.onEnableCancellation = new CancellationTokenSource();
                     await OnEnableAsync(this.onEnableCancellation.Token);
                     await StartAsync();
@@ -78,6 +76,7 @@
         }
 
         #endregion
+
 #endif
 
         #region Protected Properties
@@ -93,9 +92,7 @@
 
         private IWindowManager WindowManager { get; set; }
 
-        private ViewLocator ViewLocator { get; } = new ViewLocator();
-
-        private AssemblySource AssemblySource { get; } = new AssemblySource();
+        private ViewLocator ViewLocator { get; set; }
 
         #endregion
 
@@ -109,8 +106,10 @@
             {
                 return IoCContainer.GetInstance(serviceType);
             }
-            catch (Exception)
+            catch (Exception serviceLookupException)
             {
+                Logger.LogError(serviceLookupException, "Failed to find service {ServiceType}", serviceType);
+
                 return null;
             }
         }
@@ -182,52 +181,51 @@
         #region Protected Methods
 
         /// <summary>Override to configure your dependency injection container.</summary>
-        /// <param name="viewModelTypes">
-        ///     All relevant view-model types exported by the configured assemblies,
-        ///     excluding any view-model implementing <see cref="IWindowManager" />.
-        /// </param>
-        /// <param name="viewTypes">
-        ///     All relevant view types exported by the configured assemblies, excluding
-        ///     <see cref="ShellView" />.
-        /// </param>
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
         ///     <see cref="GetService" /> to let the framework use it. <br /> The following types need to be
         ///     registered here at a minimum:
         ///     <list type="bullet">
+        ///         <item>An <see cref="AssemblySource" /> instance, using singleton lifetime in this scope.</item>
+        ///         <item>A <see cref="ViewLocator" />, using singleton lifetime in this scope</item>
+        ///         <item>
+        ///             An <see cref="IServiceProvider" /> implementation, using singleton lifetime in this
+        ///             scope. This is usually the bootstrapper itself.
+        ///         </item>
         ///         <item>
         ///             An <see cref="IWindowManager" /> implementation, using singleton lifetime in this
         ///             scope
         ///         </item>
         ///         <item>
-        ///             Optionally a <see cref="ILoggerFactory" />, using singleton lifetime in this scope,
+        ///             Optionally an <see cref="ILoggerFactory" />, using singleton lifetime in this scope,
         ///             if you want to provide your own to the framework
         ///         </item>
-        ///         <item>All relevant view, view-models and services</item>
+        ///         <item>All relevant views, view-models and services</item>
         ///     </list>
-        ///     The view-model implementing <see cref="IWindowManager" /> will not be part of the
-        ///     <paramref name="viewModelTypes" /> sequence.
         /// </remarks>
-        protected virtual void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
+        protected virtual void ConfigureIoCContainer()
         {
             IoCContainer = new Container();
 
+            var assemblySource = new AssemblySource();
+            assemblySource.Add(GetType().Assembly);
+
+            IoCContainer.RegisterInstance(assemblySource);
+            IoCContainer.RegisterSingleton<ViewLocator, ViewLocator>();
             IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
 
 #if UNITY_5_5_OR_NEWER
             IoCContainer.RegisterInstance(typeof(ILoggerFactory), new DebugLoggerFactory(this, LogLevel.Information));
 #else
-            IoCContainer.RegisterInstance(
-                typeof(ILoggerFactory),
-                new DebugLoggerFactory(LogLevel.Information));
+            IoCContainer.RegisterInstance(typeof(ILoggerFactory), new DebugLoggerFactory(LogLevel.Information));
 #endif
 
-            foreach (var viewType in viewTypes)
+            foreach (var viewType in assemblySource.ViewTypes)
             {
                 IoCContainer.RegisterPerRequest(viewType, viewType);
             }
 
-            foreach (var type in viewModelTypes)
+            foreach (var type in assemblySource.ViewModelTypes)
             {
                 IoCContainer.RegisterPerRequest(type, type);
 
@@ -261,20 +259,6 @@
         protected virtual UniTask OnStartup()
         {
             return UniTask.CompletedTask;
-        }
-
-        /// <summary>
-        ///     Override to tell the framework where to find assemblies to inspect for views, view-models,
-        ///     etc.
-        /// </summary>
-        /// <returns>A list of assemblies to inspect.</returns>
-        protected virtual IEnumerable<Assembly> SelectAssemblies()
-        {
-            return new[]
-                       {
-                           Assembly.GetExecutingAssembly(),
-                           GetType().Assembly
-                       };
         }
 
         #endregion
@@ -349,7 +333,6 @@
         [UsedImplicitly]
         private async UniTaskVoid OnEnable()
         {
-            Initialize();
             this.onEnableCancellation = new CancellationTokenSource();
             await OnEnableAsync(this.onEnableCancellation.Token);
         }
@@ -367,11 +350,9 @@
 
         #region Private Methods
 
-        private void AddImportantResources(ResourceDictionary resourceDictionary)
+        private void AddServiceProviderResource(ResourceDictionary resourceDictionary)
         {
             resourceDictionary[nameof(IServiceProvider)] = this;
-            resourceDictionary[nameof(AssemblySource)] = AssemblySource;
-            resourceDictionary[nameof(ViewLocator)] = ViewLocator;
         }
 
         private void Initialize()
@@ -381,9 +362,7 @@
                 return;
             }
 
-            AssemblySource.AddRange(SelectAssemblies());
-
-            ConfigureIoCContainer(AssemblySource.ViewModelTypes, AssemblySource.ViewTypes);
+            ConfigureIoCContainer();
 
             if (GetService<ILoggerFactory>() is { } loggerFactory)
             {
@@ -394,7 +373,20 @@
 
             Logger.LogInformation("Initializing...");
 
+            ViewLocator = GetService<ViewLocator>();
+
+            if (ViewLocator is null)
+            {
+                Logger.LogError(
+                    "View locator not found - please register {ViewLocator} instance in DI container",
+                    nameof(ViewLocator));
+                Logger.LogError("Initialization failed");
+
+                return;
+            }
+
             Logger.LogInformation("Configuring type mappings");
+
             ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
             ConfigureViewLocator(ViewLocator);
 
@@ -458,6 +450,8 @@
             using var _ = Logger.GetMethodTracer();
             using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
 
+            Initialize();
+
             if (!this.isInitialized)
             {
                 return;
@@ -478,11 +472,10 @@
 
             DataTemplateManager.RegisterDataTemplates(
                 ViewLocator,
-                AssemblySource,
                 dictionary,
-                template => AddImportantResources(template.Resources));
+                template => AddServiceProviderResource(template.Resources));
 
-            AddImportantResources(dictionary);
+            AddServiceProviderResource(dictionary);
 
 #if UNITY_5_5_OR_NEWER
             this.noesisView.Content.DataContext = WindowManager;
@@ -501,6 +494,11 @@
             Logger.LogInformation("Showing main content: {MainContent}", mainContent);
 
             await WindowManager.ShowMainContentAsync(mainContent);
+
+            if (WindowManager is IActivate activate)
+            {
+                await activate.ActivateAsync();
+            }
 
             Logger.LogInformation("Start complete");
         }
