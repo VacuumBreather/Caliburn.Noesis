@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.Noesis.Samples
 {
     using System;
-    using System.Collections.Generic;
     using Autofac;
     using Cysharp.Threading.Tasks;
     using JetBrains.Annotations;
@@ -42,27 +41,31 @@
         #region Protected Methods
 
         /// <inheritdoc />
-        protected override void ConfigureIoCContainer(IEnumerable<Type> viewModelTypes, IEnumerable<Type> viewTypes)
+        protected override void ConfigureIoCContainer()
         {
             var builder = new ContainerBuilder();
 
+            var assemblySource = new AssemblySource();
+            assemblySource.Add(GetType().Assembly);
+            builder.RegisterInstance(assemblySource).AsSelf().SingleInstance();
+            builder.RegisterType<ViewLocator>().AsSelf().SingleInstance();
+            builder.RegisterInstance(this).As<IServiceProvider>().SingleInstance();
+            builder.RegisterType<ShellViewModel>().As<IWindowManager>().SingleInstance();
+
 #if UNITY_5_5_OR_NEWER
-            builder.Register(_ => new DebugLoggerFactory(this, LogLevel.Information))
+            builder.Register(_ => new DebugLoggerFactory(this, LogLevel.Debug))
 #else
             builder.Register(_ => new DebugLoggerFactory(LogLevel.Information))
 #endif
                    .As<ILoggerFactory>()
                    .SingleInstance();
 
-            builder.RegisterInstance(this).As<IServiceProvider>().SingleInstance();
-            builder.RegisterType<ShellViewModel>().As<IWindowManager>().SingleInstance();
-
-            foreach (var type in viewTypes)
+            foreach (var type in assemblySource.ViewTypes)
             {
                 builder.RegisterType(type).AsSelf().InstancePerDependency();
             }
 
-            foreach (var type in viewModelTypes)
+            foreach (var type in assemblySource.ViewModelTypes)
             {
                 builder.RegisterType(type).AsSelf().AsImplementedInterfaces().InstancePerDependency();
             }
