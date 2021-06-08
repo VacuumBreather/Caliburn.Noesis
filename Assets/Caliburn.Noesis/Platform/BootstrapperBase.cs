@@ -7,7 +7,6 @@
     using JetBrains.Annotations;
     using Microsoft.Extensions.Logging;
     using ILogger = Microsoft.Extensions.Logging.ILogger;
-    using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 #if UNITY_5_5_OR_NEWER
     using System.Collections.Generic;
     using global::Noesis;
@@ -145,7 +144,7 @@
         {
             using var _ = Logger.GetMethodTracer();
 
-            if (!this.isInitialized || this.shutdownCompletion != null)
+            if (!this.isInitialized || (this.shutdownCompletion != null))
             {
                 return;
             }
@@ -200,8 +199,8 @@
         ///             scope
         ///         </item>
         ///         <item>
-        ///             Optionally an <see cref="ILoggerFactory" />, using singleton lifetime in this scope,
-        ///             if you want to provide your own to the framework
+        ///             Optionally an <see cref="ILogger" />, using singleton lifetime in this scope, if you
+        ///             want to provide your own to the framework
         ///         </item>
         ///         <item>All relevant views, view-models and services</item>
         ///     </list>
@@ -218,9 +217,9 @@
             IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
 
 #if UNITY_5_5_OR_NEWER
-            IoCContainer.RegisterInstance(typeof(ILoggerFactory), new DebugLoggerFactory(this, LogLevel.Information));
+            IoCContainer.RegisterInstance(typeof(ILogger), new DebugLogger(LogManager.FrameworkCategoryName, this));
 #else
-            IoCContainer.RegisterInstance(typeof(ILoggerFactory), new DebugLoggerFactory(LogLevel.Information));
+            IoCContainer.RegisterInstance(typeof(ILogger), new DebugLogger(LogManager.FrameworkCategoryName));
 #endif
 
             foreach (var viewType in assemblySource.ViewTypes)
@@ -367,9 +366,9 @@
 
             ConfigureIoCContainer();
 
-            if (GetService<ILoggerFactory>() is { } loggerFactory)
+            if (GetService<ILogger>() is { } logger)
             {
-                LogManager.SetLoggerFactory(loggerFactory);
+                LogManager.FrameworkLogger = logger;
             }
 
             using var _ = Logger.GetMethodTracer();
@@ -422,7 +421,7 @@
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
             using var _ = Logger.GetMethodTracer(cancellationToken);
-            
+
             await (this.onDisableCompletion?.Task ?? UniTask.CompletedTask);
             using var guard = TaskCompletion.CreateGuard(out this.onDisableCompletion);
 
@@ -460,7 +459,7 @@
             {
                 return;
             }
-            
+
             using var guard = TaskCompletion.CreateGuard(out this.onStartCompletion);
 
             Initialize();
