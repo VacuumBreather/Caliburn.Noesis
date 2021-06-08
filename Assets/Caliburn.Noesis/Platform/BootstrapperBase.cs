@@ -217,10 +217,12 @@
             IoCContainer.RegisterSingleton<IWindowManager, ShellViewModel>();
 
 #if UNITY_5_5_OR_NEWER
-            IoCContainer.RegisterInstance(typeof(ILogger), new DebugLogger(LogManager.FrameworkCategoryName, this));
+            var logger = new DebugLogger(LogManager.FrameworkCategoryName, this);
 #else
-            IoCContainer.RegisterInstance(typeof(ILogger), new DebugLogger(LogManager.FrameworkCategoryName));
+            var logger = new DebugLogger(LogManager.FrameworkCategoryName);
 #endif
+
+            IoCContainer.RegisterInstance(typeof(ILogger), logger);
 
             foreach (var viewType in assemblySource.ViewTypes)
             {
@@ -236,6 +238,8 @@
                     IoCContainer.RegisterPerRequest(@interface, type);
                 }
             }
+
+            LogManager.FrameworkLogger = logger;
         }
 
         /// <summary>Override this to modify the configuration of the <see cref="Noesis.ViewLocator" />.</summary>
@@ -365,11 +369,6 @@
             }
 
             ConfigureIoCContainer();
-
-            if (GetService<ILogger>() is { } logger)
-            {
-                LogManager.FrameworkLogger = logger;
-            }
 
             using var _ = Logger.GetMethodTracer();
 
