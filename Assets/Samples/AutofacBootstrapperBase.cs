@@ -53,11 +53,11 @@
             builder.RegisterType<ShellViewModel>().As<IWindowManager>().SingleInstance();
 
 #if UNITY_5_5_OR_NEWER
-            builder.Register(_ => new DebugLoggerFactory(this, LogLevel.Debug))
+            builder.RegisterInstance(new DebugLogger(LogManager.FrameworkCategoryName, this))
 #else
-            builder.Register(_ => new DebugLoggerFactory(LogLevel.Information))
+            builder.RegisterInstance(new DebugLogger(LogManager.FrameworkCategoryName))
 #endif
-                   .As<ILoggerFactory>()
+                   .As<ILogger>()
                    .SingleInstance();
 
             foreach (var type in assemblySource.ViewTypes)
