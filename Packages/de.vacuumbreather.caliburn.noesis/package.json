@@ -1,0 +1,22 @@
+{
+  "name": "de.vacuumbreather.caliburn.noesis",
+  "version": "1.0.0",
+  "displayName": "Caliburn.Noesis",
+  "description": "Caliburn.Noesis is a small, yet powerful framework, designed for building graphical user interfaces with the NoesisGUI XAML platform for Unity. With strong support for MVVM and other proven UI patterns, Caliburn.Noesis enables you to build your solution quickly without sacrificing code quality or testability.",
+  "_upm": {
+    "supportedPlatforms": ["Desktop", "Mobile", "Web", "Consoles"]
+  },
+  "unity": "2020.2",
+  "documentationUrl": "https://github.com/VacuumBreather/Caliburn.Noesis",
+  "changelogUrl": "https://github.com/VacuumBreather/Caliburn.Noesis",
+  "licensesUrl": "https://github.com/VacuumBreather/Caliburn.Noesis/LICENSE",
+  "keywords": [],
+  "author": {
+    "name": "Vacuum Breather Software",
+    "email": "info@vacuumbreather.de",
+    "url": "https://www.vacuumbreather.de"
+  },
+  "dependencies": {
+    "com.noesis.noesisgui": "3.2.6"
+  }
+}
