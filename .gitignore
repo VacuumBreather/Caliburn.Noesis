@@ -156,3 +156,8 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity,rider
+
+### Noesis ###
+/[Aa]ssets/**/[Nn]oesis.settings.asset
+/[Aa]ssets/**/[Nn]oesis.settings.asset.meta
+/[Pp]ackages/com.noesis.noesisgui/
