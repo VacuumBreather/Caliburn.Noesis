@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -12,6 +12,6 @@ namespace Caliburn.Noesis
         /// Also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        Task TryCloseAsync(bool? dialogResult = null);
+        UniTask TryCloseAsync(bool? dialogResult = null);
     }
 }

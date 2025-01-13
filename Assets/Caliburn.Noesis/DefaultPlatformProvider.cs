@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -22,7 +22,7 @@ namespace Caliburn.Noesis
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(Action action)
+        public virtual void BeginOnUIThread(System.Action action)
         {
             action();
         }
@@ -32,16 +32,16 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual Task OnUIThreadAsync(Func<Task> action)
+        public virtual UniTask OnUIThreadAsync(Func<UniTask> action)
         {
-            return Task.Factory.StartNew(action);
+            return UniTask.RunOnThreadPool(action);
         }
 
         /// <summary>
         /// Executes the action on the UI thread.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void OnUIThread(Action action)
+        public virtual void OnUIThread(System.Action action)
         {
             action();
         }
@@ -99,9 +99,9 @@ namespace Caliburn.Noesis
         /// <returns>
         /// An <see cref="Action" /> to close the view model.
         /// </returns>
-        public virtual Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
+        public virtual Func<CancellationToken, UniTask> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult)
         {
-            return ct => Task.FromResult(true);
+            return ct => UniTask.FromResult(true);
         }
     }
 }

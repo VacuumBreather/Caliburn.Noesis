@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -12,6 +12,6 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name="activate">The instance to activate</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task ActivateAsync(this IActivate activate) => activate.ActivateAsync(default);
+        public static UniTask ActivateAsync(this IActivate activate) => activate.ActivateAsync(default);
     }
 }

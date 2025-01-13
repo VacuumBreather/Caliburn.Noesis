@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -24,19 +24,19 @@ namespace Caliburn.Noesis
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        void BeginOnUIThread(Action action);
+        void BeginOnUIThread(System.Action action);
 
         /// <summary>
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        Task OnUIThreadAsync(Func<Task> action);
+        UniTask OnUIThreadAsync(Func<UniTask> action);
 
         /// <summary>
         ///   Executes the action on the UI thread.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        void OnUIThread(Action action);
+        void OnUIThread(System.Action action);
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
@@ -71,6 +71,6 @@ namespace Caliburn.Noesis
         /// <param name="views">The associated views.</param>
         /// <param name="dialogResult">The dialog result.</param>
         /// <returns>An <see cref="Func{T, TResult}"/> to close the view model.</returns>
-        Func<CancellationToken, Task> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult);
+        Func<CancellationToken, UniTask> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -24,7 +24,7 @@ namespace Caliburn.Noesis
             set => _closeStrategy = value;
         }
 
-        Task IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken)
+        UniTask IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken)
         {
             return DeactivateItemAsync((T)item, close, cancellationToken);
         }
@@ -45,7 +45,7 @@ namespace Caliburn.Noesis
         /// <returns>The collection of children.</returns>
         public abstract IEnumerable<T> GetChildren();
 
-        Task IConductor.ActivateItemAsync(object item, CancellationToken cancellationToken)
+        UniTask IConductor.ActivateItemAsync(object item, CancellationToken cancellationToken)
         {
             return ActivateItemAsync((T)item, cancellationToken);
         }
@@ -56,7 +56,7 @@ namespace Caliburn.Noesis
         /// <param name="item">The item to activate.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public abstract Task ActivateItemAsync(T item, CancellationToken cancellationToken = default);
+        public abstract UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Deactivates the specified item.
@@ -65,7 +65,7 @@ namespace Caliburn.Noesis
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public abstract Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default);
+        public abstract UniTask DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Called by a subclass when an activation needs processing.

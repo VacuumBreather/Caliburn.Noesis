@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -63,7 +63,7 @@ namespace Caliburn.Noesis
                 /// <param name="item">The item to activate.</param>
                 /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task ActivateItemAsync(T item, CancellationToken cancellationToken = default)
+                public override async UniTask ActivateItemAsync(T item, CancellationToken cancellationToken = default)
                 {
                     if (item != null && item.Equals(ActiveItem))
                     {
@@ -86,7 +86,7 @@ namespace Caliburn.Noesis
                 /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default)
+                public override async UniTask DeactivateItemAsync(T item, bool close, CancellationToken cancellationToken = default)
                 {
                     if (item == null)
                         return;
@@ -102,7 +102,7 @@ namespace Caliburn.Noesis
                     }
                 }
 
-                private async Task CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
+                private async UniTask CloseItemCoreAsync(T item, CancellationToken cancellationToken = default)
                 {
                     if (item.Equals(ActiveItem))
                     {
@@ -144,7 +144,7 @@ namespace Caliburn.Noesis
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                public override async Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
+                public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
                 {
                     var closeResult = await CloseStrategy.ExecuteAsync(_items.ToList(), cancellationToken);
 
@@ -188,7 +188,7 @@ namespace Caliburn.Noesis
                 /// </summary>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override Task OnActivatedAsync(CancellationToken cancellationToken)
+                protected override UniTask OnActivatedAsync(CancellationToken cancellationToken)
                 {
                     return ScreenExtensions.TryActivateAsync(ActiveItem, cancellationToken);
                 }
@@ -199,7 +199,7 @@ namespace Caliburn.Noesis
                 /// <param name="close">Indicates whether this instance will be closed.</param>
                 /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
                 /// <returns>A task that represents the asynchronous operation.</returns>
-                protected override async Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+                protected override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
                 {
                     if (close)
                     {

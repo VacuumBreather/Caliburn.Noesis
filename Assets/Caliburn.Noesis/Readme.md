@@ -115,7 +115,7 @@
   - [GetFirstNonGeneratedView(view)](#M-Caliburn-Micro-DefaultPlatformProvider-GetFirstNonGeneratedView-System-Object- 'Caliburn.Micro.DefaultPlatformProvider.GetFirstNonGeneratedView(System.Object)')
   - [GetViewCloseAction(viewModel,views,dialogResult)](#M-Caliburn-Micro-DefaultPlatformProvider-GetViewCloseAction-System-Object,System-Collections-Generic-ICollection{System-Object},System-Nullable{System-Boolean}- 'Caliburn.Micro.DefaultPlatformProvider.GetViewCloseAction(System.Object,System.Collections.Generic.ICollection{System.Object},System.Nullable{System.Boolean})')
   - [OnUIThread(action)](#M-Caliburn-Micro-DefaultPlatformProvider-OnUIThread-System-Action- 'Caliburn.Micro.DefaultPlatformProvider.OnUIThread(System.Action)')
-  - [OnUIThreadAsync(action)](#M-Caliburn-Micro-DefaultPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-Task}- 'Caliburn.Micro.DefaultPlatformProvider.OnUIThreadAsync(System.Func{System.Threading.Tasks.Task})')
+  - [OnUIThreadAsync(action)](#M-Caliburn-Micro-DefaultPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-UniTask}- 'Caliburn.Micro.DefaultPlatformProvider.OnUIThreadAsync(System.Func{System.Threading.Tasks.UniTask})')
 - [DelegateResult](#T-Caliburn-Micro-DelegateResult 'Caliburn.Micro.DelegateResult')
   - [#ctor(action)](#M-Caliburn-Micro-DelegateResult-#ctor-System-Action- 'Caliburn.Micro.DelegateResult.#ctor(System.Action)')
   - [Execute(context)](#M-Caliburn-Micro-DelegateResult-Execute-Caliburn-Micro-CoroutineExecutionContext- 'Caliburn.Micro.DelegateResult.Execute(Caliburn.Micro.CoroutineExecutionContext)')
@@ -127,8 +127,8 @@
   - [Apply\`\`1(enumerable,action)](#M-Caliburn-Micro-EnumerableExtensions-Apply``1-System-Collections-Generic-IEnumerable{``0},System-Action{``0}- 'Caliburn.Micro.EnumerableExtensions.Apply``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})')
 - [EventAggregator](#T-Caliburn-Micro-EventAggregator 'Caliburn.Micro.EventAggregator')
   - [HandlerExistsFor()](#M-Caliburn-Micro-EventAggregator-HandlerExistsFor-System-Type- 'Caliburn.Micro.EventAggregator.HandlerExistsFor(System.Type)')
-  - [PublishAsync()](#M-Caliburn-Micro-EventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task},System-Threading-CancellationToken- 'Caliburn.Micro.EventAggregator.PublishAsync(System.Object,System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task},System.Threading.CancellationToken)')
-  - [Subscribe()](#M-Caliburn-Micro-EventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task}- 'Caliburn.Micro.EventAggregator.Subscribe(System.Object,System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task})')
+  - [PublishAsync()](#M-Caliburn-Micro-EventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask},System-Threading-CancellationToken- 'Caliburn.Micro.EventAggregator.PublishAsync(System.Object,System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask},System.Threading.CancellationToken)')
+  - [Subscribe()](#M-Caliburn-Micro-EventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask}- 'Caliburn.Micro.EventAggregator.Subscribe(System.Object,System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask})')
   - [Unsubscribe()](#M-Caliburn-Micro-EventAggregator-Unsubscribe-System-Object- 'Caliburn.Micro.EventAggregator.Unsubscribe(System.Object)')
 - [EventAggregatorExtensions](#T-Caliburn-Micro-EventAggregatorExtensions 'Caliburn.Micro.EventAggregatorExtensions')
   - [PublishOnBackgroundThreadAsync(eventAggregator,message,cancellationToken)](#M-Caliburn-Micro-EventAggregatorExtensions-PublishOnBackgroundThreadAsync-Caliburn-Micro-IEventAggregator,System-Object,System-Threading-CancellationToken- 'Caliburn.Micro.EventAggregatorExtensions.PublishOnBackgroundThreadAsync(Caliburn.Micro.IEventAggregator,System.Object,System.Threading.CancellationToken)')
@@ -145,7 +145,7 @@
   - [InDesignMode](#P-Caliburn-Micro-Execute-InDesignMode 'Caliburn.Micro.Execute.InDesignMode')
   - [BeginOnUIThread(action)](#M-Caliburn-Micro-Execute-BeginOnUIThread-System-Action- 'Caliburn.Micro.Execute.BeginOnUIThread(System.Action)')
   - [OnUIThread(action)](#M-Caliburn-Micro-Execute-OnUIThread-System-Action- 'Caliburn.Micro.Execute.OnUIThread(System.Action)')
-  - [OnUIThreadAsync(action)](#M-Caliburn-Micro-Execute-OnUIThreadAsync-System-Func{System-Threading-Tasks-Task}- 'Caliburn.Micro.Execute.OnUIThreadAsync(System.Func{System.Threading.Tasks.Task})')
+  - [OnUIThreadAsync(action)](#M-Caliburn-Micro-Execute-OnUIThreadAsync-System-Func{System-Threading-Tasks-UniTask}- 'Caliburn.Micro.Execute.OnUIThreadAsync(System.Func{System.Threading.Tasks.UniTask})')
 - [ExpressionExtensions](#T-Caliburn-Micro-ExpressionExtensions 'Caliburn.Micro.ExpressionExtensions')
   - [GetMemberInfo(expression)](#M-Caliburn-Micro-ExpressionExtensions-GetMemberInfo-System-Linq-Expressions-Expression- 'Caliburn.Micro.ExpressionExtensions.GetMemberInfo(System.Linq.Expressions.Expression)')
 - [IActivate](#T-Caliburn-Micro-IActivate 'Caliburn.Micro.IActivate')
@@ -170,8 +170,8 @@
   - [DeactivateAsync(close,cancellationToken)](#M-Caliburn-Micro-IDeactivate-DeactivateAsync-System-Boolean,System-Threading-CancellationToken- 'Caliburn.Micro.IDeactivate.DeactivateAsync(System.Boolean,System.Threading.CancellationToken)')
 - [IEventAggregator](#T-Caliburn-Micro-IEventAggregator 'Caliburn.Micro.IEventAggregator')
   - [HandlerExistsFor(messageType)](#M-Caliburn-Micro-IEventAggregator-HandlerExistsFor-System-Type- 'Caliburn.Micro.IEventAggregator.HandlerExistsFor(System.Type)')
-  - [PublishAsync(message,marshal,cancellationToken)](#M-Caliburn-Micro-IEventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task},System-Threading-CancellationToken- 'Caliburn.Micro.IEventAggregator.PublishAsync(System.Object,System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task},System.Threading.CancellationToken)')
-  - [Subscribe(subscriber,marshal)](#M-Caliburn-Micro-IEventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task}- 'Caliburn.Micro.IEventAggregator.Subscribe(System.Object,System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task})')
+  - [PublishAsync(message,marshal,cancellationToken)](#M-Caliburn-Micro-IEventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask},System-Threading-CancellationToken- 'Caliburn.Micro.IEventAggregator.PublishAsync(System.Object,System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask},System.Threading.CancellationToken)')
+  - [Subscribe(subscriber,marshal)](#M-Caliburn-Micro-IEventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask}- 'Caliburn.Micro.IEventAggregator.Subscribe(System.Object,System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask})')
   - [Unsubscribe(subscriber)](#M-Caliburn-Micro-IEventAggregator-Unsubscribe-System-Object- 'Caliburn.Micro.IEventAggregator.Unsubscribe(System.Object)')
 - [IGuardClose](#T-Caliburn-Micro-IGuardClose 'Caliburn.Micro.IGuardClose')
   - [CanCloseAsync(cancellationToken)](#M-Caliburn-Micro-IGuardClose-CanCloseAsync-System-Threading-CancellationToken- 'Caliburn.Micro.IGuardClose.CanCloseAsync(System.Threading.CancellationToken)')
@@ -205,7 +205,7 @@
   - [GetFirstNonGeneratedView(view)](#M-Caliburn-Micro-IPlatformProvider-GetFirstNonGeneratedView-System-Object- 'Caliburn.Micro.IPlatformProvider.GetFirstNonGeneratedView(System.Object)')
   - [GetViewCloseAction(viewModel,views,dialogResult)](#M-Caliburn-Micro-IPlatformProvider-GetViewCloseAction-System-Object,System-Collections-Generic-ICollection{System-Object},System-Nullable{System-Boolean}- 'Caliburn.Micro.IPlatformProvider.GetViewCloseAction(System.Object,System.Collections.Generic.ICollection{System.Object},System.Nullable{System.Boolean})')
   - [OnUIThread(action)](#M-Caliburn-Micro-IPlatformProvider-OnUIThread-System-Action- 'Caliburn.Micro.IPlatformProvider.OnUIThread(System.Action)')
-  - [OnUIThreadAsync(action)](#M-Caliburn-Micro-IPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-Task}- 'Caliburn.Micro.IPlatformProvider.OnUIThreadAsync(System.Func{System.Threading.Tasks.Task})')
+  - [OnUIThreadAsync(action)](#M-Caliburn-Micro-IPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-UniTask}- 'Caliburn.Micro.IPlatformProvider.OnUIThreadAsync(System.Func{System.Threading.Tasks.UniTask})')
 - [IResult](#T-Caliburn-Micro-IResult 'Caliburn.Micro.IResult')
   - [Execute(context)](#M-Caliburn-Micro-IResult-Execute-Caliburn-Micro-CoroutineExecutionContext- 'Caliburn.Micro.IResult.Execute(Caliburn.Micro.CoroutineExecutionContext)')
 - [IResult\`1](#T-Caliburn-Micro-IResult`1 'Caliburn.Micro.IResult`1')
@@ -312,18 +312,18 @@
   - [Failed()](#M-Caliburn-Micro-SimpleResult-Failed-System-Exception- 'Caliburn.Micro.SimpleResult.Failed(System.Exception)')
   - [Succeeded()](#M-Caliburn-Micro-SimpleResult-Succeeded 'Caliburn.Micro.SimpleResult.Succeeded')
 - [TaskExtensions](#T-Caliburn-Micro-TaskExtensions 'Caliburn.Micro.TaskExtensions')
-  - [AsResult(task)](#M-Caliburn-Micro-TaskExtensions-AsResult-System-Threading-Tasks-Task- 'Caliburn.Micro.TaskExtensions.AsResult(System.Threading.Tasks.Task)')
-  - [AsResult\`\`1(task)](#M-Caliburn-Micro-TaskExtensions-AsResult``1-System-Threading-Tasks-Task{``0}- 'Caliburn.Micro.TaskExtensions.AsResult``1(System.Threading.Tasks.Task{``0})')
+  - [AsResult(task)](#M-Caliburn-Micro-TaskExtensions-AsResult-System-Threading-Tasks-UniTask- 'Caliburn.Micro.TaskExtensions.AsResult(System.Threading.Tasks.UniTask)')
+  - [AsResult\`\`1(task)](#M-Caliburn-Micro-TaskExtensions-AsResult``1-System-Threading-Tasks-UniTask{``0}- 'Caliburn.Micro.TaskExtensions.AsResult``1(System.Threading.Tasks.UniTask{``0})')
   - [ExecuteAsync(result,context)](#M-Caliburn-Micro-TaskExtensions-ExecuteAsync-Caliburn-Micro-IResult,Caliburn-Micro-CoroutineExecutionContext- 'Caliburn.Micro.TaskExtensions.ExecuteAsync(Caliburn.Micro.IResult,Caliburn.Micro.CoroutineExecutionContext)')
   - [ExecuteAsync\`\`1(result,context)](#M-Caliburn-Micro-TaskExtensions-ExecuteAsync``1-Caliburn-Micro-IResult{``0},Caliburn-Micro-CoroutineExecutionContext- 'Caliburn.Micro.TaskExtensions.ExecuteAsync``1(Caliburn.Micro.IResult{``0},Caliburn.Micro.CoroutineExecutionContext)')
 - [TaskResult](#T-Caliburn-Micro-TaskResult 'Caliburn.Micro.TaskResult')
-  - [#ctor(task)](#M-Caliburn-Micro-TaskResult-#ctor-System-Threading-Tasks-Task- 'Caliburn.Micro.TaskResult.#ctor(System.Threading.Tasks.Task)')
+  - [#ctor(task)](#M-Caliburn-Micro-TaskResult-#ctor-System-Threading-Tasks-UniTask- 'Caliburn.Micro.TaskResult.#ctor(System.Threading.Tasks.UniTask)')
   - [Execute(context)](#M-Caliburn-Micro-TaskResult-Execute-Caliburn-Micro-CoroutineExecutionContext- 'Caliburn.Micro.TaskResult.Execute(Caliburn.Micro.CoroutineExecutionContext)')
-  - [OnCompleted(task)](#M-Caliburn-Micro-TaskResult-OnCompleted-System-Threading-Tasks-Task- 'Caliburn.Micro.TaskResult.OnCompleted(System.Threading.Tasks.Task)')
+  - [OnCompleted(task)](#M-Caliburn-Micro-TaskResult-OnCompleted-System-Threading-Tasks-UniTask- 'Caliburn.Micro.TaskResult.OnCompleted(System.Threading.Tasks.UniTask)')
 - [TaskResult\`1](#T-Caliburn-Micro-TaskResult`1 'Caliburn.Micro.TaskResult`1')
-  - [#ctor(task)](#M-Caliburn-Micro-TaskResult`1-#ctor-System-Threading-Tasks-Task{`0}- 'Caliburn.Micro.TaskResult`1.#ctor(System.Threading.Tasks.Task{`0})')
+  - [#ctor(task)](#M-Caliburn-Micro-TaskResult`1-#ctor-System-Threading-Tasks-UniTask{`0}- 'Caliburn.Micro.TaskResult`1.#ctor(System.Threading.Tasks.UniTask{`0})')
   - [Result](#P-Caliburn-Micro-TaskResult`1-Result 'Caliburn.Micro.TaskResult`1.Result')
-  - [OnCompleted(task)](#M-Caliburn-Micro-TaskResult`1-OnCompleted-System-Threading-Tasks-Task- 'Caliburn.Micro.TaskResult`1.OnCompleted(System.Threading.Tasks.Task)')
+  - [OnCompleted(task)](#M-Caliburn-Micro-TaskResult`1-OnCompleted-System-Threading-Tasks-UniTask- 'Caliburn.Micro.TaskResult`1.OnCompleted(System.Threading.Tasks.UniTask)')
 - [ViewAttachedEventArgs](#T-Caliburn-Micro-ViewAttachedEventArgs 'Caliburn.Micro.ViewAttachedEventArgs')
   - [Context](#P-Caliburn-Micro-ViewAttachedEventArgs-Context 'Caliburn.Micro.ViewAttachedEventArgs.Context')
   - [View](#P-Caliburn-Micro-ViewAttachedEventArgs-View 'Caliburn.Micro.ViewAttachedEventArgs.View')
@@ -1985,7 +1985,7 @@ Executes the action on the UI thread.
 | ---- | ---- | ----------- |
 | action | [System.Action](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Action 'System.Action') | The action to execute. |
 
-<a name='M-Caliburn-Micro-DefaultPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-Task}-'></a>
+<a name='M-Caliburn-Micro-DefaultPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-UniTask}-'></a>
 ### OnUIThreadAsync(action) `method`
 
 ##### Summary
@@ -2000,7 +2000,7 @@ Executes the action on the UI thread asynchronously.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| action | [System.Func{System.Threading.Tasks.Task}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.Task}') | The action to execute. |
+| action | [System.Func{System.Threading.Tasks.UniTask}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.UniTask}') | The action to execute. |
 
 <a name='T-Caliburn-Micro-DelegateResult'></a>
 ## DelegateResult `type`
@@ -2142,7 +2142,7 @@ Caliburn.Micro
 
 This method has no parameters.
 
-<a name='M-Caliburn-Micro-EventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task},System-Threading-CancellationToken-'></a>
+<a name='M-Caliburn-Micro-EventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask},System-Threading-CancellationToken-'></a>
 ### PublishAsync() `method`
 
 ##### Summary
@@ -2153,7 +2153,7 @@ This method has no parameters.
 
 This method has no parameters.
 
-<a name='M-Caliburn-Micro-EventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task}-'></a>
+<a name='M-Caliburn-Micro-EventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask}-'></a>
 ### Subscribe() `method`
 
 ##### Summary
@@ -2413,7 +2413,7 @@ Executes the action on the UI thread.
 | ---- | ---- | ----------- |
 | action | [System.Action](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Action 'System.Action') | The action to execute. |
 
-<a name='M-Caliburn-Micro-Execute-OnUIThreadAsync-System-Func{System-Threading-Tasks-Task}-'></a>
+<a name='M-Caliburn-Micro-Execute-OnUIThreadAsync-System-Func{System-Threading-Tasks-UniTask}-'></a>
 ### OnUIThreadAsync(action) `method`
 
 ##### Summary
@@ -2424,7 +2424,7 @@ Executes the action on the UI thread asynchronously.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| action | [System.Func{System.Threading.Tasks.Task}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.Task}') | The action to execute. |
+| action | [System.Func{System.Threading.Tasks.UniTask}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.UniTask}') | The action to execute. |
 
 <a name='T-Caliburn-Micro-ExpressionExtensions'></a>
 ## ExpressionExtensions `type`
@@ -2733,7 +2733,7 @@ True if any handler is found, false if not.
 | ---- | ---- | ----------- |
 | messageType | [System.Type](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Type 'System.Type') | The message type to check with |
 
-<a name='M-Caliburn-Micro-IEventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task},System-Threading-CancellationToken-'></a>
+<a name='M-Caliburn-Micro-IEventAggregator-PublishAsync-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask},System-Threading-CancellationToken-'></a>
 ### PublishAsync(message,marshal,cancellationToken) `method`
 
 ##### Summary
@@ -2749,10 +2749,10 @@ A task that represents the asynchronous operation.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | message | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The message instance. |
-| marshal | [System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task}') | Allows the publisher to provide a custom thread marshaller for the message publication. |
+| marshal | [System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask}') | Allows the publisher to provide a custom thread marshaller for the message publication. |
 | cancellationToken | [System.Threading.CancellationToken](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.CancellationToken 'System.Threading.CancellationToken') | The cancellation token to cancel operation. |
 
-<a name='M-Caliburn-Micro-IEventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-Task},System-Threading-Tasks-Task}-'></a>
+<a name='M-Caliburn-Micro-IEventAggregator-Subscribe-System-Object,System-Func{System-Func{System-Threading-Tasks-UniTask},System-Threading-Tasks-UniTask}-'></a>
 ### Subscribe(subscriber,marshal) `method`
 
 ##### Summary
@@ -2764,7 +2764,7 @@ Subscribes an instance to all events declared through implementations of [IHandl
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | subscriber | [System.Object](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Object 'System.Object') | The instance to subscribe for event publication. |
-| marshal | [System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Func{System.Threading.Tasks.Task},System.Threading.Tasks.Task}') | Allows the subscriber to provide a custom thread marshaller for the message subscription. |
+| marshal | [System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Func{System.Threading.Tasks.UniTask},System.Threading.Tasks.UniTask}') | Allows the subscriber to provide a custom thread marshaller for the message subscription. |
 
 <a name='M-Caliburn-Micro-IEventAggregator-Unsubscribe-System-Object-'></a>
 ### Unsubscribe(subscriber) `method`
@@ -3195,7 +3195,7 @@ Executes the action on the UI thread.
 | ---- | ---- | ----------- |
 | action | [System.Action](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Action 'System.Action') | The action to execute. |
 
-<a name='M-Caliburn-Micro-IPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-Task}-'></a>
+<a name='M-Caliburn-Micro-IPlatformProvider-OnUIThreadAsync-System-Func{System-Threading-Tasks-UniTask}-'></a>
 ### OnUIThreadAsync(action) `method`
 
 ##### Summary
@@ -3206,7 +3206,7 @@ Executes the action on the UI thread asynchronously.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| action | [System.Func{System.Threading.Tasks.Task}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.Task}') | The action to execute. |
+| action | [System.Func{System.Threading.Tasks.UniTask}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Func 'System.Func{System.Threading.Tasks.UniTask}') | The action to execute. |
 
 <a name='T-Caliburn-Micro-IResult'></a>
 ## IResult `type`
@@ -4655,9 +4655,9 @@ Caliburn.Micro
 
 ##### Summary
 
-Extension methods to bring [Task](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task') and [IResult](#T-Caliburn-Micro-IResult 'Caliburn.Micro.IResult') together.
+Extension methods to bring [UniTask](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask') and [IResult](#T-Caliburn-Micro-IResult 'Caliburn.Micro.IResult') together.
 
-<a name='M-Caliburn-Micro-TaskExtensions-AsResult-System-Threading-Tasks-Task-'></a>
+<a name='M-Caliburn-Micro-TaskExtensions-AsResult-System-Threading-Tasks-UniTask-'></a>
 ### AsResult(task) `method`
 
 ##### Summary
@@ -4672,9 +4672,9 @@ The coroutine that encapsulates the task.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| task | [System.Threading.Tasks.Task](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task') | The task. |
+| task | [System.Threading.Tasks.UniTask](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask') | The task. |
 
-<a name='M-Caliburn-Micro-TaskExtensions-AsResult``1-System-Threading-Tasks-Task{``0}-'></a>
+<a name='M-Caliburn-Micro-TaskExtensions-AsResult``1-System-Threading-Tasks-UniTask{``0}-'></a>
 ### AsResult\`\`1(task) `method`
 
 ##### Summary
@@ -4689,7 +4689,7 @@ The coroutine that encapsulates the task.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| task | [System.Threading.Tasks.Task{\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task{``0}') | The task. |
+| task | [System.Threading.Tasks.UniTask{\`\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask{``0}') | The task. |
 
 ##### Generic Types
 
@@ -4748,9 +4748,9 @@ Caliburn.Micro
 
 ##### Summary
 
-A couroutine that encapsulates an [Task](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task').
+A couroutine that encapsulates an [UniTask](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask').
 
-<a name='M-Caliburn-Micro-TaskResult-#ctor-System-Threading-Tasks-Task-'></a>
+<a name='M-Caliburn-Micro-TaskResult-#ctor-System-Threading-Tasks-UniTask-'></a>
 ### #ctor(task) `constructor`
 
 ##### Summary
@@ -4761,7 +4761,7 @@ Initializes a new instance of the [TaskResult](#T-Caliburn-Micro-TaskResult 'Cal
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| task | [System.Threading.Tasks.Task](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task') | The task. |
+| task | [System.Threading.Tasks.UniTask](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask') | The task. |
 
 <a name='M-Caliburn-Micro-TaskResult-Execute-Caliburn-Micro-CoroutineExecutionContext-'></a>
 ### Execute(context) `method`
@@ -4776,7 +4776,7 @@ Executes the result using the specified context.
 | ---- | ---- | ----------- |
 | context | [Caliburn.Micro.CoroutineExecutionContext](#T-Caliburn-Micro-CoroutineExecutionContext 'Caliburn.Micro.CoroutineExecutionContext') | The context. |
 
-<a name='M-Caliburn-Micro-TaskResult-OnCompleted-System-Threading-Tasks-Task-'></a>
+<a name='M-Caliburn-Micro-TaskResult-OnCompleted-System-Threading-Tasks-UniTask-'></a>
 ### OnCompleted(task) `method`
 
 ##### Summary
@@ -4787,7 +4787,7 @@ Called when the asynchronous task has completed.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| task | [System.Threading.Tasks.Task](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task') | The completed task. |
+| task | [System.Threading.Tasks.UniTask](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask') | The completed task. |
 
 <a name='T-Caliburn-Micro-TaskResult`1'></a>
 ## TaskResult\`1 `type`
@@ -4798,7 +4798,7 @@ Caliburn.Micro
 
 ##### Summary
 
-A couroutine that encapsulates an [Task\`1](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task`1 'System.Threading.Tasks.Task`1').
+A couroutine that encapsulates an [UniTask\`1](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask`1 'System.Threading.Tasks.UniTask`1').
 
 ##### Generic Types
 
@@ -4806,7 +4806,7 @@ A couroutine that encapsulates an [Task\`1](http://msdn.microsoft.com/query/dev1
 | ---- | ----------- |
 | TResult | The type of the result. |
 
-<a name='M-Caliburn-Micro-TaskResult`1-#ctor-System-Threading-Tasks-Task{`0}-'></a>
+<a name='M-Caliburn-Micro-TaskResult`1-#ctor-System-Threading-Tasks-UniTask{`0}-'></a>
 ### #ctor(task) `constructor`
 
 ##### Summary
@@ -4817,7 +4817,7 @@ Initializes a new instance of the [TaskResult\`1](#T-Caliburn-Micro-TaskResult`1
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| task | [System.Threading.Tasks.Task{\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task{`0}') | The task. |
+| task | [System.Threading.Tasks.UniTask{\`0}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask{`0}') | The task. |
 
 <a name='P-Caliburn-Micro-TaskResult`1-Result'></a>
 ### Result `property`
@@ -4826,7 +4826,7 @@ Initializes a new instance of the [TaskResult\`1](#T-Caliburn-Micro-TaskResult`1
 
 Gets the result of the asynchronous operation.
 
-<a name='M-Caliburn-Micro-TaskResult`1-OnCompleted-System-Threading-Tasks-Task-'></a>
+<a name='M-Caliburn-Micro-TaskResult`1-OnCompleted-System-Threading-Tasks-UniTask-'></a>
 ### OnCompleted(task) `method`
 
 ##### Summary
@@ -4837,7 +4837,7 @@ Called when the asynchronous task has completed.
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| task | [System.Threading.Tasks.Task](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.Task 'System.Threading.Tasks.Task') | The completed task. |
+| task | [System.Threading.Tasks.UniTask](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Threading.Tasks.UniTask 'System.Threading.Tasks.UniTask') | The completed task. |
 
 <a name='T-Caliburn-Micro-ViewAttachedEventArgs'></a>
 ## ViewAttachedEventArgs `type`

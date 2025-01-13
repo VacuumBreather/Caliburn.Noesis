@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -32,12 +32,12 @@ namespace Caliburn.Noesis
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event data.</param>
         /// <returns>A task that represents the completion of all handler invocations.</returns>
-        public static Task InvokeAllAsync<TEventArgs>(
+        public static UniTask InvokeAllAsync<TEventArgs>(
             this AsyncEventHandler<TEventArgs> handler,
             object sender,
             TEventArgs e)
             where TEventArgs : EventArgs
-            => Task.WhenAll(
+            => UniTask.WhenAll(
                 handler.GetHandlers()
                     .Select(handleAsync => handleAsync(sender, e)));
     }

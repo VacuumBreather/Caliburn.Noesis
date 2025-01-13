@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -22,7 +22,7 @@ namespace Caliburn.Noesis
         }
 
         /// <inheritdoc />
-        public async Task<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose, CancellationToken cancellationToken = default)
+        public async UniTask<ICloseResult<T>> ExecuteAsync(IEnumerable<T> toClose, CancellationToken cancellationToken = default)
         {
             var closeable = new List<T>();
             var closeCanOccur = true;

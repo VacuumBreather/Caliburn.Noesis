@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -13,6 +13,6 @@ namespace Caliburn.Noesis
         /// <param name="deactivate">The instance to deactivate</param>
         /// <param name="close">Indicates whether or not this instance is being closed.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task DeactivateAsync(this IDeactivate deactivate, bool close) => deactivate.DeactivateAsync(close, default);
+        public static UniTask DeactivateAsync(this IDeactivate deactivate, bool close) => deactivate.DeactivateAsync(close, default);
     }
 }

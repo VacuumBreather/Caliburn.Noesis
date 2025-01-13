@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -81,7 +81,7 @@ namespace Caliburn.Noesis
         /// <summary>
         /// Raised after activation occurs.
         /// </summary>
-        public virtual event AsyncEventHandler<ActivationEventArgs> Activated = delegate { return Task.FromResult(true); };
+        public virtual event AsyncEventHandler<ActivationEventArgs> Activated = delegate { return UniTask.FromResult(true); };
 
         /// <summary>
         /// Raised before deactivation.
@@ -91,9 +91,9 @@ namespace Caliburn.Noesis
         /// <summary>
         /// Raised after deactivation.
         /// </summary>
-        public virtual event AsyncEventHandler<DeactivationEventArgs> Deactivated = delegate { return Task.FromResult(true); };
+        public virtual event AsyncEventHandler<DeactivationEventArgs> Deactivated = delegate { return UniTask.FromResult(true); };
 
-        async Task IActivate.ActivateAsync(CancellationToken cancellationToken)
+        async UniTask IActivate.ActivateAsync(CancellationToken cancellationToken)
         {
             Log.Info("Activating async {0}.", this.DisplayName);
             if (IsActive)
@@ -120,10 +120,10 @@ namespace Caliburn.Noesis
             await (Activated?.InvokeAllAsync(this, new ActivationEventArgs
             {
                 WasInitialized = initialized
-            }) ?? Task.FromResult(true));
+            }) ?? UniTask.FromResult(true));
         }
 
-        async Task IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
+        async UniTask IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             Log.Info("Deactivating async {0}.", this.DisplayName);
             if (IsActive || IsInitialized && close)
@@ -140,7 +140,7 @@ namespace Caliburn.Noesis
                 await (Deactivated?.InvokeAllAsync(this, new DeactivationEventArgs
                 {
                     WasClosed = close
-                }) ?? Task.FromResult(true));
+                }) ?? UniTask.FromResult(true));
 
                 if (close)
                 {
@@ -154,10 +154,10 @@ namespace Caliburn.Noesis
         /// Called to check whether or not this instance can close.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-        /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
-        public virtual Task<bool> CanCloseAsync(CancellationToken cancellationToken = default)
+        /// <returns>A UniTask that represents the asynchronous operation and holds the value of the close check..</returns>
+        public virtual UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(true);
+            return UniTask.FromResult(true);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Caliburn.Noesis
         /// Also provides an opportunity to pass a dialog result to it's corresponding view.
         /// </summary>
         /// <param name="dialogResult">The dialog result.</param>
-        public virtual async Task TryCloseAsync(bool? dialogResult = null)
+        public virtual async UniTask TryCloseAsync(bool? dialogResult = null)
         {
             if (Parent is IConductor conductor)
             {
@@ -181,38 +181,38 @@ namespace Caliburn.Noesis
         /// Called when initializing.
         /// </summary>
         [Obsolete("Override OnInitializedAsync")]
-        protected virtual Task OnInitializeAsync(CancellationToken cancellationToken)
+        protected virtual UniTask OnInitializeAsync(CancellationToken cancellationToken)
         {
             Log.Info("Initializing async {0}.", this.DisplayName);
-            return Task.FromResult(true);
+            return UniTask.FromResult(true);
         }
 
         /// <summary>
         /// Called when view has been initialized
         /// </summary>
-        protected virtual Task OnInitializedAsync(CancellationToken cancellationToken)
+        protected virtual UniTask OnInitializedAsync(CancellationToken cancellationToken)
         {
-            return Task.FromResult(true);
+            return UniTask.FromResult(true);
         }
 
         /// <summary>
         /// Called when activating.
         /// </summary>
         [Obsolete("Override OnActivatedAsync")]
-        protected virtual Task OnActivateAsync(CancellationToken cancellationToken)
+        protected virtual UniTask OnActivateAsync(CancellationToken cancellationToken)
         {
-            Log.Info("Task activate");
-            return Task.FromResult(true);
+            Log.Info("UniTask activate");
+            return UniTask.FromResult(true);
         }
 
 
         /// <summary>
         /// Called when view has been activated.
         /// </summary>
-        protected virtual Task OnActivatedAsync(CancellationToken cancellationToken)
+        protected virtual UniTask OnActivatedAsync(CancellationToken cancellationToken)
         {
-            Log.Info("Task activated");
-            return Task.FromResult(true);
+            Log.Info("UniTask activated");
+            return UniTask.FromResult(true);
         }
 
         /// <summary>
@@ -220,11 +220,11 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name = "close">Indicates whether this instance will be closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual Task OnDeactivateAsync(bool close, CancellationToken cancellationToken)
+        /// <returns>A UniTask that represents the asynchronous operation.</returns>
+        protected virtual UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            Log.Info("Task deactivate");
-            return Task.FromResult(true);
+            Log.Info("UniTask deactivate");
+            return UniTask.FromResult(true);
         }
     }
 }

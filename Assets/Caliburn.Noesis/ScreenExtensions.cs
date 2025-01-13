@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -13,9 +13,9 @@ namespace Caliburn.Noesis
         /// Activates the item if it implements <see cref="IActivate"/>, otherwise does nothing.
         /// </summary>
         /// <param name="potentialActivatable">The potential activatable.</param>
-        public static Task TryActivateAsync(object potentialActivatable)
+        public static UniTask TryActivateAsync(object potentialActivatable)
         {
-            return potentialActivatable is IActivate activator ? activator.ActivateAsync(CancellationToken.None) : Task.FromResult(true);
+            return potentialActivatable is IActivate activator ? activator.ActivateAsync(CancellationToken.None) : UniTask.FromResult(true);
         }
 
         /// <summary>
@@ -24,9 +24,9 @@ namespace Caliburn.Noesis
         /// <param name="potentialActivatable">The potential activatable.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task TryActivateAsync(object potentialActivatable, CancellationToken cancellationToken)
+        public static UniTask TryActivateAsync(object potentialActivatable, CancellationToken cancellationToken)
         {
-            return potentialActivatable is IActivate activator ? activator.ActivateAsync(cancellationToken) : Task.FromResult(true);
+            return potentialActivatable is IActivate activator ? activator.ActivateAsync(cancellationToken) : UniTask.FromResult(true);
         }
 
         /// <summary>
@@ -35,9 +35,9 @@ namespace Caliburn.Noesis
         /// <param name="potentialDeactivatable">The potential deactivatable.</param>
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task TryDeactivateAsync(object potentialDeactivatable, bool close)
+        public static UniTask TryDeactivateAsync(object potentialDeactivatable, bool close)
         {
-            return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, CancellationToken.None) : Task.FromResult(true);
+            return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, CancellationToken.None) : UniTask.FromResult(true);
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace Caliburn.Noesis
         /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task TryDeactivateAsync(object potentialDeactivatable, bool close, CancellationToken cancellationToken)
+        public static UniTask TryDeactivateAsync(object potentialDeactivatable, bool close, CancellationToken cancellationToken)
         {
-            return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, cancellationToken): Task.FromResult(true);
+            return potentialDeactivatable is IDeactivate deactivator ? deactivator.DeactivateAsync(close, cancellationToken): UniTask.FromResult(true);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Caliburn.Noesis
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task CloseItemAsync(this IConductor conductor, object item)
+        public static UniTask CloseItemAsync(this IConductor conductor, object item)
         {
             return conductor.DeactivateItemAsync(item, true, CancellationToken.None);
         }
@@ -70,7 +70,7 @@ namespace Caliburn.Noesis
         /// <param name="item">The item to close.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task CloseItemAsync(this IConductor conductor, object item, CancellationToken cancellationToken)
+        public static UniTask CloseItemAsync(this IConductor conductor, object item, CancellationToken cancellationToken)
         {
             return conductor.DeactivateItemAsync(item, true, cancellationToken);
         }
@@ -81,7 +81,7 @@ namespace Caliburn.Noesis
         /// <param name="conductor">The conductor.</param>
         /// <param name="item">The item to close.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task CloseItemAsync<T>(this ConductorBase<T> conductor, T item) where T : class
+        public static UniTask CloseItemAsync<T>(this ConductorBase<T> conductor, T item) where T : class
         {
             return conductor.DeactivateItemAsync(item, true, CancellationToken.None);
         }
@@ -93,7 +93,7 @@ namespace Caliburn.Noesis
         /// <param name="item">The item to close.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public static Task CloseItemAsync<T>(this ConductorBase<T> conductor, T item, CancellationToken cancellationToken) where T : class
+        public static UniTask CloseItemAsync<T>(this ConductorBase<T> conductor, T item, CancellationToken cancellationToken) where T : class
         {
             return conductor.DeactivateItemAsync(item, true, cancellationToken);
         }
@@ -107,7 +107,7 @@ namespace Caliburn.Noesis
         {
             var childReference = new WeakReference(child);
 
-            async Task OnParentActivated(object s, ActivationEventArgs e)
+            async UniTask OnParentActivated(object s, ActivationEventArgs e)
             {
                 var activatable = (IActivate)childReference.Target;
                 if (activatable == null)
@@ -128,7 +128,7 @@ namespace Caliburn.Noesis
         {
             var childReference = new WeakReference(child);
 
-            async Task OnParentDeactivated(object s, DeactivationEventArgs e)
+            async UniTask OnParentDeactivated(object s, DeactivationEventArgs e)
             {
                 var deactivatable = (IDeactivate)childReference.Target;
                 if (deactivatable == null)

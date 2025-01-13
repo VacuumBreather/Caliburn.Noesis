@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -37,7 +37,7 @@ namespace Caliburn.Noesis
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected virtual async Task ChangeActiveItemAsync(T newItem, bool closePrevious, CancellationToken cancellationToken)
+        protected virtual async UniTask ChangeActiveItemAsync(T newItem, bool closePrevious, CancellationToken cancellationToken)
         {
             var previousItem = _activeItem;
             newItem = EnsureItem(newItem);
@@ -59,6 +59,6 @@ namespace Caliburn.Noesis
         /// <param name="newItem">The new item to activate.</param>
         /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected Task ChangeActiveItemAsync(T newItem, bool closePrevious) => ChangeActiveItemAsync(newItem, closePrevious, default);
+        protected UniTask ChangeActiveItemAsync(T newItem, bool closePrevious) => ChangeActiveItemAsync(newItem, closePrevious, default);
     }
 }

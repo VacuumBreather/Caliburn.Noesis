@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -22,7 +22,7 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name = "subscriber">The instance to subscribe for event publication.</param>
         /// <param name = "marshal">Allows the subscriber to provide a custom thread marshaller for the message subscription.</param>
-        void Subscribe(object subscriber, Func<Func<Task>, Task> marshal);
+        void Subscribe(object subscriber, Func<Func<UniTask>, UniTask> marshal);
 
         /// <summary>
         /// Unsubscribes the instance from all events.
@@ -37,6 +37,6 @@ namespace Caliburn.Noesis
         /// <param name = "marshal">Allows the publisher to provide a custom thread marshaller for the message publication.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task PublishAsync(object message, Func<Func<Task>, Task> marshal, CancellationToken cancellationToken = default);
+        UniTask PublishAsync(object message, Func<Func<UniTask>, UniTask> marshal, CancellationToken cancellationToken = default);
     }
 }

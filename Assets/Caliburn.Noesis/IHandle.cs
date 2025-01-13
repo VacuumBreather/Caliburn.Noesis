@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -16,7 +16,7 @@ namespace Caliburn.Noesis
         /// <param name = "message">The message.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>A task that represents the asynchronous coroutine.</returns>
-        Task HandleAsync(TMessage message, CancellationToken cancellationToken);
+        UniTask HandleAsync(TMessage message, CancellationToken cancellationToken);
 
     }
 }

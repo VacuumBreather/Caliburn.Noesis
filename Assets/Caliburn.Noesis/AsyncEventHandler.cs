@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -10,7 +10,7 @@ namespace Caliburn.Noesis
     /// <param name="sender">The source of the event.</param>
     /// <param name="e">An object that contains the event data.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public delegate Task AsyncEventHandler<TEventArgs>(
+    public delegate UniTask AsyncEventHandler<TEventArgs>(
         object sender,
         TEventArgs e)
         where TEventArgs : EventArgs;

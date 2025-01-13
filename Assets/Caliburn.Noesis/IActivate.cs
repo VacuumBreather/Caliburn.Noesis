@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 namespace Caliburn.Noesis
 {
@@ -19,7 +19,7 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task ActivateAsync(CancellationToken cancellationToken = default);
+        UniTask ActivateAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Raised after activation occurs.
