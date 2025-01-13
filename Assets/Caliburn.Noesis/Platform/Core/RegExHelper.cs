@@ -1,71 +1,87 @@
-﻿using System;
-
-namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis
 {
-    /// <summary>
-    ///  Helper class for encoding strings to regular expression patterns
-    /// </summary>
+    using Extensions;
+    using JetBrains.Annotations;
+    using Microsoft.Extensions.Logging;
+
+    /// <summary>Helper class for encoding strings to regular expression patterns.</summary>
+    [PublicAPI]
     public static class RegExHelper
     {
-        /// <summary>
-        /// Regular expression pattern for valid name
-        /// </summary>
-        public const string NameRegEx = @"[\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}_][\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}_]*";
+        #region Constants and Fields
 
-        /// <summary>
-        /// Regular expression pattern for subnamespace (including dot)
-        /// </summary>
-        public const string SubNamespaceRegEx = NameRegEx + @"\.";
+        /// <summary>The regular expression pattern for a valid name.</summary>
+        public const string NameRegEx =
+            @"[\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}_][\p{Lu}\p{Ll}\p{Lt}\p{Lm}\p{Lo}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}_]*";
 
-        /// <summary>
-        /// Regular expression pattern for namespace or namespace fragment
-        /// </summary>
+        /// <summary>The regular expression pattern for a namespace or namespace fragment.</summary>
         public const string NamespaceRegEx = "(" + SubNamespaceRegEx + ")*";
 
-        /// <summary>
-        /// Creates a named capture group with the specified regular expression 
-        /// </summary>
-        /// <param name="groupName">Name of capture group to create</param>
-        /// <param name="regEx">Regular expression pattern to capture</param>
-        /// <returns>Regular expression capture group with the specified group name</returns>
+        /// <summary>The regular expression pattern for a sub-namespace (including the dot).</summary>
+        public const string SubNamespaceRegEx = NameRegEx + @"\.";
+
+        #endregion
+
+        #region Private Properties
+
+        private static ILogger Logger => LogManager.FrameworkLogger;
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>Creates a named capture group with the specified regular expression.</summary>
+        /// <param name="groupName">The name of the capture group to create.</param>
+        /// <param name="regEx">The regular expression pattern to capture.</param>
+        /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetCaptureGroup(string groupName, string regEx)
         {
-            return String.Concat(@"(?<", groupName, ">", regEx, ")");
+            using var _ = Logger.GetMethodTracer(groupName, regEx);
+
+            return string.Concat(
+                @"(?<",
+                groupName,
+                ">",
+                regEx,
+                ")");
         }
 
-        /// <summary>
-        /// Converts a namespace (including wildcards) to a regular expression string
-        /// </summary>
-        /// <param name="srcNamespace">Source namespace to convert to regular expression</param>
-        /// <returns>Namespace converted to a regular expression</returns>
-        public static string NamespaceToRegEx(string srcNamespace)
-        {
-            //Need to escape the "." as it's a special character in regular expression syntax
-            var nsencoded = srcNamespace.Replace(".", @"\.");
-
-            //Replace "*" wildcard with regular expression syntax
-            nsencoded = nsencoded.Replace(@"*\.", NamespaceRegEx);
-            return nsencoded;
-        }
-
-        /// <summary>
-        /// Creates a capture group for a valid name regular expression pattern
-        /// </summary>
-        /// <param name="groupName">Name of capture group to create</param>
-        /// <returns>Regular expression capture group with the specified group name</returns>
+        /// <summary>Creates a capture group for a valid name regular expression pattern.</summary>
+        /// <param name="groupName">The name of the capture group to create.</param>
+        /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetNameCaptureGroup(string groupName)
         {
+            using var _ = Logger.GetMethodTracer(groupName);
+
             return GetCaptureGroup(groupName, NameRegEx);
         }
 
-        /// <summary>
-        /// Creates a capture group for a namespace regular expression pattern
-        /// </summary>
-        /// <param name="groupName">Name of capture group to create</param>
-        /// <returns>Regular expression capture group with the specified group name</returns>
+        /// <summary>Creates a capture group for a namespace regular expression pattern.</summary>
+        /// <param name="groupName">The name of capture group to create.</param>
+        /// <returns>A regular expression capture group with the specified group name.</returns>
         public static string GetNamespaceCaptureGroup(string groupName)
         {
+            using var _ = Logger.GetMethodTracer(groupName);
+
             return GetCaptureGroup(groupName, NamespaceRegEx);
         }
+
+        /// <summary>Converts a namespace (including wildcards) to a regular expression string.</summary>
+        /// <param name="sourceNamespace">Source namespace to convert to regular expression.</param>
+        /// <returns>A namespace converted to a regular expression.</returns>
+        public static string NamespaceToRegEx(string sourceNamespace)
+        {
+            using var _ = Logger.GetMethodTracer(sourceNamespace);
+
+            // We need to escape the "." as it's a special character in regular expression syntax.
+            var encodedNamespace = sourceNamespace.Replace(".", @"\.");
+
+            // We replace the "*" wildcard with regular expression syntax.
+            encodedNamespace = encodedNamespace.Replace(@"*\.", NamespaceRegEx);
+
+            return encodedNamespace;
+        }
+
+        #endregion
     }
 }
