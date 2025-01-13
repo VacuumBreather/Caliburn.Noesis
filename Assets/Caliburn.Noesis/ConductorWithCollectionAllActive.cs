@@ -80,7 +80,7 @@ namespace Caliburn.Noesis
                 /// <returns>A task that represents the asynchronous operation.</returns>
                 protected override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
                 {
-                    foreach(var deactivate in _items.OfType<IDeactivate>())
+                    foreach (var deactivate in _items.OfType<IDeactivate>())
                     {
                         await deactivate.DeactivateAsync(close, cancellationToken);
                     }

@@ -61,7 +61,7 @@ namespace Caliburn.Noesis
         {
             var viewReference = new WeakReference(nonGeneratedView);
             AsyncEventHandler<ActivationEventArgs> handler = null;
-            handler = (s, e) =>
+            handler = (s, e, _) =>
             {
                 ((IActivate)s).Activated -= handler;
                 var view = viewReference.Target;

@@ -1,4 +1,4 @@
-namespace Caliburn.Noesis
+﻿namespace Caliburn.Noesis
 {
     /// <summary>
     /// Denotes a node within a parent/child hierarchy.

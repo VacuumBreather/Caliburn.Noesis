@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
@@ -56,16 +56,6 @@ namespace Caliburn.Noesis
                     OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
                 }
             }
-        }
-
-        /// <summary>
-        /// Notifies subscribers of the property change.
-        /// </summary>
-        /// <typeparam name = "TProperty">The type of the property.</typeparam>
-        /// <param name = "property">The property expression.</param>
-        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> property)
-        {
-            NotifyOfPropertyChange(property.GetMemberInfo().Name);
         }
 
         /// <summary>

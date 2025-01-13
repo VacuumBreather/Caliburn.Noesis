@@ -107,13 +107,13 @@ namespace Caliburn.Noesis
         {
             var childReference = new WeakReference(child);
 
-            async UniTask OnParentActivated(object s, ActivationEventArgs e)
+            async UniTask OnParentActivated(object s, ActivationEventArgs e, CancellationToken cancellationToken)
             {
                 var activatable = (IActivate)childReference.Target;
                 if (activatable == null)
                     ((IActivate)s).Activated -= OnParentActivated;
                 else
-                    await activatable.ActivateAsync(CancellationToken.None);
+                    await activatable.ActivateAsync(cancellationToken);
             }
 
             parent.Activated += OnParentActivated;
@@ -128,13 +128,13 @@ namespace Caliburn.Noesis
         {
             var childReference = new WeakReference(child);
 
-            async UniTask OnParentDeactivated(object s, DeactivationEventArgs e)
+            async UniTask OnParentDeactivated(object s, DeactivationEventArgs e, CancellationToken cancellationToken)
             {
                 var deactivatable = (IDeactivate)childReference.Target;
                 if (deactivatable == null)
                     ((IDeactivate)s).Deactivated -= OnParentDeactivated;
                 else
-                    await deactivatable.DeactivateAsync(e.WasClosed, CancellationToken.None);
+                    await deactivatable.DeactivateAsync(e.WasClosed, cancellationToken);
             }
 
             parent.Deactivated += OnParentDeactivated;

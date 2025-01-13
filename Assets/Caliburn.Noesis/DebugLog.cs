@@ -1,7 +1,10 @@
-﻿#define DEBUG
-
-using System;
+﻿using System;
+#if UNITY_5_5_OR_NEWER
+using UnityEngine;
+#else
+#define DEBUG
 using System.Diagnostics;
+#endif
 
 namespace Caliburn.Noesis
 {
@@ -28,7 +31,11 @@ namespace Caliburn.Noesis
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Info(string format, params object[] args)
         {
+#if UNITY_5_5_OR_NEWER
+            Debug.Log($"[{typeName}] INFO: {string.Format(format, args)}");
+#else
             Trace.WriteLine($"[{typeName}] INFO: {string.Format(format, args)}");
+#endif
         }
 
         /// <summary>
@@ -38,7 +45,11 @@ namespace Caliburn.Noesis
         /// <param name="args">Parameters to be injected into the formatted message.</param>
         public void Warn(string format, params object[] args)
         {
+#if UNITY_5_5_OR_NEWER
+            Debug.LogWarning($"[{typeName}] WARN: {string.Format(format, args)}");
+#else
             Trace.WriteLine($"[{typeName}] WARN: {string.Format(format, args)}");
+#endif
         }
 
         /// <summary>
@@ -47,7 +58,11 @@ namespace Caliburn.Noesis
         /// <param name="exception">The exception.</param>
         public void Error(Exception exception)
         {
+#if UNITY_5_5_OR_NEWER
+            Debug.LogError($"[{typeName}] ERROR: {exception}" );
+#else
             Trace.WriteLine($"[{typeName}] ERROR: {exception}" );
+#endif
         }
     }
 }

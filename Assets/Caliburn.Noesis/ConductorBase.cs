@@ -10,7 +10,7 @@ namespace Caliburn.Noesis
     /// A base class for various implementations of <see cref="IConductor"/>.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
-    public abstract class ConductorBase<T> : Screen, IConductor, IParent<T> where T : class
+    public abstract class ConductorBase<T> : Screen, IConductor<T>, IParent<T> where T : class
     {
         private ICloseStrategy<T> _closeStrategy;
 
@@ -24,11 +24,13 @@ namespace Caliburn.Noesis
             set => _closeStrategy = value;
         }
 
+        /// <inheritdoc />
         UniTask IConductor.DeactivateItemAsync(object item, bool close, CancellationToken cancellationToken)
         {
             return DeactivateItemAsync((T)item, close, cancellationToken);
         }
 
+        /// <inheritdoc />
         IEnumerable IParent.GetChildren()
         {
             return GetChildren();
@@ -45,6 +47,7 @@ namespace Caliburn.Noesis
         /// <returns>The collection of children.</returns>
         public abstract IEnumerable<T> GetChildren();
 
+        /// <inheritdoc />
         UniTask IConductor.ActivateItemAsync(object item, CancellationToken cancellationToken)
         {
             return ActivateItemAsync((T)item, cancellationToken);
@@ -83,7 +86,7 @@ namespace Caliburn.Noesis
                 Success = success
             });
         }
-
+        
         /// <summary>
         /// Ensures that an item is ready to be activated.
         /// </summary>

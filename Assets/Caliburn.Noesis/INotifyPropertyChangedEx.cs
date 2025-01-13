@@ -1,5 +1,6 @@
-﻿using System.ComponentModel;
-
+﻿using System;
+using System.ComponentModel;
+    
 namespace Caliburn.Noesis
 {
     /// <summary>

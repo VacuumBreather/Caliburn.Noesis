@@ -61,7 +61,7 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default )
+        public override async UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             var closeResult = await CloseStrategy.ExecuteAsync(new[] { ActiveItem }, cancellationToken);
 

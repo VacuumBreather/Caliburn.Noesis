@@ -24,7 +24,7 @@ namespace Caliburn.Noesis
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        void BeginOnUIThread(System.Action action);
+        void BeginOnUIThread(Action action);
 
         /// <summary>
         ///   Executes the action on the UI thread asynchronously.
@@ -36,7 +36,7 @@ namespace Caliburn.Noesis
         ///   Executes the action on the UI thread.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        void OnUIThread(System.Action action);
+        void OnUIThread(Action action);
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.

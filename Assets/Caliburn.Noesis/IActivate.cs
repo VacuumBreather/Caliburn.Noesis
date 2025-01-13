@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-
+    
 namespace Caliburn.Noesis
 {
     /// <summary>

@@ -22,7 +22,7 @@ namespace Caliburn.Noesis
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(System.Action action)
+        public virtual void BeginOnUIThread(Action action)
         {
             action();
         }
@@ -41,7 +41,7 @@ namespace Caliburn.Noesis
         /// Executes the action on the UI thread.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void OnUIThread(System.Action action)
+        public virtual void OnUIThread(Action action)
         {
             action();
         }

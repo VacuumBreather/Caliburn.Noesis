@@ -10,7 +10,7 @@ namespace Caliburn.Noesis
     /// A base collection class that supports automatic UI thread marshalling.
     /// </summary>
     /// <typeparam name="T">The type of elements contained in the collection.</typeparam>
-    public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T>
+    public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T>, IReadOnlyBindableCollection<T>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref = "BindableCollection&lt;T&gt;" /> class.
@@ -29,7 +29,7 @@ namespace Caliburn.Noesis
         {
             IsNotifying = true;
         }
-
+        
         /// <summary>
         /// Enables/Disables property change notification.
         /// </summary>
@@ -54,26 +54,18 @@ namespace Caliburn.Noesis
             }
         }
 
-        /// <summary>
+       /// <summary>
         /// Raises a change notification indicating that all bindings should be refreshed.
         /// </summary>
         public void Refresh()
         {
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(() =>
-                {
-                    OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-                    OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-                });
-            }
-            else
+
+            OnUIThread(() =>
             {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
+            });
         }
 
         /// <summary>
@@ -83,14 +75,7 @@ namespace Caliburn.Noesis
         /// <param name = "item">The item to be inserted.</param>
         protected override sealed void InsertItem(int index, T item)
         {
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(() => InsertItemBase(index, item));
-            }
-            else
-            {
-                InsertItemBase(index, item);
-            }
+            OnUIThread(() => InsertItemBase(index, item));
         }
 
         /// <summary>
@@ -113,14 +98,7 @@ namespace Caliburn.Noesis
         /// <param name = "item">The item to set.</param>
         protected override sealed void SetItem(int index, T item)
         {
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(() => SetItemBase(index, item));
-            }
-            else
-            {
-                SetItemBase(index, item);
-            }
+            OnUIThread(() => SetItemBase(index, item));
         }
 
         /// <summary>
@@ -142,14 +120,7 @@ namespace Caliburn.Noesis
         /// <param name = "index">The position used to identify the item to remove.</param>
         protected override sealed void RemoveItem(int index)
         {
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(() => RemoveItemBase(index));
-            }
-            else
-            {
-                RemoveItemBase(index);
-            }
+            OnUIThread(() => RemoveItemBase(index));
         }
 
         /// <summary>
@@ -208,7 +179,7 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>
-        /// Adds the range.
+        /// Adds a range of items.
         /// </summary>
         /// <param name = "items">The items.</param>
         public virtual void AddRange(IEnumerable<T> items)
@@ -230,18 +201,11 @@ namespace Caliburn.Noesis
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(AddRange);
-            }
-            else
-            {
-                AddRange();
-            }
+            OnUIThread(AddRange);
         }
 
         /// <summary>
-        /// Removes the range.
+        /// Removes a range of items.
         /// </summary>
         /// <param name = "items">The items.</param>
         public virtual void RemoveRange(IEnumerable<T> items)
@@ -253,6 +217,7 @@ namespace Caliburn.Noesis
                 foreach (var item in items)
                 {
                     var index = IndexOf(item);
+
                     if (index >= 0)
                     {
                         RemoveItemBase(index);
@@ -265,21 +230,13 @@ namespace Caliburn.Noesis
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
-            {
-                OnUIThread(RemoveRange);
-            }
-            else
-            {
-                RemoveRange();
-            }
+            OnUIThread(RemoveRange);
         }
-
+        
         /// <summary>
         /// Executes the given action on the UI thread
         /// </summary>
         /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
-        /// <param name="action"></param>
         protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
     }
 }

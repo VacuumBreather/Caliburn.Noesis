@@ -2,7 +2,7 @@
 using System.Collections.Specialized;
 
 namespace Caliburn.Noesis
-{   
+{
     /// <summary>
     /// Represents a collection that is observable.
     /// </summary>
@@ -10,13 +10,13 @@ namespace Caliburn.Noesis
     public interface IObservableCollection<T> : IList<T>, INotifyPropertyChangedEx, INotifyCollectionChanged
     {
         /// <summary>
-        ///   Adds the range.
+        ///   Adds a range of items.
         /// </summary>
         /// <param name = "items">The items.</param>
         void AddRange(IEnumerable<T> items);
 
         /// <summary>
-        ///   Removes the range.
+        ///   Removes a range of items.
         /// </summary>
         /// <param name = "items">The items.</param>
         void RemoveRange(IEnumerable<T> items);

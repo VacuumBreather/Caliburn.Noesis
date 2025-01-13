@@ -103,17 +103,11 @@ namespace Caliburn.Noesis
 
             if (!IsInitialized)
             {
-#pragma warning disable CS0618 // Type or member is obsolete
-                await OnInitializeAsync(cancellationToken);
-#pragma warning restore CS0618 // Type or member is obsolete
                 IsInitialized = initialized = true;
                 await OnInitializedAsync(cancellationToken);
             }
 
             Log.Info("Activating {0}.", this);
-#pragma warning disable CS0618 // Type or member is obsolete
-            await OnActivateAsync(cancellationToken);
-#pragma warning restore CS0618 // Type or member is obsolete
             IsActive = true;
             await OnActivatedAsync(cancellationToken);
 
@@ -154,7 +148,7 @@ namespace Caliburn.Noesis
         /// Called to check whether or not this instance can close.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-        /// <returns>A UniTask that represents the asynchronous operation and holds the value of the close check..</returns>
+        /// <returns>A task that represents the asynchronous operation and holds the value of the close check..</returns>
         public virtual UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
             return UniTask.FromResult(true);
@@ -178,30 +172,10 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>
-        /// Called when initializing.
-        /// </summary>
-        [Obsolete("Override OnInitializedAsync")]
-        protected virtual UniTask OnInitializeAsync(CancellationToken cancellationToken)
-        {
-            Log.Info("Initializing async {0}.", this.DisplayName);
-            return UniTask.FromResult(true);
-        }
-
-        /// <summary>
         /// Called when view has been initialized
         /// </summary>
         protected virtual UniTask OnInitializedAsync(CancellationToken cancellationToken)
         {
-            return UniTask.FromResult(true);
-        }
-
-        /// <summary>
-        /// Called when activating.
-        /// </summary>
-        [Obsolete("Override OnActivatedAsync")]
-        protected virtual UniTask OnActivateAsync(CancellationToken cancellationToken)
-        {
-            Log.Info("UniTask activate");
             return UniTask.FromResult(true);
         }
 
@@ -220,7 +194,7 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name = "close">Indicates whether this instance will be closed.</param>
         /// <param name="cancellationToken">The cancellation token to cancel operation.</param>
-        /// <returns>A UniTask that represents the asynchronous operation.</returns>
+        /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             Log.Info("UniTask deactivate");
