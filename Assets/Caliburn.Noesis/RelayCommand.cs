@@ -14,14 +14,14 @@ namespace Caliburn.Noesis
         public static RelayCommand DoNothing = new RelayCommand(() => { });
 
         private readonly Func<bool> canExecute;
-        private readonly Action execute;
+        private readonly System.Action execute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RelayCommand" /> class.
         /// </summary>
         /// <param name="execute">The action to perform when the command is executed.</param>
         /// <param name="canExecute">(Optional) The predicate which checks if the command can be executed.</param>
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        public RelayCommand(System.Action execute, Func<bool> canExecute = null)
         {
             this.execute = execute;
             this.canExecute = canExecute;

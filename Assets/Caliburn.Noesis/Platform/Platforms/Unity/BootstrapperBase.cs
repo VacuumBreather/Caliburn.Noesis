@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine.Serialization;
 #if UNITY_5_5_OR_NEWER
-using System.Collections.Generic;
 using global::Noesis;
 using UnityEngine;
 
@@ -20,9 +22,9 @@ namespace Caliburn.Noesis
     /// </summary>
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class BootstrapperBase<T> : MonoBehaviour, IServiceProvider
+    public abstract class BootstrapperBase<T> : MonoBehaviour, IServiceProviderEx
 #else
-    public abstract class BootstrapperBase<T> : IServiceProvider
+    public abstract class BootstrapperBase<T> : IServiceProviderEx
 #endif
         where T : Screen
     {
@@ -35,74 +37,27 @@ namespace Caliburn.Noesis
         private NoesisView noesisView;
         
         [SerializeField]
-        private MonoBehaviour shellViewModel;
-        
-        [SerializeField]
         private List<NoesisXaml> xamls;
 #endif
 
+        public Screen ShellViewModel { get; set; }
+
 #if UNITY_5_5_OR_NEWER
-        private MonoBehaviour ShellViewModel => shellViewModel;
-        private FrameworkElement ShellView => noesisView.Content;
+        public FrameworkElement ShellView => noesisView.Content;
 #else
-        private PropertyChangedBase ShellViewModel { get; }
-        private FrameworkElement ShellView { get; }
+        public FrameworkElement ShellView => Application.MainWindow;
 #endif
 
 #if !UNITY_5_5_OR_NEWER
         /// <summary>
-        /// Initializes a new instance of the <see cref="BootstrapperBase{T}" /> class.
+        /// The application.
         /// </summary>
-        protected BootstrapperBase(PropertyChangedBase shellViewModel, FrameworkElement shellView)
-        {
-            ShellViewModel = shellViewModel;
-            ShellView = shellView;
-            
-            Application.Current.Startup += async (_, __) =>
-                {
-                    await OnEnableAsync(default);
-                    await StartAsync();
-                };
-            Application.Current.Activated += async (_, __) =>
-                {
-                    await OnEnableAsync(default);
-                };
-            Application.Current.Deactivated += async (_, __) =>
-                {
-                    await OnDisableAsync(default);
-                };
-        }
+        protected Application Application { get; set; }
 #endif
 
         private SimpleContainer IoCContainer { get; set; }
 
         private ViewLocator ViewLocator { get; set; }
-
-        /// <inheritdoc />
-        /// <remarks>This method must not throw exceptions.</remarks>
-        public virtual object GetService(Type serviceType)
-        {
-            try
-            {
-                return IoCContainer.GetInstance(serviceType, null);
-            }
-            catch (Exception serviceLookupException)
-            {
-                Log.Error(serviceLookupException);
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the service object of the specified type.
-        /// </summary>
-        /// <typeparam name="TService">The type of the service.</typeparam>
-        /// <returns>A service object of type serviceType.<br />-or-<br /><c>null</c> if there is no service object of type serviceType.</returns>
-        public TService GetService<TService>()
-        {
-            return (TService)GetService(typeof(TService));
-        }
 
         /// <inheritdoc />
         public override string ToString()
@@ -116,11 +71,6 @@ namespace Caliburn.Noesis
         /// <remarks>This is also called when the bootstrapper is destroyed but then it is not guaranteed to finish if the shutdown process is a long running task.</remarks>
         public async UniTask ShutdownAsync()
         {
-            if (!_isInitialized)
-            {
-                return;
-            }
-
             try
             {
                 Log.Info("Shutting down...");
@@ -137,7 +87,9 @@ namespace Caliburn.Noesis
             finally
             {
                 _isInitialized = false;
-#if !UNITY_5_5_OR_NEWER
+#if UNITY_5_5_OR_NEWER
+                Application.Quit();
+#else
                 Application.Current.Shutdown();
 #endif
             }
@@ -152,52 +104,75 @@ namespace Caliburn.Noesis
         ///     registered here at a minimum:
         ///     <list type="bullet">
         ///         <item>An <see cref="AssemblySource" /> instance, using singleton lifetime in this scope.</item>
-        ///         <item>A <see cref="ViewLocator" />, using singleton lifetime in this scope</item>
+        ///         <item>The <see cref="ViewLocator" />, using singleton lifetime in this scope</item>
         ///         <item>
-        ///             An <see cref="IServiceProvider" /> implementation, using singleton lifetime in this
+        ///             A <see cref="IServiceProviderEx" /> implementation, using singleton lifetime in this
         ///             scope. This is usually the bootstrapper itself.
-        ///         </item>
-        ///         <item>
-        ///             Optionally an <see cref="ILog" />, using singleton lifetime in this scope, if you
-        ///             want to provide your own to the framework
         ///         </item>
         ///         <item>All relevant views, view-models and services</item>
         ///     </list>
         /// </remarks>
-        protected virtual void ConfigureIoCContainer()
+        protected virtual void Configure(AssemblySource assemblySource, IEnumerable<Type> extractedTypes)
         {
             IoCContainer = new SimpleContainer();
 
-            var assemblySource = new AssemblySource();
-            assemblySource.Add(GetType().Assembly);
-
+            IoCContainer.Instance<IServiceProviderEx>(this);
             IoCContainer.Instance(assemblySource);
             IoCContainer.Singleton<ViewLocator, ViewLocator>();
 
-#if UNITY_5_5_OR_NEWER
-            var logger = new DebugLogger(LogManager.FrameworkLogger, this);
-#else
-            var logger = new DebugLogger(LogManager.FrameworkLogger);
-#endif
-
-            IoCContainer.Instance<ILog>(logger);
-
-            foreach (var viewType in assemblySource.ViewTypes)
-            {
-                IoCContainer.RegisterPerRequest(viewType, null, viewType);
-            }
-
-            foreach (var type in assemblySource.ViewModelTypes)
+            foreach (Type type in extractedTypes)
             {
                 IoCContainer.RegisterPerRequest(type, null, type);
-
-                foreach (var @interface in type.GetInterfaces())
-                {
-                    IoCContainer.RegisterPerRequest(@interface, null, type);
-                }
             }
+        }
 
-            LogManager.GetLog = _ => logger;
+        /// <summary>
+        /// Override to tell the framework where to find assemblies to inspect for views, etc.
+        /// </summary>
+        /// <returns>A list of assemblies to inspect.</returns>
+        protected virtual IEnumerable<Assembly> SelectAssemblies()
+        {
+            return new[] { GetType().Assembly };
+        }
+
+        /// <summary>
+        /// Override this to provide an IoC specific implementation.
+        /// </summary>
+        /// <param name="service">The service to locate.</param>
+        /// <param name="key">The key to locate.</param>
+        /// <returns>The located service.</returns>
+        public virtual object GetInstance(Type service, string key)
+        {
+            return IoCContainer.GetInstance(service, key);
+        }
+
+        /// <summary>
+        /// Override this to provide an IoC specific implementation.
+        /// </summary>
+        /// <param name="key">The key to locate.</param>
+        /// <returns>The located service.</returns>
+        public virtual TService GetInstance<TService>(string key)
+        {
+            return IoCContainer.GetInstance<TService>(key);
+        }
+
+        /// <summary>
+        /// Override this to provide an IoC specific implementation
+        /// </summary>
+        /// <param name="service">The service to locate.</param>
+        /// <returns>The located services.</returns>
+        public virtual IEnumerable<object> GetAllInstances(Type service)
+        {
+            return new[] { IoCContainer.GetInstance(service, null) };
+        }
+
+        /// <summary>
+        /// Override this to provide an IoC specific implementation.
+        /// </summary>
+        /// <param name="instance">The instance to perform injection on.</param>
+        public virtual void BuildUp(object instance)
+        {
+            IoCContainer.BuildUp(instance);
         }
 
         /// <summary>
@@ -295,7 +270,7 @@ namespace Caliburn.Noesis
 
         private void AddServiceProviderResource(ResourceDictionary resourceDictionary)
         {
-            resourceDictionary[nameof(IServiceProvider)] = this;
+            resourceDictionary[nameof(IServiceProviderEx)] = this;
         }
 
         private void Initialize()
@@ -305,11 +280,55 @@ namespace Caliburn.Noesis
                 return;
             }
 
-            ConfigureIoCContainer();
+            if (PlatformProvider.Current is not XamlPlatformProvider)
+            {
+                PlatformProvider.Current = new XamlPlatformProvider();
+            }
+
+            var assemblySourceCache = new AssemblySourceCache();
+            var assemblySource = new AssemblySource();
+
+            List<Type> extractedTypes = new List<Type>();
+
+            var baseExtractTypes = assemblySourceCache.ExtractTypes;
+
+            assemblySourceCache.ExtractTypes = assembly =>
+            {
+                var baseTypes = baseExtractTypes(assembly);
+                var elementTypes = assembly.GetExportedTypes()
+                    .Where(t => typeof(UIElement).IsAssignableFrom(t));
+
+                var types = baseTypes.Union(elementTypes).ToList();
+                
+                extractedTypes.Clear();
+                extractedTypes.AddRange(types);
+
+                return types;
+            };
+
+            assemblySource.Refresh();
+
+            if (Execute.InDesignMode)
+            {
+                assemblySource.Clear();
+                assemblySource.AddRange(SelectAssemblies());
+            }
+            else
+            {
+                assemblySourceCache.Install(assemblySource);
+                assemblySource.AddRange(SelectAssemblies());
+
+#if !UNITY_5_5_OR_NEWER
+                Application = Application.Current;
+                PrepareApplication();
+#endif
+            }
+
+            Configure(assemblySource, extractedTypes);
 
             Log.Info("Initializing...");
 
-            ViewLocator = GetService<ViewLocator>();
+            ViewLocator = GetInstance<ViewLocator>(null);
 
             if (ViewLocator is null)
             {
@@ -325,7 +344,10 @@ namespace Caliburn.Noesis
             ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
             ConfigureViewLocator(ViewLocator);
 
-            Log.Info("Resolving window manager");
+            foreach (NoesisXaml xaml in xamls)
+            {
+                xaml.Load();
+            }
 
             var wasOnInitializeSuccessful = OnInitialize();
 
@@ -340,6 +362,28 @@ namespace Caliburn.Noesis
             _isInitialized = true;
             Log.Info("Initialization complete");
         }
+
+#if !UNITY_5_5_OR_NEWER
+        /// <summary>
+        /// Provides an opportunity to hook into the application object.
+        /// </summary>
+        protected virtual void PrepareApplication()
+        {
+            Application.Startup += async (_, __) =>
+            {
+                await OnEnableAsync(default);
+                await StartAsync();
+            };
+            Application.Activated += async (_, __) =>
+            {
+                await OnEnableAsync(default);
+            };
+            Application.Deactivated += async (_, __) =>
+            {
+                await OnDisableAsync(default);
+            };
+        }
+#endif
 
         private async UniTask OnDisableAsync(CancellationToken cancellationToken)
         {
@@ -372,21 +416,18 @@ namespace Caliburn.Noesis
 
             Log.Info("Registering data templates");
 
-            DataTemplateManager.RegisterDataTemplates(
-                ViewLocator,
+            DataTemplateManager.RegisterDataTemplate(
+                typeof(PropertyChangedBase),
                 dictionary,
                 template => AddServiceProviderResource(template.Resources));
 
             AddServiceProviderResource(dictionary);
-
+            
+            ShellViewModel = GetInstance<T>(null);
 #if UNITY_5_5_OR_NEWER
-            noesisView.Content.DataContext = ShellViewModel;
+            noesisView.Content.DataContext = this;
 #else
-            ShellView.DataContext = ShellViewModel;
-            var window = new Window { Width = 1280, Height = 720 };
-            window.Show();
-            window.Closing += OnWindowClosing;
-            window.Content = ShellView;
+            Application.MainWindow.DataContext = this;
 #endif
 
             await OnStartup();

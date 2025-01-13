@@ -24,7 +24,7 @@ namespace Caliburn.Noesis
         ///   Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        void BeginOnUIThread(Action action);
+        void BeginOnUIThread(System.Action action);
 
         /// <summary>
         ///   Executes the action on the UI thread asynchronously.
@@ -36,7 +36,7 @@ namespace Caliburn.Noesis
         ///   Executes the action on the UI thread.
         /// </summary>
         /// <param name = "action">The action to execute.</param>
-        void OnUIThread(Action action);
+        void OnUIThread(System.Action action);
 
         /// <summary>
         /// Used to retrieve the root, non-framework-created view.
@@ -63,14 +63,5 @@ namespace Caliburn.Noesis
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
         void ExecuteOnLayoutUpdated(object view, Action<object> handler);
-
-        /// <summary>
-        /// Get the close action for the specified view model.
-        /// </summary>
-        /// <param name="viewModel">The view model to close.</param>
-        /// <param name="views">The associated views.</param>
-        /// <param name="dialogResult">The dialog result.</param>
-        /// <returns>An <see cref="Func{T, TResult}"/> to close the view model.</returns>
-        Func<CancellationToken, UniTask> GetViewCloseAction(object viewModel, ICollection<object> views, bool? dialogResult);
     }
 }
