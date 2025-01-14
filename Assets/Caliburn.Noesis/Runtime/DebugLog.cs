@@ -2,7 +2,6 @@
 #if UNITY_5_5_OR_NEWER
 using UnityEngine;
 #else
-#define DEBUG
 using System.Diagnostics;
 #endif
 

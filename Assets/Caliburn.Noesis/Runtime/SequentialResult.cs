@@ -6,7 +6,7 @@ namespace Caliburn.Noesis
     /// <summary>
     ///   An implementation of <see cref = "IResult" /> that enables sequential execution of multiple results.
     /// </summary>
-    internal class SequentialResult : IResult
+    public class SequentialResult : IResult
     {
         private readonly IEnumerator<IResult> enumerator;
         private CoroutineExecutionContext context;

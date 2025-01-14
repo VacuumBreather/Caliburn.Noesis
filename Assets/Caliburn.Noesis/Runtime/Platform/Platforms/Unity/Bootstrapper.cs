@@ -3,15 +3,17 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Caliburn.Noesis.Samples.EarlySample;
+
 #if UNITY_5_5_OR_NEWER
+using System.Runtime.CompilerServices;
 using global::Noesis;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 #else
-using System.ComponentModel;
 using System.Windows;
 #endif
 
@@ -35,30 +37,23 @@ namespace Caliburn.Noesis
 
 #if UNITY_5_5_OR_NEWER
         [SerializeField]
-        private NoesisView noesisView;
+        private List<NoesisXaml> preloadXamls;
+#endif
+
+        public Screen ShellViewModel { get; private set; }
         
-        [SerializeField]
-        private List<NoesisXaml> xamls;
-#endif
-
-        public Screen ShellViewModel { get; set; }
-
-#if UNITY_5_5_OR_NEWER
-        public FrameworkElement ShellView => noesisView.Content;
-#else
-        public FrameworkElement ShellView => Application.MainWindow;
-#endif
-
-#if !UNITY_5_5_OR_NEWER
-        /// <summary>
-        /// The application.
-        /// </summary>
-        protected Application Application { get; set; }
-#endif
+        public FrameworkElement ShellView { get; private set; }
 
         private SimpleContainer IoCContainer { get; set; }
 
         private ViewLocator ViewLocator { get; set; }
+
+#if !UNITY_5_5_OR_NEWER
+        protected Bootstrapper()
+        {
+            PrepareApplication();
+        }
+#endif
 
         /// <inheritdoc />
         public override string ToString()
@@ -67,9 +62,9 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>
-        /// Shuts the UI handled by this <see cref="BootstrapperBase{T}" /> down.
+        /// Shuts the UI handled by this <see cref="Bootstrapper{T}" /> down.
         /// </summary>
-        /// <remarks>This is also called when the bootstrapper is destroyed but then it is not guaranteed to finish if the shutdown process is a long running task.</remarks>
+        /// <remarks>This is also called when the bootstrapper is destroyed, but then it is not guaranteed to finish if the shutdown process is a long running task.</remarks>
         public async UniTask ShutdownAsync()
         {
             try
@@ -101,7 +96,7 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
-        ///     <see cref="GetService" /> to let the framework use it. <br /> The following types need to be
+        ///     <see cref="IServiceProviderEx" /> implementation to let the framework use it. <br /> The following types need to be
         ///     registered here at a minimum:
         ///     <list type="bullet">
         ///         <item>An <see cref="AssemblySource" /> instance, using singleton lifetime in this scope.</item>
@@ -232,13 +227,22 @@ namespace Caliburn.Noesis
             }
         }
 #endif
-
-#if UNITY_5_5_OR_NEWER
-        private void Awake()
+        private FrameworkElement EnsureShellView()
         {
-            noesisView = GetComponent<NoesisView>();
+#if UNITY_5_5_OR_NEWER
+            return GetComponent<NoesisView>().Content;
+#else
+            var window = new Window { Width = 1280, Height = 720 };
+            window.Show();
+            window.Closing += OnWindowClosing;
+            var root = new Root();
+            window.Content = root;
+
+            return root;
+#endif
         }
 
+#if UNITY_5_5_OR_NEWER
         // ReSharper disable once Unity.IncorrectMethodSignature
         private async UniTaskVoid OnDestroy()
         {
@@ -284,7 +288,7 @@ namespace Caliburn.Noesis
             var assemblySourceCache = new AssemblySourceCache();
             var assemblySource = new AssemblySource();
 
-            List<Type> extractedTypes = new List<Type>();
+            List<Type> extractedTypes = new();
 
             var baseExtractTypes = assemblySourceCache.ExtractTypes;
 
@@ -313,11 +317,6 @@ namespace Caliburn.Noesis
             {
                 assemblySourceCache.Install(assemblySource);
                 assemblySource.AddRange(SelectAssemblies());
-
-#if !UNITY_5_5_OR_NEWER
-                Application = Application.Current;
-                PrepareApplication();
-#endif
             }
 
             Configure(assemblySource, extractedTypes);
@@ -340,10 +339,12 @@ namespace Caliburn.Noesis
             ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
             ConfigureViewLocator(ViewLocator);
 
-            foreach (NoesisXaml xaml in xamls)
+#if UNITY_5_5_OR_NEWER
+            foreach (NoesisXaml xaml in preloadXamls)
             {
                 xaml.Load();
             }
+#endif
 
             var wasOnInitializeSuccessful = OnInitialize();
 
@@ -365,16 +366,16 @@ namespace Caliburn.Noesis
         /// </summary>
         protected virtual void PrepareApplication()
         {
-            Application.Startup += async (_, __) =>
+            Application.Current.Startup += async (_, __) =>
             {
                 await OnEnableAsync(default);
                 await StartAsync();
             };
-            Application.Activated += async (_, __) =>
+            Application.Current.Activated += async (_, __) =>
             {
                 await OnEnableAsync(default);
             };
-            Application.Deactivated += async (_, __) =>
+            Application.Current.Deactivated += async (_, __) =>
             {
                 await OnDisableAsync(default);
             };
@@ -408,15 +409,11 @@ namespace Caliburn.Noesis
 
             Log.Info("Starting...");
 
+            ShellView = EnsureShellView();
             ShellView.Resources[nameof(IServiceProviderEx)] = this;
             
             ShellViewModel = GetInstance<T>(null);
-#if UNITY_5_5_OR_NEWER
-            noesisView.Content.DataContext = this;
-#else
-            Application.MainWindow.DataContext = this;
-#endif
-            
+            ShellView.DataContext = this;
 
             await OnStartup();
 

@@ -1,9 +1,8 @@
 using System;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
-using Screen = Caliburn.Noesis.Screen;
 
-namespace Testing
+namespace Caliburn.Noesis.Samples.EarlySample
 {
     public class ShellViewModel : Screen
     {
@@ -22,7 +21,11 @@ namespace Testing
         {
             DisplayName = "Changed Name" + i++;
 
+#if UNITY_5_5_OR_NEWER
             await UniTask.Delay(2000);
+#else
+            await Task.Delay(2000).AsUniTask();
+#endif
 
             if (!hasHadError)
             {

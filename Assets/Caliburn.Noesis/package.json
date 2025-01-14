@@ -6,7 +6,7 @@
   "unity": "2020.2",
   "documentationUrl": "https://github.com/VacuumBreather/Caliburn.Noesis",
   "changelogUrl": "https://github.com/VacuumBreather/Caliburn.Noesis/releases",
-  "licensesUrl": "https://github.com/VacuumBreather/Caliburn.Noesis/LICENSE",
+  "licensesUrl": "https://github.com/VacuumBreather/Caliburn.Noesis/blob/master/LICENSE",
   "keywords": [ "NoesisGUI", "noesis", "mvvm", "UI", "caliburn" ],
   "license": "MIT",
   "author": {

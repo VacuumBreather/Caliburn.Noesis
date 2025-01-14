@@ -7,6 +7,9 @@
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
     using NoesisApp;
+    using EventTrigger = NoesisApp.EventTrigger;
+    using TriggerBase = NoesisApp.TriggerBase;
+    using TriggerAction = NoesisApp.TriggerAction;
 #else
     using System.Reflection;
     using System.Windows;
@@ -31,13 +34,13 @@
         /// <param name="target">The target.</param>
         /// <param name="text">The message text.</param>
         /// <returns>The triggers parsed from the text.</returns>
-        public static IEnumerable<NoesisApp.TriggerBase> Parse(DependencyObject target, string text)
+        public static IEnumerable<TriggerBase> Parse(DependencyObject target, string text)
         {
             if (string.IsNullOrEmpty(text))
             {
-                return new NoesisApp.TriggerBase[0];
+                return new TriggerBase[0];
             }
-            var triggers = new List<NoesisApp.TriggerBase>();
+            var triggers = new List<TriggerBase>();
 
             var messageTexts = StringSplitter.Split(text, ';');
 
@@ -67,7 +70,7 @@
         /// The function used to generate a trigger.
         /// </summary>
         /// <remarks>The parameters passed to the method are the the target of the trigger and string representing the trigger.</remarks>
-        public static Func<DependencyObject, string, NoesisApp.TriggerBase> CreateTrigger = (target, triggerText) =>
+        public static Func<DependencyObject, string, TriggerBase> CreateTrigger = (target, triggerText) =>
         {
             if (triggerText == null)
             {
@@ -81,7 +84,7 @@
                 .Replace("Event", string.Empty)
                 .Trim();
 
-            return new NoesisApp.EventTrigger { EventName = triggerDetail };
+            return new EventTrigger { EventName = triggerDetail };
         };
 
         /// <summary>
@@ -90,7 +93,7 @@
         /// <param name="target">The target of the message.</param>
         /// <param name="messageText">The textual message dsl.</param>
         /// <returns>The created message.</returns>
-        public static NoesisApp.TriggerAction CreateMessage(DependencyObject target, string messageText)
+        public static TriggerAction CreateMessage(DependencyObject target, string messageText)
         {
             var openingParenthesisIndex = messageText.IndexOf('(');
             if (openingParenthesisIndex < 0)
@@ -125,7 +128,7 @@
         /// <summary>
         /// Function used to parse a string identified as a message.
         /// </summary>
-        public static Func<DependencyObject, string, NoesisApp.TriggerAction> InterpretMessageText = (target, text) =>
+        public static Func<DependencyObject, string, TriggerAction> InterpretMessageText = (target, text) =>
         {
             return new ActionMessage { MethodName = Regex.Replace(text, "^Action", string.Empty).Trim() };
         };

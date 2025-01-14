@@ -4,6 +4,7 @@
     using System.Reflection;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
+    using TriggerBase = NoesisApp.TriggerBase;
 #else
     using System.Windows;
     using TriggerBase = Microsoft.Xaml.Behaviors.TriggerBase;
@@ -27,7 +28,7 @@
         /// <summary>
         /// The default trigger to be used when wiring actions on this element.
         /// </summary>
-        public Func<NoesisApp.TriggerBase> CreateTrigger;
+        public Func<TriggerBase> CreateTrigger;
 
         /// <summary>
         /// The default property to be used for parameters of this type in actions.

@@ -303,8 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74221b5a27b8a34393537135f444747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noesisView: {fileID: 330585548}
-  xamls:
+  preloadXamls:
   - {fileID: -8414808784256213763, guid: 668daf7589a6e0d48a4f53ce1cc4a3f9, type: 3}
 --- !u!1 &410087039
 GameObject:

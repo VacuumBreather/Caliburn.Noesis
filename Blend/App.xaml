@@ -1,0 +1,15 @@
+<Application x:Class="Caliburn_Noesis.App"
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:sample="clr-namespace:Caliburn.Noesis.Samples.EarlySample">
+  <Application.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Noesis.GUI.Extensions;component/Theme/NoesisTheme.DarkBlue.xaml"/>
+        <ResourceDictionary>
+           <sample:Bootstrapper x:Key="Bootstrapper" />
+        </ResourceDictionary>
+      </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+  </Application.Resources>
+</Application>

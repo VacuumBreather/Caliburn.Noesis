@@ -6,6 +6,7 @@
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
     using NoesisApp;
+    using TriggerBase = NoesisApp.TriggerBase;
 #else
     using System.Windows;
     using Microsoft.Xaml.Behaviors;
@@ -31,7 +32,7 @@
         static readonly DependencyProperty MessageTriggersProperty =
             DependencyPropertyHelper.RegisterAttached(
                 "MessageTriggers",
-                typeof(global::Noesis.TriggerBase[]),
+                typeof(TriggerBase[]),
                 typeof(Message),
                 null
                 );
@@ -96,7 +97,7 @@
                 return;
             }
 
-            var messageTriggers = (NoesisApp.TriggerBase[])d.GetValue(MessageTriggersProperty);
+            var messageTriggers = (TriggerBase[])d.GetValue(MessageTriggersProperty);
 
             var allTriggers = Interaction.GetTriggers(d);
 

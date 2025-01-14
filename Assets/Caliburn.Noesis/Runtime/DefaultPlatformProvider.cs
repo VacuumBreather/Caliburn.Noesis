@@ -32,9 +32,9 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual UniTask OnUIThreadAsync(Func<UniTask> action)
+        public virtual async UniTask OnUIThreadAsync(Func<UniTask> action)
         {
-            return UniTask.RunOnThreadPool(action);
+            await action();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>
-        /// Whether or not classes should execute property change notications on the UI thread.
+        /// Whether or not classes should execute property change notifications on the UI thread.
         /// </summary>
         public virtual bool PropertyChangeNotificationsOnUIThread => true;
 

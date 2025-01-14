@@ -7,6 +7,7 @@
     using System.ComponentModel;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
+    using EventTrigger = NoesisApp.EventTrigger;
 #else
     using System.Windows;
     using System.Windows.Controls;
@@ -14,6 +15,7 @@
     using System.Windows.Data;
     using System.Windows.Markup;
     using System.Windows.Shapes;
+    using System.Windows.Documents;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
 #endif
 
@@ -259,7 +261,7 @@
                 ElementType = typeof(T),
                 GetBindableProperty = element => bindableProperty,
                 ParameterProperty = parameterProperty,
-                CreateTrigger = () => new NoesisApp.EventTrigger() { EventName = eventName }
+                CreateTrigger = () => new EventTrigger() { EventName = eventName }
             });
         }
 

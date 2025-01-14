@@ -4,6 +4,7 @@
     using System.Linq;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
+    using EventHandler = global::Noesis.EventHandler;
 #else
     using System.ComponentModel;
     using System.Windows;
@@ -141,9 +142,9 @@
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="handler">The handler.</param>
-        public static void ExecuteOnLayoutUpdated(FrameworkElement element, global::Noesis.EventHandler handler)
+        public static void ExecuteOnLayoutUpdated(FrameworkElement element, EventHandler handler)
         {
-            global::Noesis.EventHandler onLayoutUpdate = null;
+            EventHandler onLayoutUpdate = null;
 
             onLayoutUpdate = (s, e) =>
             {

@@ -2,14 +2,15 @@
     #define NOESIS
     using Noesis;
 #else
+    using System.Windows;
     using System.Windows.Controls;
 #endif
 
-namespace Caliburn.Noesis
+namespace Caliburn.Noesis.Samples.EarlySample
 {
-    public partial class Root: UserControl
+    public partial class ShellView: UserControl
     {
-        public Root()
+        public ShellView()
         {
             InitializeComponent();
         }

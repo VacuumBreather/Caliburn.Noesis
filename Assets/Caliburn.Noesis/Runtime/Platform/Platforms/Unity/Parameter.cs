@@ -5,6 +5,9 @@
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
     using NoesisApp;
+#else
+    using System.Windows;
+    using Microsoft.Xaml.Behaviors;
 #endif
 
     /// <summary>

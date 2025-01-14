@@ -9,6 +9,7 @@
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
     using NoesisApp;
+    using EventTrigger = NoesisApp.EventTrigger;
 #else
     using System.Windows;
     using System.Windows.Controls.Primitives;
@@ -127,7 +128,7 @@
                 {
                     string eventName = "Loaded";
                     var trigger = Interaction.GetTriggers(AssociatedObject)
-                     .FirstOrDefault(t => t.Actions.Contains(this)) as NoesisApp.EventTrigger;
+                     .FirstOrDefault(t => t.Actions.Contains(this)) as EventTrigger;
 
                     Log.Info($"Trigger EventName '{trigger?.EventName}' event name '{eventName}'");
                     if (trigger != null && trigger.EventName == eventName)
