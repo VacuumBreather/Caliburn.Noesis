@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -269,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29355477be96127469aed699dd82b4be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _xaml: {fileID: 0}
+  _xaml: {fileID: -8414808784256213763, guid: 6b80b93675fc00b4681d550bd0c37441, type: 3}
   _texture: {fileID: 0}
   _isPPAAEnabled: 0
   _tessellationMaxPixelError: 0.4
@@ -290,6 +291,21 @@ MonoBehaviour:
   _actionsRepeatRate: 0.1
   _xrTrackingOrigin: {fileID: 0}
   _renderPassEvent: 550
+--- !u!114 &330585549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f74221b5a27b8a34393537135f444747, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noesisView: {fileID: 330585548}
+  xamls:
+  - {fileID: -8414808784256213763, guid: 668daf7589a6e0d48a4f53ce1cc4a3f9, type: 3}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

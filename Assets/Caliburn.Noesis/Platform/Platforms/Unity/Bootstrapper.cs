@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 #if UNITY_5_5_OR_NEWER
@@ -22,9 +23,9 @@ namespace Caliburn.Noesis
     /// </summary>
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class BootstrapperBase<T> : MonoBehaviour, IServiceProviderEx
+    public abstract class Bootstrapper<T> : MonoBehaviour, IServiceProviderEx
 #else
-    public abstract class BootstrapperBase<T> : IServiceProviderEx
+    public abstract class Bootstrapper<T> : IServiceProviderEx
 #endif
         where T : Screen
     {
@@ -268,11 +269,6 @@ namespace Caliburn.Noesis
         }
 #endif
 
-        private void AddServiceProviderResource(ResourceDictionary resourceDictionary)
-        {
-            resourceDictionary[nameof(IServiceProviderEx)] = this;
-        }
-
         private void Initialize()
         {
             if (_isInitialized)
@@ -411,17 +407,8 @@ namespace Caliburn.Noesis
             }
 
             Log.Info("Starting...");
-            
-            var dictionary = ShellView.Resources;
 
-            Log.Info("Registering data templates");
-
-            DataTemplateManager.RegisterDataTemplate(
-                typeof(PropertyChangedBase),
-                dictionary,
-                template => AddServiceProviderResource(template.Resources));
-
-            AddServiceProviderResource(dictionary);
+            ShellView.Resources[nameof(IServiceProviderEx)] = this;
             
             ShellViewModel = GetInstance<T>(null);
 #if UNITY_5_5_OR_NEWER
@@ -429,10 +416,11 @@ namespace Caliburn.Noesis
 #else
             Application.MainWindow.DataContext = this;
 #endif
+            
 
             await OnStartup();
 
-            Log.Info("Activating {ShellViewModel}", ShellViewModel);
+            Log.Info($"Activating {ShellViewModel}");
 
             if (ShellViewModel is IActivate activate)
             {

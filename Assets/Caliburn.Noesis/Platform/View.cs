@@ -260,8 +260,7 @@
             {
                 var context = GetContext(targetLocation);
 
-                var serviceProvider = (IServiceProviderEx)targetLocation.FindVisualAncestor<FrameworkElement>().FindResource(nameof(IServiceProviderEx));
-                var viewLocator = serviceProvider.GetInstance<ViewLocator>(null);
+                ViewLocator viewLocator = targetLocation.GetViewLocator();
 
                 var view = viewLocator.LocateForModel(args.NewValue, targetLocation, context);
                 ViewModelBinder.Bind(args.NewValue, view, context);
@@ -294,8 +293,7 @@
                 return;
             }
 
-            var serviceProvider = (IServiceProviderEx)targetLocation.FindVisualAncestor<FrameworkElement>().FindResource(nameof(IServiceProviderEx));
-            var viewLocator = serviceProvider.GetInstance<ViewLocator>(null);
+            ViewLocator viewLocator = targetLocation.GetViewLocator();
 
             var view = viewLocator.LocateForModel(model, targetLocation, e.NewValue);
 
