@@ -16,7 +16,7 @@ namespace Caliburn.Noesis
         /// <param name="task">The task.</param>
         public TaskResult(UniTask task)
         {
-            innerTask = task;
+            innerTask = task.Preserve();
         }
 
         /// <summary>
@@ -39,9 +39,20 @@ namespace Caliburn.Noesis
         /// Called when the asynchronous task has completed.
         /// </summary>
         /// <param name="task">The completed task.</param>
-        protected virtual void OnCompleted(UniTask task)
+        protected virtual async void OnCompleted(UniTask task)
         {
-            Completed(this, new ResultCompletionEventArgs { WasCancelled = task.Status.IsCanceled(), Error = task.AsTask().Exception });
+            Exception error = null;
+
+            try
+            {
+                await task;
+            }
+            catch (Exception exception)
+            {
+                error = exception;
+            }
+
+            Completed(this, new ResultCompletionEventArgs { WasCancelled = task.Status.IsCanceled(), Error = error });
         }
 
         /// <summary>
@@ -78,21 +89,11 @@ namespace Caliburn.Noesis
         {
             if (innerTask.Status.IsCompleted())
             {
-                Result = innerTask.GetAwaiter().GetResult();
-                
                 OnCompleted(innerTask);
             }
             else
             {
-                innerTask.ContinueWith(result =>
-                {
-                    if (!innerTask.Status.IsFaulted() && !innerTask.Status.IsCanceled())
-                    {
-                        Result = result;
-                    }
-
-                    OnCompleted(innerTask);
-                });
+                innerTask.ContinueWith(_ => OnCompleted(innerTask));
             }
         }
 
@@ -100,9 +101,20 @@ namespace Caliburn.Noesis
         /// Called when the asynchronous task has completed.
         /// </summary>
         /// <param name="task">The completed task.</param>
-        protected virtual void OnCompleted(UniTask<TResult> task)
+        protected virtual async void OnCompleted(UniTask<TResult> task)
         {
-            Completed(this, new ResultCompletionEventArgs { WasCancelled = task.Status.IsCanceled(), Error = task.AsTask().Exception });
+            Exception error = null;
+
+            try
+            {
+                Result = await task;
+            }
+            catch (Exception exception)
+            {
+                error = exception;
+            }
+
+            Completed(this, new ResultCompletionEventArgs { WasCancelled = task.Status.IsCanceled(), Error = error });
         }
 
         /// <summary>

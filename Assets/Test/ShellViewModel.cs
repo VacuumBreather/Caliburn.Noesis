@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Screen = Caliburn.Noesis.Screen;
@@ -14,11 +15,20 @@ namespace Testing
             OldName = "Nothing yet";
         }
 
+        private bool hasHadError;
+        private int i = 1;
+
         public async UniTask ChangeName(string displayName)
         {
-            DisplayName = "Changed Name";
+            DisplayName = "Changed Name" + i++;
 
             await UniTask.Delay(2000);
+
+            if (!hasHadError)
+            {
+                hasHadError = true;
+                throw new Exception("Hello");
+            }
             
             OldName = displayName;
         }

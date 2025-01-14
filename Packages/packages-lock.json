@@ -222,15 +222,6 @@
       },
       "url": "https://packages.unity.com"
     },
-    "de.vacuumbreather.caliburn.noesis": {
-      "version": "file:de.vacuumbreather.caliburn.noesis",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {
-        "com.noesis.noesisgui": "3.2.6",
-        "com.cysharp.unitask": "2.5.10"
-      }
-    },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
       "depth": 0,
