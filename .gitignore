@@ -553,3 +553,7 @@ sysinfo.txt
 /[Aa]ssets/**/[Nn]oesis.settings.asset
 /[Aa]ssets/**/[Nn]oesis.settings.asset.meta
 /[Pp]ackages/com.noesis.noesisgui/
+
+# Blend project
+!*-blend.csproj
+!*-blend.sln
