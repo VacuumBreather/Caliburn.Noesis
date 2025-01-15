@@ -1,4 +1,8 @@
-using Noesis;
+#if UNITY_5_5_OR_NEWER
+using global::Noesis;
+#else
+using System.Windows;
+#endif
 
 namespace Caliburn.Noesis
 {

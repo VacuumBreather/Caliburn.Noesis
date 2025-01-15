@@ -12,7 +12,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <cal:DialogAdornerDecorator>
-        <ContentControl cal:View.Model="{Binding ShellViewModel}" />
-    </cal:DialogAdornerDecorator>
+    <cal:DialogHostDecorator>
+        <AdornerDecorator>
+            <ContentControl IsTabStop="False" cal:View.Model="{Binding ShellViewModel}" />
+        </AdornerDecorator>
+    </cal:DialogHostDecorator>
 </UserControl>

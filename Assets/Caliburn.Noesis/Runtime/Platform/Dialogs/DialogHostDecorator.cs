@@ -3,21 +3,20 @@ using System;
 using Noesis;
 #else
 using System.Windows;
-using System.Windows.Documents;
+using System.Windows.Controls;
 using System.Windows.Media;
 #endif
 
 namespace Caliburn.Noesis
 {
     /// <summary>
-    /// An <see cref="AdornerDecorator"/> which allows to overlay elements with a <see cref="DialogHost"/>.
-    /// The additional element will be rendered on top of the regular <see cref="AdornerLayer"/>.
+    /// A <see cref="Decorator"/> which allows to overlay elements with a <see cref="DialogHost"/>.
     /// </summary>
-    public class DialogAdornerDecorator : AdornerDecorator
+    public class DialogHostDecorator : Decorator
     {
         private readonly DialogHost _dialogHost = new();
 
-        public DialogAdornerDecorator()
+        public DialogHostDecorator()
         {
             AddVisualChild(_dialogHost);
         }
@@ -27,19 +26,9 @@ namespace Caliburn.Noesis
         {
             get
             {
-                return Child is null ? 0 : 3;
+                return Child is null ? 0 : 2;
             }
         }
-
-#if UNITY_5_5_OR_NEWER
-        private AdornerLayer AdornerLayer
-        {
-            get
-            {
-                return null;//GetAdornerLayer();
-            }
-        }
-#endif
 
         /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
@@ -66,9 +55,6 @@ namespace Caliburn.Noesis
                     return Child;
 
                 case 1:
-                    return AdornerLayer;
-
-                case 2:
                     return _dialogHost;
 
                 default:

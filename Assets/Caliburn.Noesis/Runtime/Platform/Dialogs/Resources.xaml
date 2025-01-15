@@ -105,6 +105,8 @@
     <!--  Style.DialogItem  -->
     <Style TargetType="{x:Type cal:DialogItem}" x:Key="Style.DialogItem">
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+        <Setter Property="KeyboardNavigation.ControlTabNavigation" Value="Cycle" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle" />
         <Setter Property="MinWidth" Value="480" />
         <Setter Property="MinHeight" Value="320" />
         <Setter Property="Padding" Value="20" />

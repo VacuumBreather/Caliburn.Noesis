@@ -1,11 +1,11 @@
 
-using UnityEditor.Experimental.GraphView;
 #if UNITY_5_5_OR_NEWER
 using global::Noesis;
 #else
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Media;
 #endif
 
@@ -85,6 +85,7 @@ namespace Caliburn.Noesis
             
             host.SetCurrentValue(ContentProperty, e.NewValue);
             host.UpdateOverlayVisibility();
+            host.Focus();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
