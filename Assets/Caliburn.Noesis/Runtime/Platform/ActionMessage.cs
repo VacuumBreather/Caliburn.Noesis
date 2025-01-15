@@ -133,7 +133,7 @@
                     Log.Info($"Trigger EventName '{trigger?.EventName}' event name '{eventName}'");
                     if (trigger != null && trigger.EventName == eventName)
                     {
-                        Invoke(new RoutedEventArgs(null, null));
+                        Invoke(new RoutedEventArgs(trigger.SourceObject.GetRoutedEvent(trigger.EventName), trigger.SourceObject));
                     }
                 }
             }

@@ -4,7 +4,7 @@ using Caliburn.Noesis;
 
 namespace Caliburn.Noesis.Samples.EarlySample
 {
-    public class Bootstrapper : Bootstrapper<ShellViewModel>
+    public class Bootstrapper : BootstrapperBase<ShellViewModel>
     {
         static Bootstrapper()
         {

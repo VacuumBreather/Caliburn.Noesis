@@ -27,6 +27,7 @@ namespace Caliburn.Noesis
             Log.Info("Executing coroutine.");
 
             var enumerator = CreateParentEnumerator(coroutine);
+            context?.GetServiceLocator()?.BuildUp(enumerator);
 
             if (callback != null)
             {

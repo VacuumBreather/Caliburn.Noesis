@@ -61,6 +61,7 @@ namespace Caliburn.Noesis
             try
             {
                 continueResult.Completed += ContinueCompleted;
+                context?.GetServiceLocator()?.BuildUp(continueResult);
                 continueResult.Execute(context);
             }
             catch (Exception ex)

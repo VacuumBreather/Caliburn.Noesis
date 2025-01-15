@@ -1,4 +1,9 @@
 ﻿using System;
+#if UNITY_5_5_OR_NEWER
+using global::Noesis;
+#else
+using System.Windows;
+#endif
 
 namespace Caliburn.Noesis
 {
@@ -30,6 +35,7 @@ namespace Caliburn.Noesis
             try
             {
                 innerResult.Completed += InnerResultCompleted;
+                context?.GetServiceLocator()?.BuildUp(innerResult);
                 innerResult.Execute(this.context);
             }
             catch (Exception ex)

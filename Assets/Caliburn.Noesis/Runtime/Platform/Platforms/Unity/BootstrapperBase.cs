@@ -25,9 +25,9 @@ namespace Caliburn.Noesis
     /// </summary>
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class Bootstrapper<T> : MonoBehaviour, IServiceLocator
+    public abstract class BootstrapperBase<T> : MonoBehaviour, IServiceLocator
 #else
-    public abstract class Bootstrapper<T> : IServiceLocator
+    public abstract class BootstrapperBase<T> : IServiceLocator
 #endif
         where T : Screen
     {
@@ -49,7 +49,7 @@ namespace Caliburn.Noesis
         private ViewLocator ViewLocator { get; set; }
 
 #if !UNITY_5_5_OR_NEWER
-        protected Bootstrapper()
+        protected BootstrapperBase()
         {
             PrepareApplication();
         }
@@ -62,7 +62,7 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>
-        /// Shuts the UI handled by this <see cref="Bootstrapper{T}" /> down.
+        /// Shuts the UI handled by this <see cref="BootstrapperBase{T}" /> down.
         /// </summary>
         /// <remarks>This is also called when the bootstrapper is destroyed, but then it is not guaranteed to finish if the shutdown process is a long running task.</remarks>
         public async UniTask ShutdownAsync()

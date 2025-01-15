@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 #if UNITY_5_5_OR_NEWER
 using global::Noesis;
 
@@ -15,8 +16,39 @@ namespace Caliburn.Noesis
     /// </summary>
     public static class DependencyObjectExtensions
     {
+        public static RoutedEvent GetRoutedEvent(this object source, string eventName)
+        {
+            if (source is not DependencyObject sourceObject || string.IsNullOrEmpty(eventName))
+                throw new ArgumentNullException("sourceObject and eventName cannot be null.");
+
+            // Get the type of the source object
+            var type = sourceObject.GetType();
+
+            // Find the event using reflection
+            var eventInfo = type.GetEvent(eventName);
+            if (eventInfo == null)
+            {
+                return null;
+            }
+
+            var routedEventField = type.GetField($"{eventName}Event", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
+            if (routedEventField != null && routedEventField.GetValue(sourceObject) is RoutedEvent routedEvent)
+            {
+                return routedEvent;
+            }
+
+            return null;
+        }
 
         public static ViewLocator GetViewLocator(this DependencyObject dependencyObject)
+        {
+            var serviceLocator = dependencyObject.GetServiceLocator();
+            var viewLocator = serviceLocator.GetInstance<ViewLocator>();
+
+            return viewLocator;
+        }
+
+        public static IServiceLocator GetServiceLocator(this DependencyObject dependencyObject)
         {
             if (dependencyObject is not FrameworkElement frameworkElement)
             {
@@ -24,9 +56,8 @@ namespace Caliburn.Noesis
             }
                 
             var serviceProvider = (IServiceLocator)frameworkElement.FindResource(nameof(IServiceLocator));
-            var viewLocator = serviceProvider.GetInstance<ViewLocator>();
 
-            return viewLocator;
+            return serviceProvider;
         }
 
         /// <summary>
