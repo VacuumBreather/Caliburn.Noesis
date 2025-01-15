@@ -31,7 +31,7 @@ namespace Caliburn.Noesis
         ///     simultaneously.
         /// </exception>
         public async UniTask<DialogResult> ShowDialogAsync(DialogScreen dialog,
-                                                             CancellationToken cancellationToken = default)
+                                                           CancellationToken cancellationToken = default)
         {
             if (Items.Contains(dialog))
             {

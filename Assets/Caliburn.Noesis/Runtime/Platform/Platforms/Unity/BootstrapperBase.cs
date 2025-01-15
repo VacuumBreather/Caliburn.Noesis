@@ -76,6 +76,8 @@ namespace Caliburn.Noesis
                 {
                     await deactivate.DeactivateAsync(true);
                 }
+            
+                await GetInstance<IDialogService>().DeactivateAsync(true);
 
                 Log.Info("Shutdown complete");
             }
