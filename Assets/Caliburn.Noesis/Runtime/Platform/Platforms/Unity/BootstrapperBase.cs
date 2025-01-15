@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Caliburn.Noesis.Samples.EarlySample;
 
 #if UNITY_5_5_OR_NEWER
 using System.Runtime.CompilerServices;
