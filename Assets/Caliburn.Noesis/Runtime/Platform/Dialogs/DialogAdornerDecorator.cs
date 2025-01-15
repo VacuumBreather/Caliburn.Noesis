@@ -36,15 +36,7 @@ namespace Caliburn.Noesis
         {
             get
             {
-                for (int i = 0; i < base.VisualChildrenCount; i++)
-                {
-                    if (base.GetVisualChild(i) is AdornerLayer layer)
-                    {
-                        return layer;
-                    }
-                }
-                
-                return null;
+                return null;//GetAdornerLayer();
             }
         }
 #endif
