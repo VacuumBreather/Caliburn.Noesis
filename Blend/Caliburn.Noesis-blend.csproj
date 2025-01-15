@@ -8,6 +8,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <EnableDefaultItems>false</EnableDefaultItems>
     <LangVersion>9</LangVersion>
+    <OutputPath>$(SolutionDir)Blend\bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>$(SolutionDir)Blend\obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,18 +18,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ApplicationDefinition Include="Blend\App.xaml" />
-    <Compile Include="Blend\App.xaml.cs">
+    <ApplicationDefinition Include="App.xaml" />
+    <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Page Include="Assets\Caliburn.Noesis\**\*.xaml" />
-    <Compile Include="Assets\Caliburn.Noesis\**\*.xaml.cs">
+    <Page Include="..\Assets\Caliburn.Noesis\**\*.xaml" />
+    <Compile Include="..\Assets\Caliburn.Noesis\**\*.xaml.cs">
       <DependentUpon Condition="Exists('%(Filename).xaml')">%(Filename).xaml</DependentUpon>
     </Compile>
-    <Compile Remove="Assets\Caliburn.Noesis\**\*.cs" />
+    <Compile Remove="..\Assets\Caliburn.Noesis\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Assets\Caliburn.Noesis\**\*.cs" />
+    <Compile Include="..\Assets\Caliburn.Noesis\**\*.cs" />
   </ItemGroup>
 </Project>

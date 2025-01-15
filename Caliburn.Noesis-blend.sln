@@ -1,8 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Blend for Visual Studio Version 16
-VisualStudioVersion = 16.0.31729.503
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis-blend", "Caliburn.Noesis-blend.csproj", "{ED2D91FA-1817-4C48-8B2A-1FD7702F0287}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis-blend", "Blend\Caliburn.Noesis-blend.csproj", "{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,10 +10,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{ED2D91FA-1817-4C48-8B2A-1FD7702F0287}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED2D91FA-1817-4C48-8B2A-1FD7702F0287}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED2D91FA-1817-4C48-8B2A-1FD7702F0287}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED2D91FA-1817-4C48-8B2A-1FD7702F0287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
