@@ -66,8 +66,11 @@ namespace Caliburn.Noesis
         protected override Size MeasureOverride(Size constraint)
         {
             var desiredSize = base.MeasureOverride(constraint);
-
             _dialogHost.Measure(constraint);
+
+            desiredSize = new Size(
+                Math.Max(desiredSize.Width, _dialogHost.DesiredSize.Width),
+                Math.Max(desiredSize.Height, _dialogHost.DesiredSize.Height));
 
             return desiredSize;
         }
