@@ -6,8 +6,8 @@
     <!--  DataTemplate.QueryDialog.Implicit  -->
     <DataTemplate DataType="{x:Type cal:QueryDialog}">
         <DataTemplate.Resources>
-            <cal:EnumFlagSetToVisibilityConverter x:Key="Converter.EnumFlagSetToVisible" />
-            <cal:IsEqualConverter x:Key="Converter.IsEqualTo" />
+            <cal:EnumFlagSetToVisibilityConverter x:Key="Caliburn.Converter.EnumFlagSetToVisible" />
+            <cal:IsEqualConverter x:Key="Caliburn.Converter.IsEqualTo" />
         </DataTemplate.Resources>
         <DockPanel>
             <TextBlock
@@ -25,29 +25,29 @@
                 <Button
                     Content="OK"
                     Height="40"
-                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Ok}}"
-                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Ok}}"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Ok}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Ok}}"
                     Width="100"
                     cal:CloseDialog.Result="Ok" />
                 <Button
                     Content="Yes"
                     Height="40"
-                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Yes}}"
-                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Yes}}"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Yes}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Yes}}"
                     Width="100"
                     cal:CloseDialog.Result="Yes" />
                 <Button
                     Content="No"
                     Height="40"
-                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.No}}"
-                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.No}}"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.No}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.No}}"
                     Width="100"
                     cal:CloseDialog.Result="No" />
                 <Button
                     Content="Cancel"
                     Height="40"
-                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Cancel}}"
-                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Cancel}}"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Cancel}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Cancel}}"
                     Width="100"
                     cal:CloseDialog.Result="Cancel" />
             </StackPanel>
@@ -61,7 +61,7 @@
     </DataTemplate>
 
     <!--  ControlTemplate.DialogItem  -->
-    <ControlTemplate TargetType="{x:Type cal:DialogItem}" x:Key="ControlTemplate.DialogItem">
+    <ControlTemplate TargetType="{x:Type cal:DialogItem}" x:Key="Caliburn.ControlTemplate.DialogItem">
         <Border
             Background="{TemplateBinding Background}"
             BorderBrush="{TemplateBinding BorderBrush}"
@@ -89,7 +89,7 @@
     </ControlTemplate>
 
     <!--  ControlTemplate.DialogHost  -->
-    <ControlTemplate TargetType="{x:Type cal:DialogHost}" x:Key="ControlTemplate.DialogHost">
+    <ControlTemplate TargetType="{x:Type cal:DialogHost}" x:Key="Caliburn.ControlTemplate.DialogHost">
         <Grid
             Background="{TemplateBinding OverlayBackgroundBrush}"
             Visibility="Collapsed"
@@ -103,7 +103,7 @@
     </ControlTemplate>
 
     <!--  Style.DialogItem  -->
-    <Style TargetType="{x:Type cal:DialogItem}" x:Key="Style.DialogItem">
+    <Style TargetType="{x:Type cal:DialogItem}" x:Key="Caliburn.Style.DialogItem">
         <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
         <Setter Property="KeyboardNavigation.ControlTabNavigation" Value="Cycle" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle" />
@@ -112,22 +112,22 @@
         <Setter Property="Padding" Value="20" />
         <Setter Property="Border.CornerRadius" Value="8" />
         <Setter Property="Background" Value="#FF888888" />
-        <Setter Property="Template" Value="{StaticResource ControlTemplate.DialogItem}" />
+        <Setter Property="Template" Value="{StaticResource Caliburn.ControlTemplate.DialogItem}" />
     </Style>
 
     <!--  Style.DialogHost  -->
-    <Style TargetType="{x:Type cal:DialogHost}" x:Key="Style.DialogHost">
+    <Style TargetType="{x:Type cal:DialogHost}" x:Key="Caliburn.Style.DialogHost">
         <Setter Property="OverlayBackgroundBrush" Value="#44000000" />
-        <Setter Property="DialogContainerStyle" Value="{StaticResource Style.DialogItem}" />
+        <Setter Property="DialogContainerStyle" Value="{StaticResource Caliburn.Style.DialogItem}" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Template" Value="{StaticResource ControlTemplate.DialogHost}" />
+        <Setter Property="Template" Value="{StaticResource Caliburn.ControlTemplate.DialogHost}" />
     </Style>
 
     <!--  Style.DialogItem.Implicit  -->
-    <Style BasedOn="{StaticResource Style.DialogItem}" TargetType="{x:Type cal:DialogItem}" />
+    <Style BasedOn="{StaticResource Caliburn.Style.DialogItem}" TargetType="{x:Type cal:DialogItem}" />
 
     <!--  Style.DialogHost.Implicit  -->
-    <Style BasedOn="{StaticResource Style.DialogHost}" TargetType="{x:Type cal:DialogHost}" />
+    <Style BasedOn="{StaticResource Caliburn.Style.DialogHost}" TargetType="{x:Type cal:DialogHost}" />
 
 </ResourceDictionary>
