@@ -1,0 +1,18 @@
+<UserControl
+    x:Class="Caliburn.Noesis.RootView"
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:cal="clr-namespace:Caliburn.Noesis"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Dialogs/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <cal:DialogAdornerDecorator>
+        <ContentControl cal:View.Model="{Binding ShellViewModel}" />
+    </cal:DialogAdornerDecorator>
+</UserControl>

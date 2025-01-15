@@ -19,5 +19,10 @@
         /// The instance on which the action is invoked.
         /// </summary>
         public object Target { get; set; }
+
+        /// <summary>
+        /// The associated <see cref="IServiceLocator"/>.
+        /// </summary>
+        public IServiceLocator ServiceLocator { get; set; }
     }
 }

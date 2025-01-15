@@ -52,14 +52,9 @@ namespace Caliburn.Noesis
 
         public static IServiceLocator GetServiceLocator(this DependencyObject dependencyObject)
         {
-            if (dependencyObject is not FrameworkElement frameworkElement)
-            {
-                frameworkElement = dependencyObject.FindLogicalAncestor<FrameworkElement>();
-            }
-                
-            var serviceProvider = (IServiceLocator)frameworkElement.FindResource(nameof(IServiceLocator));
+            var serviceLocator = AttachedProperties.GetServiceLocator(dependencyObject);
 
-            return serviceProvider;
+            return serviceLocator;
         }
 
         /// <summary>Goes up the logical tree, looking for an ancestor of the specified <see cref="Type" />.</summary>
@@ -102,6 +97,23 @@ namespace Caliburn.Noesis
             while ((dependencyObject != null) && !(dependencyObject is T));
 
             return dependencyObject as T;
+        }
+
+        /// <summary>
+        ///     Goes up the visual tree, looking for an ancestor declared inside a
+        ///     <see cref="UserControl" /> (i.e. with a <see cref="UserControl" /> ancestor in its logical
+        ///     tree).
+        /// </summary>
+        /// <param name="dependencyObject">The starting point.</param>
+        /// <returns>The visual ancestor, if any, which was declared inside a <see cref="UserControl" />.</returns>
+        public static DependencyObject FindAncestorDeclaredInUserControl(this DependencyObject dependencyObject)
+        {
+            while ((dependencyObject != null) && FindLogicalAncestor<UserControl>(dependencyObject) is null)
+            {
+                dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
+            }
+
+            return dependencyObject;
         }
     }
 }

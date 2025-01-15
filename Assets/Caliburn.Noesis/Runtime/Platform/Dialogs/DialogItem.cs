@@ -2,6 +2,7 @@
 using global::Noesis;
 #else
 using System.Windows;
+using System.Windows.Controls;
 #endif
 
 namespace Caliburn.Noesis

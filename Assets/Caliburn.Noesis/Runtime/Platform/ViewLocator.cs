@@ -46,7 +46,7 @@ namespace Caliburn.Noesis
         /// <summary>
         /// The service provider used to resolve views.
         /// </summary>
-        private IServiceLocator ServiceProvider { get; }
+        private IServiceLocator ServiceLocator { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewLocator" /> class.
@@ -64,7 +64,7 @@ namespace Caliburn.Noesis
             DeterminePackUriFromType = InternalDeterminePackUriFromType;
 
             AssemblySource = assemblySource;
-            ServiceProvider = serviceProvider;
+            ServiceLocator = serviceProvider;
             
             ConfigureTypeMappings(new TypeMappingConfiguration());
         }
@@ -315,18 +315,20 @@ namespace Caliburn.Noesis
         
         private UIElement InternalGetOrCreateViewType(Type viewType)
         {
-            var view = ServiceProvider.GetAllInstances(viewType)
+            var view = ServiceLocator.GetAllInstances(viewType)
                 .FirstOrDefault() as UIElement;
 
-            if (view != null)
+            if (view == null)
             {
-                return view;
+                if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
+                {
+                    return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
+                }
+                
+                view = (UIElement)System.Activator.CreateInstance(viewType);
             }
 
-            if (viewType.IsInterface || viewType.IsAbstract || !typeof(UIElement).IsAssignableFrom(viewType))
-                return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
-
-            view = (UIElement)System.Activator.CreateInstance(viewType);
+            view.SetValue(AttachedProperties.ServiceLocatorProperty, ServiceLocator);
 
             return view;
         }
@@ -480,7 +482,7 @@ namespace Caliburn.Noesis
         private string InternalDeterminePackUriFromType(Type viewModelType, Type viewType)
         {
             var assemblyName = viewType.Assembly.GetAssemblyName();
-            var applicationAssemblyName = ServiceProvider.GetType().Assembly.GetAssemblyName();
+            var applicationAssemblyName = ServiceLocator.GetType().Assembly.GetAssemblyName();
             var viewTypeName = viewType.FullName;
 
             if (viewTypeName.StartsWith(assemblyName))

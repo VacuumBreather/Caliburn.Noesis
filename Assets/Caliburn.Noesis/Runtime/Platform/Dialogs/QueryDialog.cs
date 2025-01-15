@@ -11,15 +11,19 @@ namespace Caliburn.Noesis
         public QueryDialog(string title,
             string content,
             DialogResults dialogResults,
-            DialogResult defaultResult = DialogResult.None) : base(defaultResult)
+            DialogResult defaultResult = DialogResult.None)
         {
             Title = title;
             Content = content;
             DialogResults = dialogResults;
+            DefaultResult = defaultResult;
         }
 
         /// <summary>Gets the content of the dialog.</summary>
         public string Content { get; }
+
+        /// <summary>Gets the default result.</summary>
+        public DialogResult DefaultResult { get; }
 
         /// <summary>Gets the possible results the dialog can return.</summary>
         public DialogResults DialogResults { get; }

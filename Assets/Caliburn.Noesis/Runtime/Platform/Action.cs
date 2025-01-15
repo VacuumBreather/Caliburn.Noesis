@@ -109,7 +109,6 @@
         ///<param name="parameters"> The method parameters. </param>
         public static void Invoke(object target, string methodName, DependencyObject view = null, FrameworkElement source = null, object eventArgs = null, object[] parameters = null)
         {
-
             var message = new ActionMessage { MethodName = methodName };
 
             var context = new ActionExecutionContext
@@ -119,7 +118,8 @@
                 Message = message,
                 View = view,
                 Source = source,
-                EventArgs = eventArgs
+                EventArgs = eventArgs,
+                ServiceLocator = source.GetServiceLocator() ?? view.GetServiceLocator()
             };
 
             if (parameters != null)

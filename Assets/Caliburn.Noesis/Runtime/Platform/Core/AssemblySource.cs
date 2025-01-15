@@ -74,6 +74,8 @@ namespace Caliburn.Noesis
         /// </summary>
         public Func<Assembly, IEnumerable<Type>> ExtractTypes = assembly =>
             assembly.ExportedTypes
+                .Where(t => !t.IsAbstract)
+                .Where(t => !t.IsInterface)
                 .Where(t => t != typeof(AssemblySource))
                 .Where(t =>
                     typeof(INotifyPropertyChanged).GetTypeInfo().IsAssignableFrom(t.GetTypeInfo()));

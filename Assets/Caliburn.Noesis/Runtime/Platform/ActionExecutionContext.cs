@@ -17,6 +17,7 @@
         private WeakReference _source;
         private WeakReference _target;
         private WeakReference _view;
+        private WeakReference _serviceLocator;
         private Dictionary<string, object> _values;
 
         /// <summary>
@@ -65,6 +66,14 @@
         public DependencyObject View {
             get { return _view == null ? null : _view.Target as DependencyObject; }
             set { _view = new WeakReference(value); }
+        }
+
+        /// <summary>
+        /// The service locator associated with the target.
+        /// </summary>
+        public IServiceLocator ServiceLocator {
+            get { return _serviceLocator == null ? null : _serviceLocator.Target as IServiceLocator; }
+            set { _serviceLocator = new WeakReference(value); }
         }
 
         /// <summary>

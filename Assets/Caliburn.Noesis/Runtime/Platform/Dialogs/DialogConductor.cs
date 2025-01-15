@@ -33,7 +33,7 @@ namespace Caliburn.Noesis
         public async UniTask<DialogResult> ShowDialogAsync(DialogScreen dialog,
                                                              CancellationToken cancellationToken = default)
         {
-            if (!Items.Contains(dialog))
+            if (Items.Contains(dialog))
             {
                 throw new ArgumentException(
                     $"Attempting to open a {dialog.GetType().Name} dialog with the same instance multiple times simultaneously.",

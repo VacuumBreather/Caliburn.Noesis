@@ -1,4 +1,10 @@
+#if UNITY_5_5_OR_NEWER
 using Noesis;
+#else
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+#endif
 
 namespace Caliburn.Noesis
 {

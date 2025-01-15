@@ -58,7 +58,7 @@
 
             try
             {
-                context?.GetServiceLocator()?.BuildUp(result);
+                context?.ServiceLocator?.BuildUp(result);
                 result.Completed += completed;
                 result.Execute(context ?? new CoroutineExecutionContext());
             }

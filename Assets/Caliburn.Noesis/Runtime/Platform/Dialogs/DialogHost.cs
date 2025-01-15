@@ -1,7 +1,12 @@
+
+using UnityEditor.Experimental.GraphView;
 #if UNITY_5_5_OR_NEWER
 using global::Noesis;
 #else
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 #endif
 
 namespace Caliburn.Noesis
@@ -47,14 +52,6 @@ namespace Caliburn.Noesis
         public DialogHost()
         {
             Loaded += OnLoaded;
-
-            if (TryFindResource(nameof(IServiceLocator)) is IServiceLocator serviceLocator &&
-                serviceLocator.GetInstance<IDialogService>() is { } service)
-            {
-                DataContext = service;
-                var contentBinding = new Binding(nameof(IDialogService.ActiveItem)) { Mode = BindingMode.OneWay };
-                SetBinding(PrivateContentProperty, contentBinding);
-            }
         }
 
         /// <summary>Gets or sets the <see cref="Style"/> to be used on the <see cref="DialogItem"/> container.</summary>
@@ -92,6 +89,17 @@ namespace Caliburn.Noesis
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
+            var serviceLocator = this.GetServiceLocator();
+            var dialogService = serviceLocator?.GetInstance<IDialogService>();
+
+
+            if (dialogService is { } service)
+            {
+                DataContext = service;
+                var contentBinding = new Binding(nameof(IDialogService.ActiveItem)) { Mode = BindingMode.OneWay };
+                SetBinding(PrivateContentProperty, contentBinding);
+            }
+
             UpdateOverlayVisibility();
         }
 

@@ -11,14 +11,6 @@ namespace Caliburn.Noesis
         private CancellationTokenRegistration? _cancellationTokenRegistration;
         private DialogResult _result = DialogResult.None;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DialogScreen"/> class.
-        /// </summary>
-        /// <param name="defaultResult">(Optional) The default result.</param>
-        protected DialogScreen(DialogResult defaultResult = DialogResult.None)
-        {
-        }
-
         /// <inheritdoc/>
         public sealed override UniTask<bool> CanCloseAsync(CancellationToken cancellationToken = default)
         {
@@ -59,7 +51,11 @@ namespace Caliburn.Noesis
         {
             if (IsInitialized && close)
             {
+#if UNITY_5_5_OR_NEWER
                 await _cancellationTokenRegistration!.Value.DisposeAsync();
+#else
+                _cancellationTokenRegistration!.Value.Dispose();
+#endif
                 _cancellationTokenRegistration = null;
                 _taskCompletionSource.TrySetResult(_result);
                 _taskCompletionSource = null;

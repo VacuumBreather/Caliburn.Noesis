@@ -65,7 +65,7 @@ namespace Caliburn.Noesis
                 try
                 {
                     var next = enumerator.Current;
-                    context?.GetServiceLocator()?.BuildUp(next);
+                    context?.ServiceLocator?.BuildUp(next);
                     next.Completed += ChildCompleted;
                     next.Execute(context);
                 }

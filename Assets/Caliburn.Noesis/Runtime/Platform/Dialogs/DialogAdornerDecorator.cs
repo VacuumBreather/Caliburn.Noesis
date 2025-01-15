@@ -1,5 +1,11 @@
 using System;
+#if UNITY_5_5_OR_NEWER
 using Noesis;
+#else
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Media;
+#endif
 
 namespace Caliburn.Noesis
 {
@@ -10,42 +16,10 @@ namespace Caliburn.Noesis
     public class DialogAdornerDecorator : AdornerDecorator
     {
         private readonly DialogHost _dialogHost = new();
-        private readonly AdornerLayer _adornerLayer;
-
-        private UIElement _child;
 
         public DialogAdornerDecorator()
         {
-            _adornerLayer = GetAdornerLayer();
-        }
-
-        public DialogAdornerDecorator(bool logicalChild) : base(logicalChild)
-        {
-            _adornerLayer = GetAdornerLayer();
-        }
-
-        /// <summary>Gets or sets the child of the AdornerDecorator.</summary>
-        public new UIElement Child
-        {
-            get => _child;
-            set
-            {
-                if (ReferenceEquals(_child, value))
-                {
-                    return;
-                }
-
-                if (_child is not null && value is null)
-                {
-                    RemoveOverlays();
-                }
-                else if (_child is null && value is not null)
-                {
-                    AddOverlays();
-                }
-
-                _child = value;
-            }
+            AddVisualChild(_dialogHost);
         }
 
         /// <summary>Gets the <see cref="Visual"/> children count.</summary>
@@ -57,16 +31,29 @@ namespace Caliburn.Noesis
             }
         }
 
+#if UNITY_5_5_OR_NEWER
+        private AdornerLayer AdornerLayer
+        {
+            get
+            {
+                for (int i = 0; i < base.VisualChildrenCount; i++)
+                {
+                    if (base.GetVisualChild(i) is AdornerLayer layer)
+                    {
+                        return layer;
+                    }
+                }
+                
+                return null;
+            }
+        }
+#endif
+
         /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
         {
+            base.ArrangeOverride(finalSize);
             var finalSizeRect = new Rect(finalSize);
-            Child.Arrange(finalSizeRect);
-
-            if (VisualTreeHelper.GetParent(_adornerLayer) != null)
-            {
-                _adornerLayer.Arrange(finalSizeRect);
-            }
 
             _dialogHost.Arrange(finalSizeRect);
 
@@ -87,7 +74,7 @@ namespace Caliburn.Noesis
                     return Child;
 
                 case 1:
-                    return _adornerLayer;
+                    return AdornerLayer;
 
                 case 2:
                     return _dialogHost;
@@ -100,32 +87,11 @@ namespace Caliburn.Noesis
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
         {
-            var desiredSize = new Size();
-
-            if (Child != null)
-            {
-                Child.Measure(constraint);
-                desiredSize = Child.DesiredSize;
-            }
-
-            if (VisualTreeHelper.GetParent(_adornerLayer) is not null)
-            {
-                _adornerLayer.Measure(constraint);
-            }
+            var desiredSize = base.MeasureOverride(constraint);
 
             _dialogHost.Measure(constraint);
 
             return desiredSize;
-        }
-
-        private void AddOverlays()
-        {
-            AddVisualChild(_dialogHost);
-        }
-
-        private void RemoveOverlays()
-        {
-            RemoveVisualChild(_dialogHost);
         }
     }
 }

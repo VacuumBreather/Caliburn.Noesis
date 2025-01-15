@@ -6,16 +6,25 @@ namespace Caliburn.Noesis.Samples.EarlySample
 {
     public class ShellViewModel : Screen
     {
+        private readonly IDialogService _dialogService;
         private string _oldName;
 
-        public ShellViewModel()
+        public ShellViewModel(IDialogService dialogService)
         {
+            _dialogService = dialogService;
             DisplayName = "Hey here I am";
             OldName = "Nothing yet";
         }
 
         private bool hasHadError;
         private int i = 1;
+
+        public async UniTask OpenDialog()
+        {
+            var result = await _dialogService.ShowDialogAsync(new QueryDialog("Hello", "Hello World", DialogResults.Yes | DialogResults.No | DialogResults.Cancel, DialogResult.Yes));
+
+            DisplayName = result.ToString();
+        }
 
         public async UniTask ChangeName(string displayName)
         {

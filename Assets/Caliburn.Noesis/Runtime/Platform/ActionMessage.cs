@@ -201,7 +201,8 @@
             _context = new ActionExecutionContext
             {
                 Message = this,
-                Source = AssociatedObject
+                Source = AssociatedObject,
+                ServiceLocator = AssociatedObject.GetServiceLocator()
             };
 
             PrepareContext(_context);
@@ -327,7 +328,8 @@
                     {
                         Source = context.Source,
                         View = context.View,
-                        Target = context.Target
+                        Target = context.Target,
+                        ServiceLocator = context.ServiceLocator
                     });
             }
         };

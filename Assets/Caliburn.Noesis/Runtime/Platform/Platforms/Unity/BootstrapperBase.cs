@@ -114,6 +114,7 @@ namespace Caliburn.Noesis
             IoCContainer.Instance<IServiceLocator>(this);
             IoCContainer.Instance(assemblySource);
             IoCContainer.Singleton<ViewLocator, ViewLocator>();
+            IoCContainer.Singleton<IDialogService, DialogConductor>();
 
             foreach (Type type in extractedTypes)
             {
@@ -136,7 +137,7 @@ namespace Caliburn.Noesis
         /// <param name="service">The service to locate.</param>
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
-        public virtual object GetInstance(Type service, string key)
+        public virtual object GetInstance(Type service, string key = null)
         {
             return IoCContainer.GetInstance(service, key);
         }
@@ -146,7 +147,7 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <param name="key">The key to locate.</param>
         /// <returns>The located service.</returns>
-        public virtual TService GetInstance<TService>(string key)
+        public virtual TService GetInstance<TService>(string key = null)
         {
             return IoCContainer.GetInstance<TService>(key);
         }
@@ -239,7 +240,7 @@ namespace Caliburn.Noesis
             var window = new Window { Width = 1280, Height = 720 };
             window.Show();
             window.Closing += OnWindowClosing;
-            var root = new Root();
+            var root = new RootView();
             window.Content = root;
 
             return root;
@@ -414,7 +415,7 @@ namespace Caliburn.Noesis
             Log.Info("Starting...");
 
             ShellView = EnsureShellView();
-            ShellView.Resources[nameof(IServiceLocator)] = this;
+            ShellView.SetValue(AttachedProperties.ServiceLocatorProperty, this);
             
             ShellViewModel = GetInstance<T>(null);
             ShellView.DataContext = this;
@@ -422,6 +423,8 @@ namespace Caliburn.Noesis
             await OnStartup();
 
             Log.Info($"Activating {ShellViewModel}");
+            
+            await GetInstance<IDialogService>().ActivateAsync();
 
             if (ShellViewModel is IActivate activate)
             {
