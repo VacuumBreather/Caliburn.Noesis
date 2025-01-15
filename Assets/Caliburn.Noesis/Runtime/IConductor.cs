@@ -68,7 +68,7 @@ namespace Caliburn.Noesis
     }
 
     /// <summary>An <see cref="IConductor{T}" /> that also implements <see cref="IHaveActiveItem" />.</summary>
-    public interface IConductActiveItem<T> : IConductor<T>, IConductActiveItem
+    public interface IConductActiveItem<T> : IConductor<T>, IConductActiveItem, IHaveActiveItem<T>
     {
     }
 }

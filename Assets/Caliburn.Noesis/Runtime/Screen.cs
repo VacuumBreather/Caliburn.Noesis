@@ -31,7 +31,7 @@ namespace Caliburn.Noesis
         public virtual bool IsInitialized
         {
             get => _isInitialized;
-            private set
+            protected set
             {
                 _isInitialized = value;
                 NotifyOfPropertyChange();

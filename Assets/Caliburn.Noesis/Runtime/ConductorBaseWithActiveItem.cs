@@ -20,6 +20,9 @@ namespace Caliburn.Noesis
             set => ActivateItemAsync(value, CancellationToken.None);
         }
 
+        /// <inheritdoc />
+        object IHaveReadOnlyActiveItem.ActiveItem => ActiveItem;
+
         /// <summary>
         /// The currently active item.
         /// </summary>
