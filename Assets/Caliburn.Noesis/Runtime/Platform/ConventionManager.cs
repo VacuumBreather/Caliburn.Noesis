@@ -15,8 +15,8 @@
     using System.Windows.Data;
     using System.Windows.Markup;
     using System.Windows.Shapes;
-    using System.Windows.Documents;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;
+    using System.Windows.Documents;
 #endif
 
     /// <summary>

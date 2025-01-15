@@ -315,11 +315,11 @@ namespace Caliburn.Noesis
         
         private UIElement InternalGetOrCreateViewType(Type viewType)
         {
-            var view = ServiceProvider.GetInstance(viewType, null) as UIElement;
+            var view = ServiceProvider.GetAllInstances(viewType)
+                .FirstOrDefault() as UIElement;
 
             if (view != null)
             {
-                InitializeComponent(view);
                 return view;
             }
 
@@ -327,8 +327,6 @@ namespace Caliburn.Noesis
                 return new TextBlock { Text = string.Format("Cannot create {0}.", viewType.FullName) };
 
             view = (UIElement)System.Activator.CreateInstance(viewType);
-
-            InitializeComponent(view);
 
             return view;
         }
@@ -496,19 +494,6 @@ namespace Caliburn.Noesis
             }
 
             return uri;
-        }
-
-        /// <summary>
-        ///   When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
-        /// </summary>
-        /// <param name = "element">The element to initialize</param>
-        public static void InitializeComponent(object element)
-        {
-            // var method = element.GetType()
-            //     .GetMethod("InitializeComponent", BindingFlags.Public | BindingFlags.Instance);
-            //
-            //
-            // method?.Invoke(element, null);
         }
     }
 }

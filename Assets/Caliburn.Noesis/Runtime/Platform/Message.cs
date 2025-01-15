@@ -107,7 +107,7 @@
             }
 
             var newTriggers = Parser.Parse(d, e.NewValue as string).ToArray();
-            newTriggers.Apply(trigger => allTriggers.Add(trigger));
+            newTriggers.Apply(allTriggers.Add);
 
             if (newTriggers.Length > 0)
             {

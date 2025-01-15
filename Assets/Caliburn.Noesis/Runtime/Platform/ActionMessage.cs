@@ -184,10 +184,10 @@
                 currentElement = _context.View;
             }
 
-            string bindingText = $"<Binding xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation\' xmlns:cal='clr-namespace:Caliburn.Noesis;assembly={Assembly.GetExecutingAssembly().GetName().Name}' Path='(cal:Message.Handler)' />";
-
-            var binding = (Binding)XamlReader.Parse(bindingText);
-            binding.Source = currentElement;
+            var binding = new Binding {
+                Path = new PropertyPath(Message.HandlerProperty), 
+                Source = currentElement
+            };
 
             BindingOperations.SetBinding(this, HandlerProperty, binding);
         }

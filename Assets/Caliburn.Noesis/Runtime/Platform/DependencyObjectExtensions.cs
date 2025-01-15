@@ -19,7 +19,9 @@ namespace Caliburn.Noesis
         public static RoutedEvent GetRoutedEvent(this object source, string eventName)
         {
             if (source is not DependencyObject sourceObject || string.IsNullOrEmpty(eventName))
-                throw new ArgumentNullException("sourceObject and eventName cannot be null.");
+            {
+                return null;
+            }
 
             // Get the type of the source object
             var type = sourceObject.GetType();
@@ -58,23 +60,6 @@ namespace Caliburn.Noesis
             var serviceProvider = (IServiceLocator)frameworkElement.FindResource(nameof(IServiceLocator));
 
             return serviceProvider;
-        }
-
-        /// <summary>
-        ///     Goes up the visual tree, looking for an ancestor declared inside a
-        ///     <see cref="UserControl" /> (i.e. with a <see cref="UserControl" /> ancestor in its logical
-        ///     tree).
-        /// </summary>
-        /// <param name="dependencyObject">The starting point.</param>
-        /// <returns>The visual ancestor, if any, which was declared inside a <see cref="UserControl" />.</returns>
-        public static DependencyObject FindAncestorDeclaredInUserControl(this DependencyObject dependencyObject)
-        {
-            while ((dependencyObject != null) && FindLogicalAncestor<UserControl>(dependencyObject) is null)
-            {
-                dependencyObject = VisualTreeHelper.GetParent(dependencyObject);
-            }
-
-            return dependencyObject;
         }
 
         /// <summary>Goes up the logical tree, looking for an ancestor of the specified <see cref="Type" />.</summary>

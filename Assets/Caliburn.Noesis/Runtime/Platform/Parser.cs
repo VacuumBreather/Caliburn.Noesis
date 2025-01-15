@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
 #if UNITY_5_5_OR_NEWER
     using global::Noesis;
@@ -11,7 +12,6 @@
     using TriggerBase = NoesisApp.TriggerBase;
     using TriggerAction = NoesisApp.TriggerAction;
 #else
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
     using EventTrigger = Microsoft.Xaml.Behaviors.EventTrigger;

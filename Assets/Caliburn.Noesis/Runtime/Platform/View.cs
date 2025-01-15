@@ -87,11 +87,6 @@
                 false
                 );
 
-        public static bool GetIsGenerated(DependencyObject dependencyObject)
-        {
-            return (bool)dependencyObject.GetValue(IsGeneratedProperty);
-        }
-
         /// <summary>
         /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
         /// </summary>

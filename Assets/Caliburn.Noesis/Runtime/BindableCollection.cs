@@ -59,13 +59,21 @@ namespace Caliburn.Noesis
         /// </summary>
         public void Refresh()
         {
-
-            OnUIThread(() =>
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() =>
+                {
+                    OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+                    OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                });
+            }
+            else
             {
                 OnPropertyChanged(new PropertyChangedEventArgs("Count"));
                 OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            });
+            }
         }
 
         /// <summary>
@@ -75,7 +83,14 @@ namespace Caliburn.Noesis
         /// <param name = "item">The item to be inserted.</param>
         protected override sealed void InsertItem(int index, T item)
         {
-            OnUIThread(() => InsertItemBase(index, item));
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() => InsertItemBase(index, item));
+            }
+            else
+            {
+                InsertItemBase(index, item);
+            }
         }
 
         /// <summary>
@@ -98,7 +113,14 @@ namespace Caliburn.Noesis
         /// <param name = "item">The item to set.</param>
         protected override sealed void SetItem(int index, T item)
         {
-            OnUIThread(() => SetItemBase(index, item));
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() => SetItemBase(index, item));
+            }
+            else
+            {
+                SetItemBase(index, item);
+            }
         }
 
         /// <summary>
@@ -120,7 +142,14 @@ namespace Caliburn.Noesis
         /// <param name = "index">The position used to identify the item to remove.</param>
         protected override sealed void RemoveItem(int index)
         {
-            OnUIThread(() => RemoveItemBase(index));
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(() => RemoveItemBase(index));
+            }
+            else
+            {
+                RemoveItemBase(index);
+            }
         }
 
         /// <summary>
@@ -201,7 +230,14 @@ namespace Caliburn.Noesis
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            OnUIThread(AddRange);
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(AddRange);
+            }
+            else
+            {
+                AddRange();
+            }
         }
 
         /// <summary>
@@ -217,7 +253,6 @@ namespace Caliburn.Noesis
                 foreach (var item in items)
                 {
                     var index = IndexOf(item);
-
                     if (index >= 0)
                     {
                         RemoveItemBase(index);
@@ -230,13 +265,21 @@ namespace Caliburn.Noesis
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
             }
 
-            OnUIThread(RemoveRange);
+            if (PlatformProvider.Current.PropertyChangeNotificationsOnUIThread)
+            {
+                OnUIThread(RemoveRange);
+            }
+            else
+            {
+                RemoveRange();
+            }
         }
         
         /// <summary>
         /// Executes the given action on the UI thread
         /// </summary>
         /// <remarks>An extension point for subclasses to customise how property change notifications are handled.</remarks>
+        /// <param name="action"></param>
         protected virtual void OnUIThread(System.Action action) => action.OnUIThread();
     }
 }
