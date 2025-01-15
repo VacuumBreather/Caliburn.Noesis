@@ -23,8 +23,8 @@ namespace Caliburn.Noesis
                 frameworkElement = dependencyObject.FindLogicalAncestor<FrameworkElement>();
             }
                 
-            var serviceProvider = (IServiceProviderEx)frameworkElement.FindResource(nameof(IServiceProviderEx));
-            var viewLocator = serviceProvider.GetInstance<ViewLocator>(null);
+            var serviceProvider = (IServiceLocator)frameworkElement.FindResource(nameof(IServiceLocator));
+            var viewLocator = serviceProvider.GetInstance<ViewLocator>();
 
             return viewLocator;
         }

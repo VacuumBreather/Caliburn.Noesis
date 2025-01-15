@@ -25,9 +25,9 @@ namespace Caliburn.Noesis
     /// </summary>
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class Bootstrapper<T> : MonoBehaviour, IServiceProviderEx
+    public abstract class Bootstrapper<T> : MonoBehaviour, IServiceLocator
 #else
-    public abstract class Bootstrapper<T> : IServiceProviderEx
+    public abstract class Bootstrapper<T> : IServiceLocator
 #endif
         where T : Screen
     {
@@ -96,13 +96,13 @@ namespace Caliburn.Noesis
         /// </summary>
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
-        ///     <see cref="IServiceProviderEx" /> implementation to let the framework use it. <br /> The following types need to be
+        ///     <see cref="IServiceLocator" /> implementation to let the framework use it. <br /> The following types need to be
         ///     registered here at a minimum:
         ///     <list type="bullet">
         ///         <item>An <see cref="AssemblySource" /> instance, using singleton lifetime in this scope.</item>
         ///         <item>The <see cref="ViewLocator" />, using singleton lifetime in this scope</item>
         ///         <item>
-        ///             A <see cref="IServiceProviderEx" /> implementation, using singleton lifetime in this
+        ///             A <see cref="IServiceLocator" /> implementation, using singleton lifetime in this
         ///             scope. This is usually the bootstrapper itself.
         ///         </item>
         ///         <item>All relevant views, view-models and services</item>
@@ -112,7 +112,7 @@ namespace Caliburn.Noesis
         {
             IoCContainer = new SimpleContainer();
 
-            IoCContainer.Instance<IServiceProviderEx>(this);
+            IoCContainer.Instance<IServiceLocator>(this);
             IoCContainer.Instance(assemblySource);
             IoCContainer.Singleton<ViewLocator, ViewLocator>();
 
@@ -159,7 +159,12 @@ namespace Caliburn.Noesis
         /// <returns>The located services.</returns>
         public virtual IEnumerable<object> GetAllInstances(Type service)
         {
-            return new[] { IoCContainer.GetInstance(service, null) };
+            return IoCContainer.GetAllInstances(service);
+        }
+
+        public IEnumerable<TService> GetAllInstances<TService>()
+        {
+            return IoCContainer.GetAllInstances<TService>();
         }
 
         /// <summary>
@@ -410,7 +415,7 @@ namespace Caliburn.Noesis
             Log.Info("Starting...");
 
             ShellView = EnsureShellView();
-            ShellView.Resources[nameof(IServiceProviderEx)] = this;
+            ShellView.Resources[nameof(IServiceLocator)] = this;
             
             ShellViewModel = GetInstance<T>(null);
             ShellView.DataContext = this;

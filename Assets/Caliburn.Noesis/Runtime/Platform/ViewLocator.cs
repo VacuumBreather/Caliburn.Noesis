@@ -46,14 +46,14 @@ namespace Caliburn.Noesis
         /// <summary>
         /// The service provider used to resolve views.
         /// </summary>
-        private IServiceProviderEx ServiceProvider { get; }
+        private IServiceLocator ServiceProvider { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewLocator" /> class.
         /// </summary>
         /// <param name="assemblySource">The source of assemblies that contain view and view-model types relevant to this instance.</param>
         /// <param name="serviceProvider">The service provider used to resolve views.</param>
-        public ViewLocator(AssemblySource assemblySource, IServiceProviderEx serviceProvider)
+        public ViewLocator(AssemblySource assemblySource, IServiceLocator serviceProvider)
         {
             GetOrCreateViewType = InternalGetOrCreateViewType;
             ModifyModelTypeAtDesignTime = InternalModifyModelTypeAtDesignTime;
