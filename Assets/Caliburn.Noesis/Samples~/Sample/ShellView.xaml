@@ -7,7 +7,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Assets/Caliburn.Noesis/Runtime/Platform/Unity/Resources.xaml" />
+                <ResourceDictionary Source="/Packages/de.vacuumbreather.caliburn.noesis/Runtime/Platform/Unity/Resources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style
