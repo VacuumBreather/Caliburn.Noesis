@@ -18,39 +18,40 @@ using System.Windows;
 
 namespace Caliburn.Noesis
 {
-
     /// <summary>
     /// Inherit from this class to configure and run the framework.
     /// </summary>
 #if UNITY_5_5_OR_NEWER
     [RequireComponent(typeof(NoesisView))]
-    public abstract class BootstrapperBase<T> : MonoBehaviour, IServiceLocator
+    public abstract class BootstrapperBase : MonoBehaviour, IServiceLocator
 #else
-    public abstract class BootstrapperBase<T> : IServiceLocator
+    public abstract class BootstrapperBase : IServiceLocator
 #endif
-        where T : Screen
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(Screen));
 
         private bool _isInitialized;
+        private IEnumerable<Type> _extractedTypes;
 
 #if UNITY_5_5_OR_NEWER
         [SerializeField]
         private List<NoesisXaml> preloadXamls;
 #endif
 
-        public Screen ShellViewModel { get; private set; }
+        public object ShellViewModel { get; private set; }
         
         public FrameworkElement ShellView { get; private set; }
 
-        private SimpleContainer IoCContainer { get; set; }
+        protected bool EnableDisableWithThis { get; set; }
 
-        private ViewLocator ViewLocator { get; set; }
+        protected ViewLocator ViewLocator { get; private set; }
+
+        private SimpleContainer IoCContainer { get; set; }
 
 #if !UNITY_5_5_OR_NEWER
         protected BootstrapperBase()
         {
-            PrepareApplication();
+            Initialize();
         }
 #endif
 
@@ -61,7 +62,7 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>
-        /// Shuts the UI handled by this <see cref="BootstrapperBase{T}" /> down.
+        /// Shuts the UI handled by this <see cref="BootstrapperBase" /> down.
         /// </summary>
         /// <remarks>This is also called when the bootstrapper is destroyed, but then it is not guaranteed to finish if the shutdown process is a long running task.</remarks>
         public async UniTask ShutdownAsync()
@@ -70,7 +71,7 @@ namespace Caliburn.Noesis
             {
                 Log.Info("Shutting down...");
 
-                await OnShutdown();
+                await OnShutdownAsync();
 
                 if (ShellViewModel is IDeactivate deactivate)
                 {
@@ -98,27 +99,21 @@ namespace Caliburn.Noesis
         /// <remarks>
         ///     If you are configuring your own DI container you also need to override
         ///     <see cref="IServiceLocator" /> implementation to let the framework use it. <br /> The following types need to be
-        ///     registered here at a minimum:
+        ///     registered here:
         ///     <list type="bullet">
-        ///         <item>An <see cref="AssemblySource" /> instance, using singleton lifetime in this scope.</item>
-        ///         <item>The <see cref="ViewLocator" />, using singleton lifetime in this scope</item>
-        ///         <item>
-        ///             A <see cref="IServiceLocator" /> implementation, using singleton lifetime in this
-        ///             scope. This is usually the bootstrapper itself.
-        ///         </item>
+        ///         <item>A <see cref="IDialogService" /> implementation.</item>
+        ///         <item>A <see cref="IEventAggregator" /> implementation.</item>
         ///         <item>All relevant views, view-models and services</item>
         ///     </list>
         /// </remarks>
-        protected virtual void Configure(AssemblySource assemblySource, IEnumerable<Type> extractedTypes)
+        protected virtual void Configure()
         {
             IoCContainer = new SimpleContainer();
 
-            IoCContainer.Instance<IServiceLocator>(this);
-            IoCContainer.Instance(assemblySource);
             IoCContainer.Singleton<ViewLocator, ViewLocator>();
             IoCContainer.Singleton<IDialogService, DialogConductor>();
 
-            foreach (Type type in extractedTypes)
+            foreach (Type type in _extractedTypes)
             {
                 IoCContainer.RegisterPerRequest(type, null, type);
             }
@@ -133,57 +128,37 @@ namespace Caliburn.Noesis
             return new[] { GetType().Assembly };
         }
 
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <param name="key">The key to locate.</param>
-        /// <returns>The located service.</returns>
+        /// <inheritdoc />
+        /// <remarks>Override this to provide an IoC specific implementation</remarks>
         public virtual object GetInstance(Type service, string key = null)
         {
             return IoCContainer.GetInstance(service, key);
         }
 
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="key">The key to locate.</param>
-        /// <returns>The located service.</returns>
-        public virtual TService GetInstance<TService>(string key = null)
+        /// <inheritdoc />
+        public TService GetInstance<TService>(string key = null)
         {
-            return IoCContainer.GetInstance<TService>(key);
+            return (TService)GetInstance(typeof(TService), key);
         }
 
-        /// <summary>
-        /// Override this to provide an IoC specific implementation
-        /// </summary>
-        /// <param name="service">The service to locate.</param>
-        /// <returns>The located services.</returns>
+        /// <inheritdoc />
+        /// <remarks>Override this to provide an IoC specific implementation</remarks>
         public virtual IEnumerable<object> GetAllInstances(Type service)
         {
             return IoCContainer.GetAllInstances(service);
         }
 
+        /// <inheritdoc />
         public IEnumerable<TService> GetAllInstances<TService>()
         {
-            return IoCContainer.GetAllInstances<TService>();
+            return GetAllInstances(typeof(TService)).Cast<TService>();
         }
 
-        /// <summary>
-        /// Override this to provide an IoC specific implementation.
-        /// </summary>
-        /// <param name="instance">The instance to perform injection on.</param>
+        /// <inheritdoc />
+        /// <remarks>Override this to provide an IoC specific implementation</remarks>
         public virtual void BuildUp(object instance)
         {
             IoCContainer.BuildUp(instance);
-        }
-
-        /// <summary>
-        /// Override this to modify the configuration of the <see cref="Noesis.ViewLocator" />.
-        /// </summary>
-        /// <param name="viewLocator">The <see cref="Noesis.ViewLocator" /> to configure.</param>
-        protected virtual void ConfigureViewLocator(ViewLocator viewLocator)
-        {
         }
 
         /// <summary>
@@ -198,7 +173,7 @@ namespace Caliburn.Noesis
         /// <summary>
         /// Override this to add custom logic on shutdown.
         /// </summary>
-        protected virtual UniTask OnShutdown()
+        protected virtual UniTask OnShutdownAsync()
         {
             return UniTask.CompletedTask;
         }
@@ -206,7 +181,7 @@ namespace Caliburn.Noesis
         /// <summary>
         /// Override this to add custom logic on startup.
         /// </summary>
-        protected virtual UniTask OnStartup()
+        protected virtual UniTask OnStartupAsync()
         {
             return UniTask.CompletedTask;
         }
@@ -250,6 +225,29 @@ namespace Caliburn.Noesis
         }
 
 #if UNITY_5_5_OR_NEWER
+        private void Awake()
+        {
+            Initialize();
+        }
+
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        private async UniTaskVoid OnEnable()
+        {
+            await OnEnableAsync();
+        }
+
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        private async UniTaskVoid Start()
+        {
+            await StartAsync();
+        }
+
+        // ReSharper disable once Unity.IncorrectMethodSignature
+        private async UniTaskVoid OnDisable()
+        {
+            await OnDisableAsync();
+        }
+
         // ReSharper disable once Unity.IncorrectMethodSignature
         private async UniTaskVoid OnDestroy()
         {
@@ -260,24 +258,6 @@ namespace Caliburn.Noesis
                 await ShutdownAsync();
             }
         }
-
-        // ReSharper disable once Unity.IncorrectMethodSignature
-        private async UniTaskVoid OnDisable()
-        {
-            await OnDisableAsync(default);
-        }
-
-        // ReSharper disable once Unity.IncorrectMethodSignature
-        private async UniTaskVoid OnEnable()
-        {
-            await OnEnableAsync(default);
-        }
-
-        // ReSharper disable once Unity.IncorrectMethodSignature
-        private async UniTaskVoid Start()
-        {
-            await StartAsync();
-        }
 #endif
 
         private void Initialize()
@@ -287,6 +267,8 @@ namespace Caliburn.Noesis
                 return;
             }
 
+            Log.Info("Initializing...");
+
             if (PlatformProvider.Current is not XamlPlatformProvider)
             {
                 PlatformProvider.Current = new XamlPlatformProvider();
@@ -294,8 +276,6 @@ namespace Caliburn.Noesis
 
             var assemblySourceCache = new AssemblySourceCache();
             var assemblySource = new AssemblySource();
-
-            List<Type> extractedTypes = new();
 
             var baseExtractTypes = assemblySourceCache.ExtractTypes;
 
@@ -305,12 +285,7 @@ namespace Caliburn.Noesis
                 var elementTypes = assembly.GetExportedTypes()
                     .Where(t => typeof(UIElement).IsAssignableFrom(t));
 
-                var types = baseTypes.Union(elementTypes).ToList();
-                
-                extractedTypes.Clear();
-                extractedTypes.AddRange(types);
-
-                return types;
+                return _extractedTypes = baseTypes.Union(elementTypes).ToList();
             };
 
             assemblySource.Refresh();
@@ -326,27 +301,16 @@ namespace Caliburn.Noesis
                 assemblySource.AddRange(SelectAssemblies());
             }
 
-            Configure(assemblySource, extractedTypes);
+#if !UNITY_5_5_OR_NEWER
+            PrepareApplication();
+#endif
 
-            Log.Info("Initializing...");
-
-            ViewLocator = GetInstance<ViewLocator>(null);
-
-            if (ViewLocator is null)
-            {
-                var exception = new InvalidOperationException(
-                    $"View locator not found - please register {nameof(ViewLocator)} instance in DI container");
-                Log.Error(exception);
-
-                throw exception;
-            }
-
-            Log.Info("Configuring type mappings");
-
-            ViewLocator.ConfigureTypeMappings(new TypeMappingConfiguration());
-            ConfigureViewLocator(ViewLocator);
+            ViewLocator = new ViewLocator(assemblySource, this);
+            Configure();
 
 #if UNITY_5_5_OR_NEWER
+            Log.Info("Preloading xamls");
+
             foreach (NoesisXaml xaml in preloadXamls)
             {
                 xaml.Load();
@@ -371,44 +335,39 @@ namespace Caliburn.Noesis
         /// <summary>
         /// Provides an opportunity to hook into the application object.
         /// </summary>
-        protected virtual void PrepareApplication()
+        protected void PrepareApplication()
         {
             Application.Current.Startup += async (_, __) =>
             {
-                await OnEnableAsync(default);
+                await OnEnableAsync();
                 await StartAsync();
             };
             Application.Current.Activated += async (_, __) =>
             {
-                await OnEnableAsync(default);
+                await OnEnableAsync();
             };
             Application.Current.Deactivated += async (_, __) =>
             {
-                await OnDisableAsync(default);
+                await OnDisableAsync();
             };
         }
 #endif
 
-        private async UniTask OnDisableAsync(CancellationToken cancellationToken)
+        private async UniTask OnEnableAsync()
         {
-            if (ShellViewModel is IDeactivate deactivate)
+            if (!EnableDisableWithThis)
             {
-                await deactivate.DeactivateAsync(false, cancellationToken);
+                return;
             }
-        }
-
-        private async UniTask OnEnableAsync(CancellationToken cancellationToken)
-        {
+            
             if (ShellViewModel is IActivate activate)
             {
-                await activate.ActivateAsync(cancellationToken);
+                await activate.ActivateAsync();
             }
         }
 
         private async UniTask StartAsync()
         {
-            Initialize();
-
             if (!_isInitialized)
             {
                 return;
@@ -418,22 +377,58 @@ namespace Caliburn.Noesis
 
             ShellView = EnsureShellView();
             ShellView.SetValue(AttachedProperties.ServiceLocatorProperty, this);
+            ShellView.SetValue(AttachedProperties.ViewLocatorProperty, ViewLocator);
+
+            await OnStartupAsync();
             
-            ShellViewModel = GetInstance<T>(null);
+            if (GetInstance<IDialogService>() is { } dialogService)
+            {
+                await dialogService.ActivateAsync();
+            }
+
+            Log.Info("Start complete");
+        }
+
+        private async UniTask OnDisableAsync()
+        {
+            if (!EnableDisableWithThis)
+            {
+                return;
+            }
+
+            if (ShellViewModel is IDeactivate deactivate)
+            {
+                await deactivate.DeactivateAsync(false);
+            }
+        }
+
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <param name="viewModelType">The view model type.</param>
+        /// <param name="settings">The optional window settings.</param>
+        protected async UniTask DisplayRootViewForAsync(Type viewModelType, IDictionary<string, object> settings = null)
+        {
+            ShellViewModel = GetInstance(viewModelType);
             ShellView.DataContext = this;
 
-            await OnStartup();
-
             Log.Info($"Activating {ShellViewModel}");
-            
-            await GetInstance<IDialogService>().ActivateAsync();
 
             if (ShellViewModel is IActivate activate)
             {
                 await activate.ActivateAsync();
             }
+        }
 
-            Log.Info("Start complete");
+
+        /// <summary>
+        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
+        /// </summary>
+        /// <typeparam name="TViewModel">The view model type.</typeparam>
+        /// <param name="settings">The optional window settings.</param>
+        protected UniTask DisplayRootViewForAsync<TViewModel>(IDictionary<string, object> settings = null)
+        {
+            return DisplayRootViewForAsync(typeof(TViewModel), settings);
         }
     }
 }

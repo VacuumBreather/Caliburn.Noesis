@@ -329,6 +329,7 @@ namespace Caliburn.Noesis
             }
 
             view.SetValue(AttachedProperties.ServiceLocatorProperty, ServiceLocator);
+            view.SetValue(AttachedProperties.ViewLocatorProperty, this);
 
             return view;
         }

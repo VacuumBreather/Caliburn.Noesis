@@ -6,7 +6,7 @@ namespace Caliburn.Noesis
     public interface IServiceLocator
     {
         /// <summary>
-        /// Override this to provide an IoC specific implementation.
+        /// Returns an implementation of a given service type from the container.
         /// </summary>
         /// <param name="service">The service to locate.</param>
         /// <param name="key">The key to locate.</param>
@@ -14,7 +14,7 @@ namespace Caliburn.Noesis
         object GetInstance(Type service, string key = null);
 
         /// <summary>
-        /// Override this to provide an IoC specific implementation.
+        /// Returns an implementation of a given service type from the container.
         /// </summary>
         /// <param name="key">The key to locate.</param>
         /// <typeparam name="T">The service to locate.</typeparam>
@@ -22,21 +22,21 @@ namespace Caliburn.Noesis
         T GetInstance<T>(string key = null);
 
         /// <summary>
-        /// Override this to provide an IoC specific implementation
+        /// Returns all instances of a given service type from the container.
         /// </summary>
         /// <param name="service">The service to locate.</param>
         /// <returns>The located services.</returns>
         IEnumerable<object> GetAllInstances(Type service);
 
         /// <summary>
-        /// Override this to provide an IoC specific implementation
+        /// Returns all instances of a given service type from the container.
         /// </summary>
         /// <typeparam name="T">The service to locate.</typeparam>
         /// <returns>The located services.</returns>
         IEnumerable<T> GetAllInstances<T>();
 
         /// <summary>
-        /// Override this to provide an IoC specific implementation.
+        /// Injects dependencies into an existing instance.
         /// </summary>
         /// <param name="instance">The instance to perform injection on.</param>
         void BuildUp(object instance);

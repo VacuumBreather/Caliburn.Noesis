@@ -44,8 +44,7 @@ namespace Caliburn.Noesis
 
         public static ViewLocator GetViewLocator(this DependencyObject dependencyObject)
         {
-            var serviceLocator = dependencyObject.GetServiceLocator();
-            var viewLocator = serviceLocator.GetInstance<ViewLocator>();
+            var viewLocator = AttachedProperties.GetViewLocator(dependencyObject);
 
             return viewLocator;
         }
