@@ -259,7 +259,6 @@
                 ViewLocator viewLocator = targetLocation.GetViewLocator();
 
                 var view = viewLocator.LocateForModel(args.NewValue, targetLocation, context);
-                ViewModelBinder.Bind(args.NewValue, view, context);
                 if (!SetContentProperty(targetLocation, view))
                 {
 
@@ -269,6 +268,7 @@
 
                     SetContentProperty(targetLocation, view);
                 }
+                ViewModelBinder.Bind(args.NewValue, view, context);
             }
             else
             {
