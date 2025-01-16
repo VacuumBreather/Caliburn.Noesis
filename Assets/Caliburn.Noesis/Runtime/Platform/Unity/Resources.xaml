@@ -1,0 +1,133 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cal="clr-namespace:Caliburn.Noesis">
+
+    <!--  DataTemplate.QueryDialog.Implicit  -->
+    <DataTemplate DataType="{x:Type cal:QueryDialog}">
+        <DataTemplate.Resources>
+            <cal:EnumFlagSetToVisibilityConverter x:Key="Caliburn.Converter.EnumFlagSetToVisible" />
+            <cal:IsEqualConverter x:Key="Caliburn.Converter.IsEqualTo" />
+        </DataTemplate.Resources>
+        <DockPanel Margin="20">
+            <TextBlock
+                HorizontalAlignment="Center"
+                DockPanel.Dock="Top"
+                FontSize="17"
+                Text="{Binding Title, Mode=OneWay}"
+                TextAlignment="Center" />
+            <UniformGrid
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                DockPanel.Dock="Bottom"
+                Rows="1">
+                <Button
+                    MinWidth="50"
+                    Margin="10,0"
+                    cal:CloseDialog.Result="Ok"
+                    Content="OK"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Ok}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Ok}}" />
+                <Button
+                    MinWidth="50"
+                    Margin="10,0"
+                    cal:CloseDialog.Result="Yes"
+                    Content="Yes"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Yes}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Yes}}" />
+                <Button
+                    MinWidth="50"
+                    Margin="10,0"
+                    cal:CloseDialog.Result="No"
+                    Content="No"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.No}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.No}}" />
+                <Button
+                    MinWidth="50"
+                    Margin="10,0"
+                    cal:CloseDialog.Result="Cancel"
+                    Content="Cancel"
+                    IsDefault="{Binding DefaultResult, Mode=OneWay, Converter={StaticResource Caliburn.Converter.IsEqualTo}, ConverterParameter={x:Static cal:DialogResult.Cancel}}"
+                    Visibility="{Binding DialogResults, Mode=OneWay, Converter={StaticResource Caliburn.Converter.EnumFlagSetToVisible}, ConverterParameter={x:Static cal:DialogResults.Cancel}}" />
+            </UniformGrid>
+            <TextBlock
+                Margin="0,20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Text="{Binding Content, Mode=OneWay}"
+                TextAlignment="Center" />
+        </DockPanel>
+    </DataTemplate>
+
+    <!--  Caliburn.ControlTemplate.DialogItem  -->
+    <ControlTemplate x:Key="Caliburn.ControlTemplate.DialogItem" TargetType="{x:Type cal:DialogItem}">
+        <Border
+            x:Name="Border"
+            Padding="{TemplateBinding Padding}"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="{TemplateBinding Border.CornerRadius}"
+            RenderTransformOrigin=".5,.5"
+            TextElement.Foreground="{TemplateBinding Foreground}">
+            <ContentPresenter ContentSource="Content" />
+        </Border>
+    </ControlTemplate>
+
+    <!--  Caliburn.ControlTemplate.DialogHost  -->
+    <ControlTemplate x:Key="Caliburn.ControlTemplate.DialogHost" TargetType="{x:Type cal:DialogHost}">
+        <Grid
+            x:Name="PART_RootGrid"
+            Background="{TemplateBinding OverlayBackgroundBrush}"
+            Visibility="Collapsed">
+            <cal:DialogItem
+                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                Content="{TemplateBinding Content}"
+                Style="{TemplateBinding DialogContainerStyle}" />
+        </Grid>
+    </ControlTemplate>
+
+    <!--  Caliburn.Style.DialogItem  -->
+    <Style x:Key="Caliburn.Style.DialogItem" TargetType="{x:Type cal:DialogItem}">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="KeyboardNavigation.ControlTabNavigation" Value="Cycle" />
+        <Setter Property="KeyboardNavigation.TabNavigation" Value="Cycle" />
+        <Setter Property="MinWidth" Value="300" />
+        <Setter Property="MinHeight" Value="150" />
+        <Setter Property="Border.CornerRadius" Value="0" />
+        <Setter Property="Foreground" Value="#E4E6E8" />
+        <Setter Property="Background" Value="Red" />
+        <!--<Setter Property="Background" Value="#262E35" />-->
+        <Setter Property="BorderBrush" Value="#FF1098DF" />
+        <Setter Property="BorderThickness" Value="0,5" />
+        <!--  {StaticResource Border.Box}  -->
+        <Setter Property="Template" Value="{StaticResource Caliburn.ControlTemplate.DialogItem}" />
+    </Style>
+
+    <!--  Caliburn.Style.DialogHost  -->
+    <Style x:Key="Caliburn.Style.DialogHost" TargetType="{x:Type cal:DialogHost}">
+        <Setter Property="OverlayBackgroundBrush">
+            <Setter.Value>
+                <RadialGradientBrush Center="0.5, 0.5">
+                    <GradientStop Offset="0.0" Color="#AA000000" />
+                    <GradientStop Offset="1.0" Color="#CC000000" />
+                </RadialGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="DialogContainerStyle" Value="{StaticResource Caliburn.Style.DialogItem}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template" Value="{StaticResource Caliburn.ControlTemplate.DialogHost}" />
+    </Style>
+
+    <!--  Style.DialogItem.Implicit  -->
+    <Style BasedOn="{StaticResource Caliburn.Style.DialogItem}" TargetType="{x:Type cal:DialogItem}" />
+
+    <!--  Style.DialogHost.Implicit  -->
+    <Style BasedOn="{StaticResource Caliburn.Style.DialogHost}" TargetType="{x:Type cal:DialogHost}" />
+
+</ResourceDictionary>

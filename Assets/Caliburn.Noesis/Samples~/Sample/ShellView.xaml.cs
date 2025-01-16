@@ -5,7 +5,7 @@ using Noesis;
 using System.Windows.Controls;
 #endif
 
-namespace Caliburn.Noesis.Samples.EarlySample
+namespace Caliburn.Noesis.Samples
 {
     public partial class ShellView : UserControl
     {

@@ -36,6 +36,8 @@ namespace Caliburn.Noesis
 #if UNITY_5_5_OR_NEWER
         [SerializeField]
         private List<NoesisXaml> preloadXamls;
+#else
+        private bool _hasStarted;
 #endif
 
         public object ShellViewModel { get; private set; }
@@ -45,6 +47,8 @@ namespace Caliburn.Noesis
         protected bool EnableDisableWithThis { get; set; }
 
         protected ViewLocator ViewLocator { get; private set; }
+
+        protected ViewModelLocator ViewModelLocator { get; private set; }
 
         private SimpleContainer IoCContainer { get; set; }
 
@@ -185,42 +189,12 @@ namespace Caliburn.Noesis
         {
             return UniTask.CompletedTask;
         }
-
-#if !UNITY_5_5_OR_NEWER
-        private async void OnWindowClosing(object _, CancelEventArgs args)
-        {
-            if (args.Cancel)
-            {
-                return;
-            }
-
-            var canClose = true;
-
-            if (ShellViewModel is IGuardClose guardClose)
-            {
-                canClose = await guardClose.CanCloseAsync();
-            }
-
-            args.Cancel = true;
-
-            if (canClose)
-            {
-                await ShutdownAsync();
-            }
-        }
-#endif
-        private FrameworkElement EnsureShellView()
+        private FrameworkElement GetShellView()
         {
 #if UNITY_5_5_OR_NEWER
             return GetComponent<NoesisView>().Content;
 #else
-            var window = new Window { Width = 1280, Height = 720 };
-            window.Show();
-            window.Closing += OnWindowClosing;
-            var root = new RootView();
-            window.Content = root;
-
-            return root;
+            return Application.Current.MainWindow!.Content as FrameworkElement;
 #endif
         }
 
@@ -255,6 +229,53 @@ namespace Caliburn.Noesis
             {
                 Log.Warn($"Async shutdown logic not guaranteed to complete before {gameObject.name} destruction - call and await {nameof(ShutdownAsync)}() before destroying");
 
+                await ShutdownAsync();
+            }
+        }
+#else
+        /// <summary>
+        /// Provides an opportunity to hook into the application object.
+        /// </summary>
+        protected void PrepareApplication()
+        {
+            Application.Current.Startup += async (_, __) =>
+            {
+                await OnEnableAsync();
+            };
+            Application.Current.Activated += async (_, __) =>
+            {
+                await OnEnableAsync();
+
+                if (!_hasStarted)
+                {
+                    _hasStarted = true;
+                    await StartAsync();
+                }
+            };
+            Application.Current.Deactivated += async (_, __) =>
+            {
+                await OnDisableAsync();
+            };
+        }
+
+        private async void OnWindowClosing(object _, CancelEventArgs args)
+        {
+            if (args.Cancel)
+            {
+                return;
+            }
+
+            var canClose = true;
+
+            if (ShellViewModel is IGuardClose guardClose)
+            {
+                canClose = await guardClose.CanCloseAsync();
+            }
+
+            args.Cancel = true;
+
+            if (canClose)
+            {
                 await ShutdownAsync();
             }
         }
@@ -306,6 +327,7 @@ namespace Caliburn.Noesis
 #endif
 
             ViewLocator = new ViewLocator(assemblySource, this);
+            ViewModelLocator = new ViewModelLocator(assemblySource, this);
             Configure();
 
 #if UNITY_5_5_OR_NEWER
@@ -331,28 +353,6 @@ namespace Caliburn.Noesis
             Log.Info("Initialization complete");
         }
 
-#if !UNITY_5_5_OR_NEWER
-        /// <summary>
-        /// Provides an opportunity to hook into the application object.
-        /// </summary>
-        protected void PrepareApplication()
-        {
-            Application.Current.Startup += async (_, __) =>
-            {
-                await OnEnableAsync();
-                await StartAsync();
-            };
-            Application.Current.Activated += async (_, __) =>
-            {
-                await OnEnableAsync();
-            };
-            Application.Current.Deactivated += async (_, __) =>
-            {
-                await OnDisableAsync();
-            };
-        }
-#endif
-
         private async UniTask OnEnableAsync()
         {
             if (!EnableDisableWithThis)
@@ -375,15 +375,26 @@ namespace Caliburn.Noesis
 
             Log.Info("Starting...");
 
-            ShellView = EnsureShellView();
+            ShellView = GetShellView();
             ShellView.SetValue(AttachedProperties.ServiceLocatorProperty, this);
             ShellView.SetValue(AttachedProperties.ViewLocatorProperty, ViewLocator);
+            ShellView.SetValue(AttachedProperties.ViewModelLocatorProperty, ViewModelLocator);
 
             await OnStartupAsync();
-            
+
             if (GetInstance<IDialogService>() is { } dialogService)
             {
                 await dialogService.ActivateAsync();
+            }
+
+            ShellViewModel = ViewModelLocator.LocateForView(ShellView);
+            Bind.SetModel(ShellView, ShellViewModel);
+
+            Log.Info($"Activating {ShellViewModel}");
+
+            if (ShellViewModel is IActivate activate)
+            {
+                await activate.ActivateAsync();
             }
 
             Log.Info("Start complete");
@@ -400,35 +411,6 @@ namespace Caliburn.Noesis
             {
                 await deactivate.DeactivateAsync(false);
             }
-        }
-
-        /// <summary>
-        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
-        /// </summary>
-        /// <param name="viewModelType">The view model type.</param>
-        /// <param name="settings">The optional window settings.</param>
-        protected async UniTask DisplayRootViewForAsync(Type viewModelType, IDictionary<string, object> settings = null)
-        {
-            ShellViewModel = GetInstance(viewModelType);
-            ShellView.DataContext = this;
-
-            Log.Info($"Activating {ShellViewModel}");
-
-            if (ShellViewModel is IActivate activate)
-            {
-                await activate.ActivateAsync();
-            }
-        }
-
-
-        /// <summary>
-        /// Locates the view model, locates the associate view, binds them and shows it as the root view.
-        /// </summary>
-        /// <typeparam name="TViewModel">The view model type.</typeparam>
-        /// <param name="settings">The optional window settings.</param>
-        protected UniTask DisplayRootViewForAsync<TViewModel>(IDictionary<string, object> settings = null)
-        {
-            return DisplayRootViewForAsync(typeof(TViewModel), settings);
         }
     }
 }

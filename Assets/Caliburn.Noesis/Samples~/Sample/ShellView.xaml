@@ -1,0 +1,65 @@
+<UserControl
+    x:Class="Caliburn.Noesis.Samples.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:noesis="clr-namespace:Caliburn.Noesis"
+    x:Name="Shell">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Assets/Caliburn.Noesis/Runtime/Platform/Unity/Resources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style
+                x:Key="Style.DialogItem"
+                BasedOn="{StaticResource Caliburn.Style.DialogItem}"
+                TargetType="{x:Type noesis:DialogItem}">
+                <Setter Property="Foreground" Value="{StaticResource Brush.Foreground.Normal}" />
+                <Setter Property="Background" Value="{StaticResource Brush.Background.Popup}" />
+                <Setter Property="BorderBrush" Value="{StaticResource Brush.Border.Checked}" />
+            </Style>
+
+            <Style BasedOn="{StaticResource Caliburn.Style.DialogHost}" TargetType="{x:Type noesis:DialogHost}">
+                <Setter Property="DialogContainerStyle" Value="{StaticResource Style.DialogItem}" />
+            </Style>
+
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontFamily" Value="{StaticResource Font.Family.Default}" />
+                <Setter Property="FontSize" Value="{StaticResource Font.Size.Normal}" />
+                <Setter Property="Foreground" Value="{StaticResource Brush.Foreground.Normal}" />
+                <Setter Property="HorizontalAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5,10" />
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <noesis:DialogHostDecorator>
+        <AdornerDecorator>
+            <Grid Background="{StaticResource Brush.Window.Background}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <UniformGrid Rows="1">
+                        <TextBlock Text="Firstname" />
+                        <TextBox x:Name="FirstName" />
+                        <TextBlock Text="Lastname" />
+                        <TextBox x:Name="LastName" />
+                    </UniformGrid>
+
+                    <Button
+                        x:Name="SayHello"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Center"
+                        Content="Say hello" />
+                    <TextBlock x:Name="HelloMessage" />
+
+                    <Button
+                        x:Name="OpenDialogAsync"
+                        Margin="0,50,0,0"
+                        HorizontalAlignment="Center"
+                        Content="Open dialog" />
+                    <TextBlock x:Name="SaveMessage" />
+                </StackPanel>
+            </Grid>
+        </AdornerDecorator>
+    </noesis:DialogHostDecorator>
+</UserControl>

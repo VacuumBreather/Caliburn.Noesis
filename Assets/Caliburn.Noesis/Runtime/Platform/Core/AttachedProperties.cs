@@ -20,6 +20,12 @@ namespace Caliburn.Noesis
             typeof(AttachedProperties),
             new FrameworkPropertyMetadata(default(ViewLocator), FrameworkPropertyMetadataOptions.Inherits));
 
+        public static readonly DependencyProperty ViewModelLocatorProperty = DependencyProperty.RegisterAttached(
+            "ViewModelLocator",
+            typeof(ViewModelLocator),
+            typeof(AttachedProperties),
+            new FrameworkPropertyMetadata(default(ViewModelLocator), FrameworkPropertyMetadataOptions.Inherits));
+
         public static void SetServiceLocator(DependencyObject element, IServiceLocator value)
         {
             element.SetValue(ServiceLocatorProperty, value);
@@ -38,6 +44,16 @@ namespace Caliburn.Noesis
         public static ViewLocator GetViewLocator(DependencyObject element)
         {
             return (ViewLocator)element.GetValue(ViewLocatorProperty);
+        }
+
+        public static void SetViewModelLocator(DependencyObject element, ViewModelLocator value)
+        {
+            element.SetValue(ViewModelLocatorProperty, value);
+        }
+
+        public static ViewModelLocator GetViewModelLocator(DependencyObject element)
+        {
+            return (ViewModelLocator)element.GetValue(ViewModelLocatorProperty);
         }
     }
 }

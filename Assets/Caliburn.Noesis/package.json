@@ -20,9 +20,9 @@
   },
   "samples": [
       {
-          "displayName": "Test Sample",
-          "description": "Testing how samples work",
-          "path": "Samples~/EarlySample"
+          "displayName": "Sample",
+          "description": "Demonstration of the framework",
+          "path": "Samples~/Sample"
       }
   ]
 }

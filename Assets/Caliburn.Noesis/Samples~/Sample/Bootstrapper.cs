@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Caliburn.Noesis;
-using Cysharp.Threading.Tasks;
 
-namespace Caliburn.Noesis.Samples.EarlySample
+namespace Caliburn.Noesis.Samples
 {
     public class Bootstrapper : BootstrapperBase
     {
@@ -16,11 +14,6 @@ namespace Caliburn.Noesis.Samples.EarlySample
         protected override IEnumerable<Assembly> SelectAssemblies()
         {
             return new[] { GetType().Assembly };
-        }
-
-        protected override async UniTask OnStartupAsync()
-        {
-            await DisplayRootViewForAsync<ShellViewModel>();
         }
     }
 }

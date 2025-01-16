@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29355477be96127469aed699dd82b4be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _xaml: {fileID: -8414808784256213763, guid: 6b80b93675fc00b4681d550bd0c37441, type: 3}
+  _xaml: {fileID: -8414808784256213763, guid: 668daf7589a6e0d48a4f53ce1cc4a3f9, type: 3}
   _texture: {fileID: 0}
   _isPPAAEnabled: 0
   _tessellationMaxPixelError: 0.4
@@ -303,8 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f74221b5a27b8a34393537135f444747, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  preloadXamls:
-  - {fileID: -8414808784256213763, guid: 668daf7589a6e0d48a4f53ce1cc4a3f9, type: 3}
+  preloadXamls: []
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

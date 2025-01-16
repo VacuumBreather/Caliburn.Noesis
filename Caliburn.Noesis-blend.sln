@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis-blend", "Blend\Caliburn.Noesis-blend.csproj", "{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Noesis-blend", "Caliburn.Noesis-blend.csproj", "{03F7F096-9CEB-4EE9-A1CB-B3B515B3702C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
