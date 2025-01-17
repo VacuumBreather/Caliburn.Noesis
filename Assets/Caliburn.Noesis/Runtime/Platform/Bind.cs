@@ -124,9 +124,11 @@
                 return;
             }
 
+            object newValue = e.NewValue;
+
             View.ExecuteOnLoad(fe, delegate
             {
-                var target = e.NewValue;
+                var target = newValue;
                 d.SetValue(View.IsScopeRootProperty, true);
 
                 var context = string.IsNullOrEmpty(fe.Name)
