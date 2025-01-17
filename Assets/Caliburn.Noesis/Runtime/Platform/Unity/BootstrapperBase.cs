@@ -114,8 +114,8 @@ namespace Caliburn.Noesis
         {
             IoCContainer = new SimpleContainer();
 
-            IoCContainer.Singleton<ViewLocator, ViewLocator>();
             IoCContainer.Singleton<IDialogService, DialogConductor>();
+            IoCContainer.Singleton<IEventAggregator, EventAggregator>();
 
             foreach (Type type in _extractedTypes)
             {
@@ -355,12 +355,7 @@ namespace Caliburn.Noesis
 
         private async UniTask OnEnableAsync()
         {
-            if (!EnableDisableWithThis)
-            {
-                return;
-            }
-            
-            if (ShellViewModel is IActivate activate)
+            if (EnableDisableWithThis && ShellViewModel is IActivate activate)
             {
                 await activate.ActivateAsync();
             }
@@ -402,12 +397,7 @@ namespace Caliburn.Noesis
 
         private async UniTask OnDisableAsync()
         {
-            if (!EnableDisableWithThis)
-            {
-                return;
-            }
-
-            if (ShellViewModel is IDeactivate deactivate)
+            if (EnableDisableWithThis && ShellViewModel is IDeactivate deactivate)
             {
                 await deactivate.DeactivateAsync(false);
             }
