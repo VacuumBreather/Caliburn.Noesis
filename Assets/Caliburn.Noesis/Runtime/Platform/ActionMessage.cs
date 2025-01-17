@@ -83,6 +83,8 @@
             null
             );
 
+        private RoutedEventHandler _loadedHandler;
+
         /// <summary>
         /// Creates an instance of <see cref="ActionMessage"/>.
         /// </summary>
@@ -124,7 +126,7 @@
                 Parameters.Attach(AssociatedObject);
                 Parameters.Apply(x => x.MakeAwareOf(this));
 
-                if (Noesis.View.ExecuteOnLoad(AssociatedObject, ElementLoaded))
+                if (Noesis.View.ExecuteOnLoad(AssociatedObject, ElementLoaded, out _loadedHandler))
                 {
                     string eventName = "Loaded";
                     var trigger = Interaction.GetTriggers(AssociatedObject)
@@ -155,8 +157,7 @@
             if (!Noesis.View.InDesignMode)
             {
                 Detaching(this, System.EventArgs.Empty);
-                //TODO: Fix this: cannot remove ElementLoaded here because a wrapper handler was added instead (in View.ExecuteOnLoad() called from this.OnAttached())
-                AssociatedObject.Loaded -= ElementLoaded;
+                AssociatedObject.Loaded -= _loadedHandler;
                 Parameters.Detach();
             }
 

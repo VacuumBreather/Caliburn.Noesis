@@ -95,7 +95,11 @@
         /// <returns>true if the handler was executed immediately; false otherwise</returns>
         public static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler)
         {
+            return ExecuteOnLoad(element, handler, out _);
+        }
 
+        internal static bool ExecuteOnLoad(FrameworkElement element, RoutedEventHandler handler, out RoutedEventHandler attachedHandler)
+        {
             if (element.IsLoaded)
             {
 #if UNITY_5_5_OR_NEWER
@@ -103,6 +107,8 @@
 #else
                 handler(element, new RoutedEventArgs());
 #endif
+                attachedHandler = null;
+                
                 return true;
             }
 
@@ -112,6 +118,8 @@
                 handler(s, e);
             };
             element.Loaded += loaded;
+
+            attachedHandler = loaded;
 
             return false;
         }
