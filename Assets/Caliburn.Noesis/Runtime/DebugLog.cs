@@ -58,7 +58,7 @@ namespace Caliburn.Noesis
         public void Error(Exception exception)
         {
 #if UNITY_5_5_OR_NEWER
-            Debug.LogError($"[{typeName}] ERROR: {exception}" );
+            Debug.LogError($"[{typeName}] ERROR: {exception}");
 #else
             Trace.WriteLine($"[{typeName}] ERROR: {exception}" );
 #endif

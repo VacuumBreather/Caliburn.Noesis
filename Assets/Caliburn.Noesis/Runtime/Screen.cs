@@ -115,6 +115,7 @@ namespace Caliburn.Noesis
             {
                 WasInitialized = initialized
             }) ?? UniTask.FromResult(true));
+            Log.Info("Activated {0}.", this);
         }
 
         async UniTask IDeactivate.DeactivateAsync(bool close, CancellationToken cancellationToken)
@@ -140,6 +141,10 @@ namespace Caliburn.Noesis
                 {
                     Views.Clear();
                     Log.Info("Closed {0}.", this);
+                }
+                else
+                {   
+                    Log.Info("Deactivated {0}.", this);
                 }
             }
         }
@@ -181,7 +186,6 @@ namespace Caliburn.Noesis
         /// </summary>
         protected virtual UniTask OnActivatedAsync(CancellationToken cancellationToken)
         {
-            Log.Info("UniTask activated");
             return UniTask.FromResult(true);
         }
 
@@ -193,7 +197,6 @@ namespace Caliburn.Noesis
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected virtual UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
-            Log.Info("UniTask deactivate");
             return UniTask.FromResult(true);
         }
     }

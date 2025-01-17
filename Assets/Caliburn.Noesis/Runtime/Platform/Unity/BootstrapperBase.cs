@@ -28,7 +28,7 @@ namespace Caliburn.Noesis
     public abstract class BootstrapperBase : IServiceLocator
 #endif
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+        private static readonly ILog Log = LogManager.GetLog(typeof(BootstrapperBase));
 
         private bool _isInitialized;
         private IEnumerable<Type> _extractedTypes;
