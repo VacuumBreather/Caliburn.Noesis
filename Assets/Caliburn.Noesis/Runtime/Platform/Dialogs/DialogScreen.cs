@@ -23,7 +23,7 @@ namespace Caliburn.Noesis
         ///     this dialog was closed with.
         /// </returns>
         /// <exception cref="InvalidOperationException">Attempting to await the result before initializing the dialog.</exception>
-        public async UniTask<DialogResult> GetDialogResultAsync()
+        internal async UniTask<DialogResult> GetDialogResultAsync()
         {
             if (!IsInitialized)
             {
@@ -47,6 +47,31 @@ namespace Caliburn.Noesis
         }
 
         /// <inheritdoc/>
+        public sealed override UniTask TryCloseAsync(bool? dialogResult = null)
+        {
+            return base.TryCloseAsync(dialogResult);
+        }
+
+        /// <inheritdoc/>
+        protected sealed override async UniTask OnActivatedAsync(CancellationToken cancellationToken)
+        {
+            _result = DialogResult.None;
+
+            await OnDialogOpenedAsync(cancellationToken);
+            await base.OnActivatedAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Called when the dialog is opened.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        protected virtual UniTask OnDialogOpenedAsync(CancellationToken cancellationToken)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        /// <inheritdoc/>
         protected sealed override async UniTask OnDeactivateAsync(bool close, CancellationToken cancellationToken)
         {
             if (IsInitialized && close)
@@ -60,20 +85,32 @@ namespace Caliburn.Noesis
                 _taskCompletionSource.TrySetResult(_result);
                 _taskCompletionSource = null;
                 IsInitialized = false;
+
+                await OnDialogClosed(cancellationToken);
             }
 
             await base.OnDeactivateAsync(close, cancellationToken);
         }
 
+        /// <summary>
+        /// Called when the dialog is being closed.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        protected virtual UniTask OnDialogClosed(CancellationToken cancellationToken)
+        {
+            return UniTask.CompletedTask;
+        }
+
         /// <inheritdoc/>
-        protected sealed override UniTask OnInitializedAsync(CancellationToken cancellationToken)
+        protected sealed override async UniTask OnInitializedAsync(CancellationToken cancellationToken)
         {
             _taskCompletionSource = new UniTaskCompletionSource<DialogResult>();
 
             _cancellationTokenRegistration =
                 cancellationToken.Register(() => _taskCompletionSource!.TrySetResult(result: default));
 
-            return base.OnInitializedAsync(cancellationToken);
+            await base.OnInitializedAsync(cancellationToken);
         }
     }
 }
