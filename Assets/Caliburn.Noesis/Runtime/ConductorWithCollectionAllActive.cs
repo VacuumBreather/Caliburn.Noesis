@@ -18,7 +18,7 @@ namespace Caliburn.Noesis
             /// <summary>
             /// An implementation of <see cref="IConductor"/> that holds on to many items which are all activated.
             /// </summary>
-            public class AllActive : ConductorBase<T>
+            public class AllActive : ConductorBase<T>, ICollectionConductor<T>
             {
                 private readonly BindableCollection<T> _items = new BindableCollection<T>();
                 private readonly bool _openPublicItems;

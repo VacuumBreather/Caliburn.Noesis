@@ -16,7 +16,7 @@ namespace Caliburn.Noesis
             /// <summary>
             /// An implementation of <see cref="IConductor"/> that holds on many items but only activates one at a time.
             /// </summary>
-            public class OneActive : ConductorBaseWithActiveItem<T>
+            public class OneActive : ConductorBaseWithActiveItem<T>, ICollectionConductorWithActiveItem<T>
             {
                 private readonly BindableCollection<T> _items = new BindableCollection<T>();
 
