@@ -267,16 +267,21 @@
                 ViewLocator viewLocator = targetLocation.GetViewLocator();
 
                 var view = viewLocator.LocateForModel(args.NewValue, targetLocation, context);
-                if (!SetContentProperty(targetLocation, view))
-                {
-
-                    Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
-
-                    view = viewLocator.LocateForModelType(args.NewValue.GetType(), targetLocation, context);
-
-                    SetContentProperty(targetLocation, view);
-                }
                 ViewModelBinder.Bind(args.NewValue, view, context);
+                
+                Execute.OnUIThread(
+                    () =>
+                    {
+                        if (!SetContentProperty(targetLocation, view))
+                        {
+
+                            Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
+
+                            view = viewLocator.LocateForModelType(args.NewValue.GetType(), targetLocation, context);
+
+                            SetContentProperty(targetLocation, view);
+                        }
+                    });
             }
             else
             {
@@ -300,18 +305,21 @@
             ViewLocator viewLocator = targetLocation.GetViewLocator();
 
             var view = viewLocator.LocateForModel(model, targetLocation, e.NewValue);
-
-            if (!SetContentProperty(targetLocation, view))
-            {
-
-                Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
-
-                view = viewLocator.LocateForModelType(model.GetType(), targetLocation, e.NewValue);
-
-                SetContentProperty(targetLocation, view);
-            }
-
             ViewModelBinder.Bind(model, view, e.NewValue);
+
+            Execute.OnUIThread(
+                () =>
+                {
+                    if (!SetContentProperty(targetLocation, view))
+                    {
+
+                        Log.Warn("SetContentProperty failed for ViewLocator.LocateForModel, falling back to LocateForModelType");
+
+                        view = viewLocator.LocateForModelType(model.GetType(), targetLocation, e.NewValue);
+
+                        SetContentProperty(targetLocation, view);
+                    }
+                });
         }
 
         static bool SetContentProperty(object targetLocation, object view)
