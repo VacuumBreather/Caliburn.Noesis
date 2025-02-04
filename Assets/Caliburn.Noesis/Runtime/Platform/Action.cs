@@ -152,10 +152,10 @@
 
             var target = e.NewValue;
 
-            if (setContext && d is FrameworkElement)
+            if (setContext && d is FrameworkElement element && !ReferenceEquals(element.DataContext, target))
             {
                 Log.Info("Setting DC of {0} to {1}.", d, target);
-                ((FrameworkElement)d).DataContext = target;
+                element.DataContext = target;
             }
 
             Message.SetHandler(d, target);
