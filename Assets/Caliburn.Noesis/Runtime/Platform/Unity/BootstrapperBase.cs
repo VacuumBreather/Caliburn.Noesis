@@ -1,18 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using Cysharp.Threading.Tasks;
 
 #if UNITY_5_5_OR_NEWER
-using System.Runtime.CompilerServices;
-using global::Noesis;
+using Noesis;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 #else
+using System.ComponentModel;
 using System.Windows;
 #endif
 
@@ -89,11 +86,6 @@ namespace Caliburn.Noesis
             finally
             {
                 _isInitialized = false;
-#if UNITY_5_5_OR_NEWER
-                Application.Quit();
-#else
-                Application.Current.Shutdown();
-#endif
             }
         }
 
