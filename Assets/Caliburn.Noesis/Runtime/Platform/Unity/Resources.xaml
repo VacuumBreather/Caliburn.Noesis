@@ -98,11 +98,9 @@
         <Setter Property="MinHeight" Value="150" />
         <Setter Property="Border.CornerRadius" Value="0" />
         <Setter Property="Foreground" Value="#E4E6E8" />
-        <Setter Property="Background" Value="Red" />
-        <!--<Setter Property="Background" Value="#262E35" />-->
+        <Setter Property="Background" Value="#262E35" />
         <Setter Property="BorderBrush" Value="#FF1098DF" />
         <Setter Property="BorderThickness" Value="0,5" />
-        <!--  {StaticResource Border.Box}  -->
         <Setter Property="Template" Value="{StaticResource Caliburn.ControlTemplate.DialogItem}" />
     </Style>
 
