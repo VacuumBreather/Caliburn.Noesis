@@ -20,15 +20,15 @@ namespace Caliburn.Noesis
         }
 
         /// <summary>Gets the content of the dialog.</summary>
-        public string Content { get; }
+        public string Content { get; set; }
 
         /// <summary>Gets the default result.</summary>
-        public DialogResult DefaultResult { get; }
+        public DialogResult DefaultResult { get; set; }
 
         /// <summary>Gets the possible results the dialog can return.</summary>
-        public DialogResults DialogResults { get; }
+        public DialogResults DialogResults { get; set; }
 
         /// <summary>Gets the title of the dialog.</summary>
-        public string Title { get; }
+        public string Title { get; set; }
     }
 }
