@@ -15,14 +15,16 @@ namespace Caliburn.Noesis {
     /// <summary>
     /// A <see cref="IPlatformProvider"/> implementation for the XAML platfrom.
     /// </summary>
-    public class XamlPlatformProvider : IPlatformProvider {
+    public class XamlPlatformProvider : IPlatformProvider
+    {
 
         private readonly Dispatcher dispatcher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XamlPlatformProvider"/> class.
         /// </summary>
-        public XamlPlatformProvider() {
+        public XamlPlatformProvider()
+        {
             dispatcher = Dispatcher.CurrentDispatcher;
         }
 
@@ -34,16 +36,19 @@ namespace Caliburn.Noesis {
         /// <summary>
         /// Indicates whether or not the framework is in design-time mode.
         /// </summary>
-        public virtual bool InDesignMode {
+        public virtual bool InDesignMode
+        {
             get { return View.InDesignMode; }
         }
 
-        private void ValidateDispatcher() {
+        private void ValidateDispatcher()
+        {
             if (dispatcher == null)
                 throw new InvalidOperationException("Not initialized with dispatcher.");
         }
 
-        private bool CheckAccess() {
+        private bool CheckAccess()
+        {
             return dispatcher == null || dispatcher.CheckAccess();
         }
 
@@ -51,7 +56,8 @@ namespace Caliburn.Noesis {
         /// Executes the action on the UI thread asynchronously.
         /// </summary>
         /// <param name="action">The action to execute.</param>
-        public virtual void BeginOnUIThread(System.Action action) {
+        public virtual void BeginOnUIThread(System.Action action)
+        {
             ValidateDispatcher();
             dispatcher.BeginInvoke(action);
         }
@@ -61,7 +67,8 @@ namespace Caliburn.Noesis {
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <returns></returns>
-        public virtual async UniTask OnUIThreadAsync(Func<UniTask> action) {
+        public virtual async UniTask OnUIThreadAsync(Func<UniTask> action)
+        {
             ValidateDispatcher();
 #if UNITY_5_5_OR_NEWER
             await UniTask.SwitchToMainThread();
@@ -76,16 +83,21 @@ namespace Caliburn.Noesis {
         /// </summary>
         /// <param name="action">The action to execute.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public virtual void OnUIThread(System.Action action) {
+        public virtual void OnUIThread(System.Action action)
+        {
             if (CheckAccess())
                 action();
-            else {
+            else
+            {
                 Exception exception = null;
-                System.Action method = () => {
-                    try {
+                System.Action method = () =>
+                {
+                    try
+                    {
                         action();
                     }
-                    catch(Exception ex) {
+                    catch(Exception ex)
+                    {
                         exception = ex;
                     }
                 };
@@ -110,7 +122,8 @@ namespace Caliburn.Noesis {
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
-        public virtual object GetFirstNonGeneratedView(object view) {
+        public virtual object GetFirstNonGeneratedView(object view)
+        {
             return View.GetFirstNonGeneratedView(view);
         }
 
@@ -126,9 +139,11 @@ namespace Caliburn.Noesis {
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler) {
+        public virtual void ExecuteOnFirstLoad(object view, Action<object> handler)
+        {
             var element = view as FrameworkElement;
-            if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty)) {
+            if (element != null && !(bool) element.GetValue(PreviouslyAttachedProperty))
+            {
                 element.SetValue(PreviouslyAttachedProperty, true);
                 View.ExecuteOnLoad(element, (s, e) => handler(s));
             }
@@ -139,7 +154,8 @@ namespace Caliburn.Noesis {
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="handler">The handler.</param>
-        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler) {
+        public virtual void ExecuteOnLayoutUpdated(object view, Action<object> handler)
+        {
             var element = view as FrameworkElement;
             if (element != null) {
                 View.ExecuteOnLayoutUpdated(element, (s, e) => handler(s));

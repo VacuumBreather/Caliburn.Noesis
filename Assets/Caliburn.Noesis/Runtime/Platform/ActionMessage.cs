@@ -254,7 +254,7 @@
 
             _context.EventArgs = eventArgs;
 
-            if (EnforceGuardsDuringInvocation && (_context?.CanExecute() != true))
+            if (EnforceGuardsDuringInvocation && _context.CanExecute != null && !_context.CanExecute())
             {
                 return;
             }
@@ -411,7 +411,17 @@
                     }
                 }
 
-                currentElement = BindingScope.GetVisualParent(currentElement);
+                var pElement = BindingScope.GetVisualParent(currentElement);
+                if (pElement == null
+                    && currentElement.GetType().Name.Equals("PopupRoot", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (currentElement is FrameworkElement popupRoot && popupRoot.Parent is Popup popup)
+                    {
+                        pElement = popup.PlacementTarget;
+                    }
+                }
+
+                currentElement = pElement;
             }
 
             if (source != null && source.DataContext != null)

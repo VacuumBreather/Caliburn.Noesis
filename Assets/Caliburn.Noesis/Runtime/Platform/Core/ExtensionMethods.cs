@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 namespace Caliburn.Noesis
 {
@@ -29,6 +30,16 @@ namespace Caliburn.Noesis
         public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
         {
             return dictionary.TryGetValue(key, out TValue result) ? result : default;
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="StringBuilder"/> is null or has a length of zero.
+        /// </summary>
+        /// <param name="source">The <see cref="StringBuilder"/> to check.</param>
+        /// <returns><c>true</c> if the <see cref="StringBuilder"/> is null or empty; otherwise, <c>false</c>.</returns>
+        public static bool IsNullOrEmpty(this StringBuilder source)
+        {
+            return source == null || source.Length == 0;
         }
     }
 }
